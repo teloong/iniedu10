@@ -1,0 +1,35 @@
+---
+import Layout from '../layouts/Layout.astro';
+title: "Perpustakaan"
+---
+
+<script type="module" src="/firebase-protect.js"></script>
+<Layout title="Perpustakaan">
+  <section class="relative min-h-[50vh] flex flex-col items-center justify-center py-16 px-4 bg-gradient-to-br from-blue-50 via-white to-blue-100 overflow-hidden" data-aos="fade-up">
+    <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-[#232b4d] drop-shadow-lg" data-aos="fade-right">Perpustakaan Digital</h1>
+    <p class="mb-10 text-lg md:text-xl text-gray-700 text-center max-w-2xl" data-aos="fade-left">Akses ribuan koleksi buku digital untuk semua kebutuhan belajar, referensi, dan hiburan anak. Semua gratis dan mudah diakses!</p>
+    <div class="grid md:grid-cols-3 gap-8 w-full max-w-5xl">
+      <!-- Card 1: Koleksi Buku Sekolah Digital -->
+      <div class="bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center transition-all duration-300 border-b-4 border-blue-400 hover:scale-105 hover:-rotate-x-3 hover:rotate-y-3 hover:shadow-[0_8px_32px_0_rgba(0,153,255,0.19),0_2px_12px_0_rgba(0,153,255,0.13)] hover:border-b-[6px] hover:border-blue-500 hover:bg-gradient-to-br hover:from-white hover:to-blue-50 group relative overflow-hidden" data-aos="zoom-in" data-aos-delay="100">
+        <svg width="44" height="44" fill="none" viewBox="0 0 44 44"><circle cx="22" cy="22" r="22" fill="#009fff" opacity=".12"/><rect x="13" y="15" width="18" height="14" rx="3" fill="#009fff"/><rect x="16" y="19" width="12" height="2" rx="1" fill="#fff"/></svg>
+        <div class="font-bold text-lg mt-4 mb-2 text-blue-700">Koleksi Buku Sekolah Digital</div>
+        <div class="text-gray-600 text-center mb-4">Buku pelajaran SD, SMP, SMA digital lengkap untuk menunjang pembelajaran formal.</div>
+        <a href="/perpustakaan/buku-sekolah" class="mt-auto px-5 py-2 rounded-full font-semibold bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md transition-all duration-200 hover:scale-105 hover:shadow-xl hover:from-cyan-400 hover:to-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-300">Baca Sekarang</a>
+      </div>
+      <!-- Card 2: Koleksi Buku Referensi Islam Digital -->
+      <div class="bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center transition-all duration-300 border-b-4 border-green-400 hover:scale-105 hover:-rotate-x-3 hover:rotate-y-3 hover:shadow-[0_8px_32px_0_rgba(34,197,94,0.17),0_2px_12px_0_rgba(34,197,94,0.13)] hover:border-b-[6px] hover:border-green-500 hover:bg-gradient-to-br hover:from-white hover:to-green-50 group relative overflow-hidden" data-aos="zoom-in" data-aos-delay="200">
+        <svg width="44" height="44" fill="none" viewBox="0 0 44 44"><circle cx="22" cy="22" r="22" fill="#22c55e" opacity=".12"/><rect x="13" y="15" width="18" height="14" rx="3" fill="#22c55e"/><path d="M22 19l3 3-3 3-3-3 3-3z" fill="#fff"/></svg>
+        <div class="font-bold text-lg mt-4 mb-2 text-green-700">Koleksi Buku Referensi Islam Digital</div>
+        <div class="text-gray-600 text-center mb-4">Kumpulan kitab, tafsir, dan buku-buku keislaman digital untuk pembelajaran dan inspirasi.</div>
+        <a href="/perpustakaan/buku-islam" class="mt-auto px-5 py-2 rounded-full font-semibold bg-gradient-to-r from-green-500 to-emerald-400 text-white shadow-md transition-all duration-200 hover:scale-105 hover:shadow-xl hover:from-emerald-400 hover:to-green-500 focus:outline-none focus:ring-4 focus:ring-green-200">Baca Sekarang</a>
+      </div>
+      <!-- Card 3: Koleksi Buku Anak Digital -->
+      <div class="bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center transition-all duration-300 border-b-4 border-pink-400 hover:scale-105 hover:-rotate-x-3 hover:rotate-y-3 hover:shadow-[0_8px_32px_0_rgba(224,64,251,0.17),0_2px_12px_0_rgba(224,64,251,0.13)] hover:border-b-[6px] hover:border-pink-500 hover:bg-gradient-to-br hover:from-white hover:to-pink-50 group relative overflow-hidden" data-aos="zoom-in" data-aos-delay="300">
+        <svg width="44" height="44" fill="none" viewBox="0 0 44 44"><circle cx="22" cy="22" r="22" fill="#e040fb" opacity=".12"/><rect x="13" y="15" width="18" height="14" rx="3" fill="#e040fb"/><circle cx="22" cy="22" r="3" fill="#fff"/></svg>
+        <div class="font-bold text-lg mt-4 mb-2 text-pink-700">Koleksi Buku Anak Digital</div>
+        <div class="text-gray-600 text-center mb-4">Cerita anak, buku edukasi, dan komik digital untuk menumbuhkan minat baca sejak dini.</div>
+        <a href="/perpustakaan/buku-anak" class="mt-auto px-5 py-2 rounded-full font-semibold bg-gradient-to-r from-pink-500 to-purple-400 text-white shadow-md transition-all duration-200 hover:scale-105 hover:shadow-xl hover:from-purple-400 hover:to-pink-500 focus:outline-none focus:ring-4 focus:ring-pink-200">Baca Sekarang</a>
+      </div>
+    </div>
+  </section>
+</Layout>

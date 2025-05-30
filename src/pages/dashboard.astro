@@ -1,0 +1,28 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Dashboard">
+  <section class="max-w-2xl mx-auto mt-12 bg-white rounded-2xl shadow-lg p-8">
+    <h1 class="text-2xl font-bold text-center mb-6 text-blue-700">Dashboard</h1>
+    <div id="dashboard-content" class="text-center text-gray-700">
+      Selamat datang di Dashboard!<br />
+      <span id="user-email" class="font-semibold"></span>
+    </div>
+  </section>
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js';
+    import { firebaseConfig } from '../firebaseConfig.js';
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const emailSpan = document.getElementById('user-email');
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        emailSpan.textContent = `Email: ${user.email}`;
+      } else {
+        window.location.href = '/login';
+      }
+    });
+  </script>
+</Layout>

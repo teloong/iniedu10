@@ -1,0 +1,186 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<script type="module" src="/firebase-admin-protect.js"></script>
+
+<Layout title="Admin - Kelola Video Pembelajaran">
+  <section class="max-w-2xl mx-auto mt-12 bg-white rounded-2xl shadow-lg p-8">
+    <h1 class="text-2xl font-bold text-center mb-6 text-blue-700">Admin: Kelola Video Pembelajaran</h1>
+    <form id="video-form" class="flex flex-col gap-4 mb-8">
+      <input type="text" id="judul" required placeholder="Judul Video" class="border rounded p-2" />
+      <select id="kelas" required class="border rounded p-2">
+        <option value="">Pilih Kelas</option>
+        <option value="1">Kelas 1</option>
+        <option value="2">Kelas 2</option>
+        <option value="3">Kelas 3</option>
+        <option value="4">Kelas 4</option>
+        <option value="5">Kelas 5</option>
+        <option value="6">Kelas 6</option>
+      </select>
+      <select id="mapel" required class="border rounded p-2">
+        <option value="">Pilih Mapel</option>
+        <option value="Matematika">Matematika</option>
+        <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+        <option value="PKN">PKN</option>
+        <option value="PAI">PAI</option>
+        <option value="Seni Teater">Seni Teater</option>
+        <option value="Seni Musik">Seni Musik</option>
+        <option value="Seni Tari">Seni Tari</option>
+        <option value="Seni Rupa">Seni Rupa</option>
+      </select>
+
+      <input type="url" id="url" placeholder="URL Video (YouTube)" class="border rounded p-2" />
+      <div class="text-xs text-gray-500 mb-2">Masukkan link YouTube (mode privat/unlisted) yang ingin di-embed.</div>
+      <textarea id="deskripsi" placeholder="Deskripsi (opsional)" class="border rounded p-2"></textarea>
+      <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded">Tambah Video</button>
+      <div id="video-message" class="text-center text-red-500"></div>
+    </form>
+
+    <script type="module">
+      import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+      import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js';
+      import { firebaseConfig } from '/firebaseConfig.js';
+      import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js';
+
+      // Inisialisasi Firebase
+      const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+
+      // Inisialisasi Supabase
+      const supabaseUrl = 'https://jcfizceoycwdvpqpwhrj.supabase.co';
+      const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA';
+      const supabase = createClient(supabaseUrl, supabaseKey);
+
+      // === Tambahkan validasi YouTube URL ===
+      function isValidYouTubeUrl(url) {
+        return (
+          url.match(/^https?:\/\/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[\w-]{11}/) != null
+        );
+      }
+
+      // Tangkap submit form
+      document.querySelector('form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const judul = document.getElementById('judul').value.trim();
+        const kelas = document.getElementById('kelas').value;
+        const mapel = document.getElementById('mapel').value;
+        const url = document.getElementById('url').value.trim();
+        const deskripsi = document.getElementById('deskripsi').value.trim();
+        const videoMessage = document.getElementById('video-message');
+        if (!isValidYouTubeUrl(url)) {
+          videoMessage.textContent = 'Mohon masukkan URL YouTube yang valid!';
+          return false;
+        }
+        // Insert ke Supabase
+        const { data, error } = await supabase.from('videos').insert([
+          {
+            title: judul,
+            kelas: kelas,
+            mapel: mapel,
+            url: url,
+            description: deskripsi
+          }
+        ]);
+        if (error) {
+          videoMessage.textContent = 'Gagal menambah video: ' + error.message;
+        } else {
+          videoMessage.textContent = 'Berhasil menambah video!';
+          // Reset form
+          document.querySelector('form').reset();
+        }
+      });
+
+      // Proteksi: hanya email admin yang boleh akses
+      onAuthStateChanged(auth, (user) => {
+        if (!user) {
+          window.location.href = '/login';
+        } else if (user.email !== 'lemindes@gmail.com') {
+          alert('Akses khusus admin.');
+          window.location.href = '/profil';
+        }
+      });
+
+      const form = document.getElementById('video-form');
+      const videoList = document.getElementById('video-list');
+      const videoMessage = document.getElementById('video-message');
+
+      // Ambil dan tampilkan daftar video
+      async function fetchVideos() {
+        const { data, error } = await supabase.from('videos').select('*').order('created_at', { ascending: false });
+        videoList.innerHTML = '';
+        if (error) {
+          videoMessage.textContent = 'Gagal mengambil data video.';
+          return;
+        }
+        if (data.length === 0) {
+          videoList.innerHTML = '<li class="text-center text-gray-500">Belum ada video.</li>';
+        } else {
+          data.forEach(video => {
+            const li = document.createElement('li');
+            li.className = 'p-4 bg-gray-100 rounded shadow flex flex-col md:flex-row md:items-center md:justify-between';
+            li.innerHTML = `
+              <div>
+                <div class="font-semibold">${video.title}</div>
+                <div class="text-sm text-gray-600 mb-1">Kelas: ${video.kelas} | Mapel: ${video.mapel}</div>
+                <div class="text-xs text-gray-500 mb-2">${video.description || ''}</div>
+                <a href="${video.url}" target="_blank" class="text-blue-600 underline">Lihat Video</a>
+              </div>
+              <button data-id="${video.id}" class="hapus-btn bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded mt-2 md:mt-0">Hapus</button>
+            `;
+            videoList.appendChild(li);
+          });
+        }
+        // Tambah event hapus
+        document.querySelectorAll('.hapus-btn').forEach(btn => {
+          btn.onclick = async (e) => {
+            const id = btn.getAttribute('data-id');
+            if (confirm('Yakin ingin menghapus video ini?')) {
+              await supabase.from('videos').delete().eq('id', id);
+              fetchVideos();
+            }
+          };
+        });
+      }
+      fetchVideos();
+      
+      // Tambah video baru
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        videoMessage.textContent = '';
+        const title = document.getElementById('judul').value;
+        const kelas = document.getElementById('kelas').value;
+        const mapel = document.getElementById('mapel').value;
+        const description = document.getElementById('deskripsi').value;
+        const fileInput = document.getElementById('video-file');
+        const urlInput = document.getElementById('url');
+        let url = urlInput.value;
+        // Upload file jika ada
+        if (fileInput.files && fileInput.files.length > 0) {
+          const file = fileInput.files[0];
+          const fileExt = file.name.split('.').pop();
+          const fileName = `${Date.now()}_${Math.random().toString(36).substr(2, 8)}.${fileExt}`;
+          const { data: uploadData, error: uploadError } = await supabase.storage.from('videos').upload(fileName, file);
+          if (uploadError) {
+            videoMessage.textContent = 'Gagal upload file video.';
+            return;
+          }
+          // Ambil public URL
+          const { data: publicUrlData } = supabase.storage.from('videos').getPublicUrl(fileName);
+          url = publicUrlData.publicUrl;
+        }
+        if (!url) {
+          videoMessage.textContent = 'Silakan upload file video atau isi URL video.';
+          return;
+        }
+        const { error } = await supabase.from('videos').insert([{ title, url, kelas, mapel, description }]);
+        if (error) {
+          videoMessage.textContent = 'Gagal menambah video.';
+        } else {
+          form.reset();
+          fetchVideos();
+        }
+      });
+    </script>
+  </section>
+</Layout>

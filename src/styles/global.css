@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Kustomisasi tambahan */
+@layer base {
+  body {
+    @apply font-sans text-gray-800;
+  }
+  
+  /* Reset CSS untuk menghilangkan garis */
+  *, *::before, *::after {
+    box-sizing: border-box;
+    outline: none !important;
+  }
+  
+  body, html {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+  
+  /* Hapus semua garis dan elemen pseudo */
+  body::before, body::after,
+  html::before, html::after,
+  div::before, div::after,
+  header::before, header::after {
+    display: none !important;
+    content: none !important;
+  }
+  
+  /* Hapus outline pada semua elemen fokus */
+  :focus {
+    outline: none !important;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-md transition-colors;
+  }
+  
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-primary/90;
+  }
+}
