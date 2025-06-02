@@ -35,9 +35,9 @@
   }
 }
 
-[data-aos] {
+/* [data-aos] {
   overflow: visible !important;
-}
+} */
 
 html, body {
   overflow-x: hidden !important;
