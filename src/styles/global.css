@@ -17,9 +17,9 @@
   body, html {
     margin: 0;
     padding: 0;
-    overflow-x: hidden;
-  }
-  
+    overflow-x: hidden !important;
+    /* height: 100%;  <-- hapus atau beri komentar */
+}
   /* Hapus semua garis dan elemen pseudo */
   body::before, body::after,
   html::before, html::after,
@@ -35,7 +35,19 @@
   }
 }
 
+[data-aos] {
+  overflow: visible !important;
+}
+
+html, body {
+  overflow-x: hidden !important;
+  /* Jangan set overflow-y di sini agar scroll utama tetap normal */
+}
+
 @layer components {
+
+
+
   .btn {
     @apply px-4 py-2 rounded-md transition-colors;
   }
