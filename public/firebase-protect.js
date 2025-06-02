@@ -14,6 +14,7 @@ async function loadFirebaseConfig() {
 document.addEventListener('DOMContentLoaded', async () => {
   // Ambil konfigurasi dari endpoint dinamis
   const firebaseConfig = await loadFirebaseConfig();
+  console.log("Config di protect.js:", firebaseConfig);
 
   // Cegah inisialisasi ulang
   let app;
@@ -25,6 +26,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const auth = getAuth(app);
 
   onAuthStateChanged(auth, (user) => {
+    console.log("User di protect.js:", user);
     if (!user) {
       window.location.href = "/login";
     }
