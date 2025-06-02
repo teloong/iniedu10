@@ -1,6 +1,7 @@
-import { initializeApp, getApps } from "firebase/app";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
-import { firebaseConfig } from "/firebaseConfig.js";
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+const firebaseConfig = window.firebaseConfig;
 const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
@@ -49,7 +50,7 @@ function renderForm() {
 
   document.getElementById("logout-btn").onclick = async () => {
     await signOut(auth);
-    messageDiv.textContent = "Berhasil logout.";
+    window.location.href = "/";
   };
 }
 
@@ -58,8 +59,7 @@ onAuthStateChanged(auth, (user) => {
     formContainer.innerHTML = `<div class='text-green-600 font-semibold text-center'>Halo, ${user.email}<br>Anda sudah login.</div><button id=\"logout-btn\" class=\"mt-4 bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded w-full\">Keluar</button>`;
     document.getElementById("logout-btn").onclick = async () => {
       await signOut(auth);
-      messageDiv.textContent = "Berhasil logout.";
-      renderForm();
+      window.location.href = "/";
     };
   } else {
     renderForm();
