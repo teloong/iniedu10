@@ -20,6 +20,9 @@ const { title = 'IniEdu - Platform Pendidikan Online' } = Astro.props;
 		<title>{title}</title>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
 		<link rel="preload" as="image" href="/images/education-animate.svg" type="image/svg+xml" />
+		<!-- Firebase CDN -->
+		<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 		<style>
 			/* Reset CSS untuk menghilangkan garis dan outline */
 			*, *::before, *::after {
