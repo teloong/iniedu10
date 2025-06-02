@@ -1,17 +1,19 @@
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
 
-document.addEventListener('DOMContentLoaded', () => {
-  const firebaseConfig = {
-    apiKey: "AIzaSyAlxYWD4bCwpoKEErXDX1_4AZC9wzQTkwA",
-    authDomain: "iniedu.firebaseapp.com",
-    projectId: "iniedu",
-    storageBucket: "iniedu.firebasestorage.app",
-    messagingSenderId: "743403637628",
-    appId: "1:743403637628:web:15b40396e94c8b91ce32f9",
-    measurementId: "G-P2NBXXWM7T"
-  };
+// Fungsi untuk load konfigurasi dari /firebase-config.js
+async function loadFirebaseConfig() {
+  return new Promise((resolve) => {
+    const script = document.createElement('script');
+    script.src = '/firebase-config.js';
+    script.onload = () => resolve(window.firebaseConfig);
+    document.head.appendChild(script);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const firebaseConfig = await loadFirebaseConfig();
 
   let app;
   try {
