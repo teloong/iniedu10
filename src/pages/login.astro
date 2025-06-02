@@ -20,8 +20,8 @@ import Layout from '../layouts/Layout.astro';
     
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script type="module">
-      import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js';
-      import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js';
+      import { initializeApp, getApps } from 'firebase/app';
+      import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
     
       async function loadFirebaseConfig() {
         return new Promise((resolve) => {

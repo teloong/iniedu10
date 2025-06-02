@@ -19,6 +19,7 @@ const { title = 'IniEdu - Platform Pendidikan Online' } = Astro.props;
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
+		<link rel="preload" as="image" href="/images/education-animate.svg" type="image/svg+xml" />
 		<style>
 			/* Reset CSS untuk menghilangkan garis dan outline */
 			*, *::before, *::after {
@@ -43,6 +44,6 @@ const { title = 'IniEdu - Platform Pendidikan Online' } = Astro.props;
 		<main class="flex-grow p-0 m-0">
 			<slot />
 		</main>
-		<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js" onload="if(window.AOS){window.AOS.init({duration:700,once:true,delay:0});}"></script>
+		<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js" defer onload="if(window.AOS){window.AOS.init({duration:700,once:true,delay:0});}"></script>
 	</body>
 </html>

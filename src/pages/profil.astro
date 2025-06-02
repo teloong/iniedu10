@@ -7,9 +7,9 @@ import Layout from '../layouts/Layout.astro';
     <h1 class="text-2xl font-bold text-center mb-6 text-blue-700">Profil Saya</h1>
     <div id="profile-info" class="text-center">Memuat profil...</div>
     <script type="module">
-      import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js';
-      import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js';
-      import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js';
+      import { initializeApp, getApps } from 'firebase/app';
+      import { getAuth, onAuthStateChanged } from 'firebase/auth';
+      import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
       async function loadFirebaseConfig() {
         return new Promise((resolve) => {

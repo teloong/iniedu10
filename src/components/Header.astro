@@ -27,8 +27,8 @@
 </a>
     </div>
     <script type="module">
-      import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js';
-      import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js';
+      import { initializeApp, getApps } from 'firebase/app';
+      import { getAuth, onAuthStateChanged } from 'firebase/auth';
     
       async function loadFirebaseConfig() {
         return new Promise((resolve) => {

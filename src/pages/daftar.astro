@@ -15,8 +15,8 @@ import Layout from '../layouts/Layout.astro';
       Sudah punya akun? <a href="/login" class="text-blue-600 underline">Login</a>
     </p>
     <script type="module">
-      import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js';
-      import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js';
+      import { initializeApp, getApps } from 'firebase/app';
+      import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
 
       async function loadFirebaseConfig() {
         return new Promise((resolve) => {
