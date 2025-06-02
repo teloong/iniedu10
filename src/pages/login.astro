@@ -19,43 +19,6 @@ import Layout from '../layouts/Layout.astro';
 </form>
     
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <script type="module">
-      import { initializeApp, getApps } from 'firebase/app';
-      import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
-    
-      async function loadFirebaseConfig() {
-        return new Promise((resolve) => {
-          const script = document.createElement('script');
-          script.src = '/firebase-config.js';
-          script.onload = () => resolve(window.firebaseConfig);
-          document.head.appendChild(script);
-        });
-      }
-    
-      const firebaseConfig = await loadFirebaseConfig();
-      const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-    
-      const messageDiv = document.getElementById('message');
-      const form = document.getElementById('login-form');
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        try {
-          await signInWithEmailAndPassword(auth, email, password);
-          window.location.href = "/"; // redirect ke halaman utama/profil
-        } catch (error) {
-          messageDiv.textContent = "Login gagal: " + error.message;
-        }
-      });
-    
-      // Redirect jika sudah login
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          window.location.href = "/"; // atau ke /profil
-        }
-      });
-    </script>
+    <script type="module" src="/src/scripts/login.js"></script>
   </section>
 </Layout>
