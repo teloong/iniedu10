@@ -109,4 +109,20 @@ badges.forEach((badgeEl) => {
   });
 });
 </script>
+  <style>
+    @media (max-width: 640px) {
+      .ml-64.justify-center {
+        justify-content: flex-start !important;
+        margin-left: 0 !important;
+        padding-left: 18px !important;
+      }
+      .pl-52.items-start {
+        padding-left: 0 !important;
+      }
+      /* Tambahkan jarak bawah pada badge terakhir di mobile */
+      .flex-wrap.gap-4.mt-4 > span:last-child {
+        margin-bottom: 16px !important;
+      }
+    }
+  </style>
 </Layout>

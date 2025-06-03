@@ -3,8 +3,52 @@ import Layout from '../layouts/Layout.astro';
 title: "Kursus"
 ---
 
-<script src="/firebaseConfig.js" is:inline></script>
-<script type="module" src="/firebase-protect.js"></script>
+<script>
+declare global {
+  interface Window {
+    firebaseConfig: any;
+  }
+}
+window.firebaseConfig = {
+  apiKey: "AIzaSyAlxYWD4bCwpoKEErXDX1_4AZC9wzQTkwA",
+  authDomain: "iniedu.firebaseapp.com",
+  projectId: "iniedu",
+  storageBucket: "iniedu.firebasestorage.app",
+  messagingSenderId: "743403637628",
+  appId: "1:743403637628:web:15b40396e94c8b91ce32f9",
+  measurementId: "G-P2NBXXWM7T"
+};
+</script>
+<script type="module">
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+const firebaseConfig = window.firebaseConfig;
+let app;
+if (!getApps().length) {
+  app = initializeApp(firebaseConfig);
+} else {
+  app = getApps()[0];
+}
+const auth = getAuth(app);
+const loader = document.createElement('div');
+loader.id = 'auth-loading';
+loader.style.cssText = 'width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;position:fixed;top:0;left:0;z-index:9999;background:white;font-size:1.3rem;color:#232b4d;';
+loader.innerText = 'Memeriksa autentikasi...';
+document.body.appendChild(loader);
+let authTimeout = setTimeout(() => {
+  document.getElementById('auth-loading')?.remove();
+  // Tidak tampilkan pesan apapun
+}, 5000);
+onAuthStateChanged(auth, (user) => {
+  clearTimeout(authTimeout);
+  if (!user) {
+    window.location.href = "/login";
+  } else {
+    document.getElementById('auth-loading')?.remove();
+  }
+});
+</script>
 <Layout title="Kursus">
   <section class="relative min-h-[50vh] flex flex-col items-center justify-center py-16 px-4 bg-gradient-to-br from-blue-50 via-white to-blue-100 overflow-hidden" data-aos="fade-up">
     <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-[#232b4d] drop-shadow-lg" data-aos="fade-right">Kursus Unggulan</h1>

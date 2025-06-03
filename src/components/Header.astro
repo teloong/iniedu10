@@ -46,11 +46,39 @@
       <a href="/tentang" class="text-gray-800 hover:text-primary font-medium transition-colors py-2">Tentang</a>
       <a href="/kursus" class="text-gray-800 hover:text-primary font-medium transition-colors py-2">Kursus</a>
       <a href="/perpustakaan" class="text-gray-800 hover:text-primary font-medium transition-colors py-2">Perpustakaan</a>
-      <a href="/login" class="text-blue-600 hover:text-blue-800 font-medium transition-colors py-2">Login</a>
-      <a href="/daftar" class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded px-4 py-2 transition-all">Daftar</a>
+      <a href="/login" class="text-blue-600 hover:text-blue-800 font-medium transition-colors py-2 hide-mobile-auth">Login</a>
+      <a href="/daftar" class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded px-4 py-2 transition-all hide-mobile-auth">Daftar</a>
     </div>
   </div>
 </header>
+
+<style>
+  .hide-mobile-auth {
+    @apply md:hidden;
+  }
+</style>
+<script>
+// Sembunyikan tombol login/daftar di mobile jika user sudah login
+function hideMobileAuthIfLoggedIn() {
+  var profileBtn = document.getElementById('profile-btn');
+  var isLoggedIn = profileBtn && getComputedStyle(profileBtn).display !== 'none' && getComputedStyle(profileBtn).visibility !== 'hidden';
+  document.querySelectorAll('.hide-mobile-auth').forEach(function(el) {
+    if (isLoggedIn) {
+      el.classList.add('hidden');
+    } else {
+      el.classList.remove('hidden');
+    }
+  });
+}
+window.addEventListener('DOMContentLoaded', hideMobileAuthIfLoggedIn);
+// Jalankan juga setiap kali menu mobile dibuka
+var mobileMenuButton = document.getElementById('mobile-menu-button');
+if(mobileMenuButton) {
+  mobileMenuButton.addEventListener('click', function() {
+    setTimeout(hideMobileAuthIfLoggedIn, 10);
+  });
+}
+</script>
 
 <script>
   // Toggle menu mobile

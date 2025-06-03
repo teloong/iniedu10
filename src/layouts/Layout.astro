@@ -13,12 +13,17 @@ const { title = 'IniEdu - Platform Pendidikan Online' } = Astro.props;
 <!doctype html>
 <html lang="id">
 	<head>
+		<!-- Optimasi Google Fonts: preconnect dan display=swap -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 		<meta charset="UTF-8" />
 		<meta name="description" content="IniEdu - Platform Pendidikan Online Terbaik" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/png" href="/favicon.png" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		<!-- Akhir optimasi Google Fonts -->
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
 		<link rel="preload" as="image" href="/images/education-animate.svg" type="image/svg+xml" />
 		<!-- Firebase CDN -->
