@@ -1,27 +1,25 @@
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-// Fungsi untuk load konfigurasi dari /firebase-config.js
+// Fungsi untuk load konfigurasi dari /firebaseConfig.js
 async function loadFirebaseConfig() {
   return new Promise((resolve) => {
     const script = document.createElement('script');
-    script.src = '/firebase-config.js';
+    script.src = '/firebaseConfig.js'; // <- perbaiki di sini!
     script.onload = () => resolve(window.firebaseConfig);
     document.head.appendChild(script);
   });
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // Ambil konfigurasi dari endpoint dinamis
   const firebaseConfig = await loadFirebaseConfig();
   console.log("Config di protect.js:", firebaseConfig);
 
-  // Cegah inisialisasi ulang
   let app;
-  try {
+  if (!getApps().length) {
     app = initializeApp(firebaseConfig);
-  } catch (e) {
-    app = initializeApp(firebaseConfig);
+  } else {
+    app = getApps()[0];
   }
   const auth = getAuth(app);
 
