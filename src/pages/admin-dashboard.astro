@@ -1,0 +1,112 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// ===== Firebase Admin SDK untuk server-side (ambil user) =====
+import admin from 'firebase-admin';
+// Menggunakan environment variable untuk kredensial firebase admin
+const serviceAccount = import.meta.env.FIREBASE_SERVICE_ACCOUNT_KEY ? JSON.parse(import.meta.env.FIREBASE_SERVICE_ACCOUNT_KEY) : null;
+if (!serviceAccount) throw new Error('FIREBASE_SERVICE_ACCOUNT_KEY env belum di-set atau tidak valid!');
+
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+  });
+}
+
+// Ambil semua user (max 10 user terbaru)
+const listUsers = async () => {
+  const result = await admin.auth().listUsers(10);
+  // Urutkan berdasarkan tanggal pembuatan terbaru
+  return result.users.sort((a, b) => b.metadata.creationTime.localeCompare(a.metadata.creationTime));
+};
+
+const users = await listUsers();
+const userCount = users.length; // Hanya menghitung jumlah user yang diambil (max 10, default listUsers)
+---
+
+<Layout title="Admin Dashboard - IniEdu">
+  <section class="max-w-6xl mx-auto mt-12">
+    <h1 class="text-3xl font-bold text-center mb-8 text-blue-700">Admin Dashboard</h1>
+    <!-- Statistik Ringkas Real-time -->
+    <div class="flex flex-wrap gap-4 mb-8 justify-center">
+      <div class="flex-1 min-w-[180px] bg-blue-100 rounded-xl p-4 shadow text-center">
+        <div class="text-2xl font-bold text-blue-700">{userCount}</div>
+        <div class="text-gray-600">User Terdaftar</div>
+      </div>
+      <div class="flex-1 min-w-[180px] bg-yellow-100 rounded-xl p-4 shadow text-center">
+        <div id="videoCount" class="text-2xl font-bold text-yellow-700">...</div>
+        <div class="text-gray-600">Video Pembelajaran</div>
+      </div>
+      <div class="flex-1 min-w-[180px] bg-purple-100 rounded-xl p-4 shadow text-center">
+        <div class="text-2xl font-bold text-purple-700">-</div>
+        <div class="text-gray-600">Total Transaksi</div>
+      </div>
+    </div>
+    <!-- Navigasi Admin -->
+    <div class="flex flex-wrap gap-4 justify-center mb-8">
+      <a href="/admin-video" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow transition-all font-semibold">Kelola Video Pembelajaran</a>
+      <a href="#" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow transition-all font-semibold">Kelola User</a>
+      <a href="#" class="bg-gray-100 text-gray-700 px-4 py-2 rounded shadow transition-all font-semibold">Laporan Transaksi</a>
+      <a href="#" class="bg-gray-100 text-gray-700 px-4 py-2 rounded shadow transition-all font-semibold">Pengaturan</a>
+    </div>
+    <!-- Tabel Data Ringkas -->
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="bg-white rounded-xl shadow p-4 mb-8">
+        <div class="font-semibold mb-2">User Terbaru</div>
+        <table class="min-w-full text-sm">
+          <thead>
+            <tr class="text-left text-gray-500 border-b">
+              <th>Nama</th><th>Email</th><th>Tanggal Daftar</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map(user => (
+              <tr>
+                <td>{user.displayName || '-'}</td>
+                <td>{user.email}</td>
+                <td>{user.metadata.creationTime}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="bg-white rounded-xl shadow p-4 mb-8">
+        <div class="font-semibold mb-2">Transaksi Terakhir</div>
+        <div class="text-gray-400 text-center">Belum ada data transaksi.</div>
+      </div>
+    </div>
+  </section>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
+<script type="module">
+  const supabaseUrl = 'https://jcfizceoycwdvpqpwhrj.supabase.co';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA';
+  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+  // Loading state
+  const videoCountEl = document.getElementById('videoCount');
+  if (videoCountEl) videoCountEl.textContent = '...';
+
+  async function fetchVideoCount() {
+    try {
+      const { count, error } = await supabase
+        .from('videos')
+        .select('*', { count: 'exact', head: true });
+      if (error) {
+        console.error('Supabase fetch error:', error);
+        if (videoCountEl) videoCountEl.textContent = '-';
+        return;
+      }
+      if (typeof count === 'number') {
+        if (videoCountEl) videoCountEl.textContent = count;
+      } else {
+        if (videoCountEl) videoCountEl.textContent = '-';
+      }
+    } catch (err) {
+      console.error('Fetch video count exception:', err);
+      if (videoCountEl) videoCountEl.textContent = '-';
+    }
+  }
+  fetchVideoCount();
+</script>
+
+</Layout>
