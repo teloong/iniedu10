@@ -1,0 +1,192 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<html lang="id">
+  <head>
+    <title>Pembayaran Kursus</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <Layout title="Pembayaran Kursus">
+      <section
+        class="flex flex-col items-center justify-center min-h-[60vh] py-12"
+      >
+        <div
+          class="bg-white rounded-2xl shadow-xl p-8 border-b-4 border-blue-400 w-full max-w-xs mx-auto flex flex-col items-center"
+        >
+          <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" class="mb-4">
+  <circle cx="22" cy="22" r="22" fill="#22c55e" opacity=".13"/>
+  <rect x="10" y="16" width="24" height="14" rx="4" fill="#22c55e"/>
+  <rect x="14" y="20" width="16" height="4" rx="2" fill="#fff"/>
+  <rect x="26" y="23" width="4" height="2" rx="1" fill="#16a34a"/>
+  <rect x="14" y="23" width="6" height="2" rx="1" fill="#a7f3d0"/>
+  <rect x="12" y="18" width="20" height="2" rx="1" fill="#16a34a" opacity=".4"/>
+</svg>
+          <h1 class="text-lg font-bold mb-2 text-blue-700 text-center">
+            Pembayaran Kursus
+          </h1>
+          <p class="mb-4 text-gray-600 text-center text-sm">
+            Lengkapi data berikut untuk konfirmasi pembelian kursus Anda.
+          </p>
+          <div id="pembayaran-info" class="mb-3 text-gray-700 text-center">
+          </div>
+          <form id="form-pembayaran" class="space-y-3 w-full">
+            <div>
+              <label class="block text-gray-600 mb-1">Nama Kursus</label>
+              <div id="nama_kursus_display" class="w-full border rounded px-3 py-2 bg-gray-50 text-gray-700 cursor-default select-none flex items-center" style="min-height:2.5rem;"></div>
+<input type="hidden" id="nama_kursus" name="nama_kursus" />
+            </div>
+            <div>
+              <label class="block text-gray-600 mb-1">ID Kursus</label>
+              <div id="id_kursus_display" class="w-full border rounded px-3 py-2 bg-gray-50 text-gray-700 cursor-default select-none flex items-center" style="min-height:2.5rem;"></div>
+<input type="hidden" id="id_kursus" name="id_kursus" />
+            </div>
+            <div>
+              <label class="block text-gray-600 mb-1">Harga</label>
+              <div id="harga_display" class="w-full border rounded px-3 py-2 bg-gray-50 text-gray-700 cursor-default select-none flex items-center" style="min-height:2.5rem;"></div>
+<input type="hidden" id="harga" name="harga" />
+            </div>
+            <div>
+              <label class="block text-gray-600 mb-1">Nama Lengkap</label>
+              <input
+                type="text"
+                id="nama_lengkap"
+                name="nama_lengkap"
+                class="w-full border rounded px-3 py-2"
+                required
+              />
+            </div>
+            <div>
+              <label class="block text-gray-600 mb-1">Email</label>
+              <div id="email_display" class="w-full border rounded px-3 py-2 bg-gray-50 text-gray-700 cursor-default select-none flex items-center" style="min-height:2.5rem;"></div>
+<input type="hidden" id="email" name="email" />
+            </div>
+            <button
+              type="submit"
+              class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mt-4"
+              >Konfirmasi Pembelian</button
+            >
+          </form>
+          <div id="pembayaran-status" class="mt-4"></div>
+        </div>
+        <script type="module">
+          // Ambil data kursus dari query string
+          const params = new URLSearchParams(window.location.search);
+          // Set display value dan hidden input value
+          document.getElementById('nama_kursus_display').innerText = params.get('nama_kursus') || '';
+          document.getElementById('nama_kursus').value = params.get('nama_kursus') || '';
+
+          document.getElementById('id_kursus_display').innerText = params.get('id_kursus') || '';
+          document.getElementById('id_kursus').value = params.get('id_kursus') || '';
+
+          document.getElementById('harga_display').innerText = params.get('harga') || '';
+          document.getElementById('harga').value = params.get('harga') || '';
+
+          // Firebase Modular Auth
+          import {
+            initializeApp,
+            getApps,
+          } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+          import {
+            getAuth,
+            onAuthStateChanged,
+          } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+          const firebaseConfig = window.firebaseConfig || {
+            apiKey: "AIzaSyAlxYWD4bCwpoKEErXDX1_4AZC9wzQTkwA",
+            authDomain: "iniedu.firebaseapp.com",
+            projectId: "iniedu",
+            storageBucket: "iniedu.firebasestorage.app",
+            messagingSenderId: "743403637628",
+            appId: "1:743403637628:web:15b40396e94c8b91ce32f9",
+            measurementId: "G-P2NBXXWM7T",
+          };
+          let app;
+          if (!getApps().length) {
+            app = initializeApp(firebaseConfig);
+          } else {
+            app = getApps()[0];
+          }
+          const auth = getAuth(app);
+          onAuthStateChanged(auth, (user) => {
+            if (!user) {
+              window.location.href = "/login";
+            } else {
+              document.getElementById("nama_lengkap").value = user.displayName || "";
+document.getElementById('email_display').innerText = user.email || '';
+document.getElementById('email').value = user.email || '';
+
+            }
+          });
+
+          // Supabase Insert
+          import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+          const supabaseUrl = "https://jcfizceoycwdvpqpwhrj.supabase.co";
+          const supabaseKey =
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA";
+          const supabase = createClient(supabaseUrl, supabaseKey);
+
+          document
+            .getElementById("form-pembayaran")
+            .addEventListener("submit", async (e) => {
+              e.preventDefault();
+              const user = auth.currentUser;
+              if (!user) {
+                document.getElementById("pembayaran-status").innerHTML =
+                  '<span class="text-red-600">User belum login!</span>';
+                return;
+              }
+              const id_kursus = document.getElementById("id_kursus").value;
+              // Cek apakah sudah pernah beli kursus ini
+              const { data: pembelian, error: cekErr } = await supabase
+                .from("pembelian_kursus")
+                .select("id")
+                .eq("user_uid", user.uid)
+                .eq("id_kursus", id_kursus);
+              if (cekErr) {
+                document.getElementById("pembayaran-status").innerHTML =
+                  '<span class="text-red-600">Gagal cek database: ' + cekErr.message + '</span>';
+                return;
+              }
+              if (pembelian && pembelian.length > 0) {
+                document.getElementById("pembayaran-status").innerHTML =
+                  '<span class="text-yellow-600">Anda sudah pernah membeli kursus ini.</span>';
+                return;
+              }
+              const data = {
+                user_uid: user.uid,
+                email: user.email,
+                nama_lengkap: document.getElementById("nama_lengkap").value,
+                nama_kursus: document.getElementById("nama_kursus").value,
+                id_kursus: id_kursus,
+                harga: document.getElementById("harga").value,
+                status_pembayaran: "paid",
+                waktu_pembelian: new Date().toISOString(),
+                payment_reference: "",
+              };
+              const { error } = await supabase
+                .from("pembelian_kursus")
+                .insert([data]);
+              if (error) {
+                let msg = error.message;
+                if (msg.includes("duplicate key value") || msg.includes("unique_user_kursus")) {
+                  msg = "Anda sudah pernah membeli kursus ini.";
+                } else {
+                  msg = "Gagal menyimpan ke database: " + msg;
+                }
+                document.getElementById("pembayaran-status").innerHTML =
+                  '<span class="text-red-600">' + msg + "</span>";
+              } else {
+                document.getElementById("pembayaran-status").innerHTML =
+                  '<span class="text-green-600">Pembelian berhasil disimpan! Silakan cek riwayat pembelian Anda.</span>';
+                setTimeout(() => {
+                  window.location.replace("/kursus");
+                }, 2000);
+              }
+            });
+        </script>
+      </section>
+    </Layout>
+  </body>
+</html>

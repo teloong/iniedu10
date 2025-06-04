@@ -60,6 +60,7 @@ onAuthStateChanged(auth, (user) => {
         <div class="font-bold text-lg mt-4 mb-2 text-blue-700">Konten Pembelajaran Digital</div>
         <div class="text-gray-600 text-center mb-4 text-base">Materi multimedia, video, dan modul interaktif untuk pengalaman belajar yang menyenangkan.</div>
         <a href="materi-digital" class="mt-auto px-5 py-2 rounded-full font-semibold bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md transition-all duration-200 hover:scale-105 hover:shadow-xl hover:from-cyan-400 hover:to-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-300">Akses Materi</a>
+      <a href="/pembayaran?nama_kursus=Konten%20Pembelajaran%20Digital&id_kursus=1&harga=0" class="mt-2 px-5 py-2 rounded-full font-semibold bg-gradient-to-r from-green-500 to-emerald-400 text-white shadow-md transition-all duration-200 hover:scale-105 hover:shadow-xl hover:from-emerald-400 hover:to-green-500 focus:outline-none focus:ring-4 focus:ring-green-300" data-id-kursus="1">Beli</a>
       </div>
       <!-- Card 2: Simulasi Ujian -->
       <div class="bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center transition-all duration-300 border-b-4 border-yellow-400 hover:scale-105 hover:-rotate-x-3 hover:rotate-y-3 hover:shadow-[0_8px_32px_0_rgba(255,179,0,0.17),0_2px_12px_0_rgba(255,179,0,0.13)] hover:border-b-[6px] hover:border-yellow-500 hover:bg-gradient-to-br hover:from-white hover:to-yellow-50 group relative overflow-hidden" data-aos="zoom-in" data-aos-delay="200">
@@ -67,6 +68,7 @@ onAuthStateChanged(auth, (user) => {
         <div class="font-bold text-lg mt-4 mb-2 text-yellow-700">Simulasi Ujian</div>
         <div class="text-gray-600 text-center mb-4 text-base">Latihan soal, try out, dan evaluasi otomatis untuk persiapan ujian terbaik Anda.</div>
         <a href="/kursus/simulasi-ujian" class="mt-auto px-5 py-2 rounded-full font-semibold bg-gradient-to-r from-yellow-400 to-orange-400 text-white shadow-md transition-all duration-200 hover:scale-105 hover:shadow-xl hover:from-orange-400 hover:to-yellow-400 focus:outline-none focus:ring-4 focus:ring-yellow-200">Akses Materi</a>
+      <a href="/pembayaran?nama_kursus=Simulasi%20Ujian&id_kursus=2&harga=0" class="mt-2 px-5 py-2 rounded-full font-semibold bg-gradient-to-r from-green-500 to-emerald-400 text-white shadow-md transition-all duration-200 hover:scale-105 hover:shadow-xl hover:from-emerald-400 hover:to-green-500 focus:outline-none focus:ring-4 focus:ring-green-300" data-id-kursus="2">Beli</a>
       </div>
       <!-- Card 3: Kelas Menulis/Workshop -->
       <div class="bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center transition-all duration-300 border-b-4 border-pink-400 hover:scale-105 hover:-rotate-x-3 hover:rotate-y-3 hover:shadow-[0_8px_32px_0_rgba(224,64,251,0.17),0_2px_12px_0_rgba(224,64,251,0.13)] hover:border-b-[6px] hover:border-pink-500 hover:bg-gradient-to-br hover:from-white hover:to-pink-50 group relative overflow-hidden" data-aos="zoom-in" data-aos-delay="300">
@@ -74,7 +76,9 @@ onAuthStateChanged(auth, (user) => {
         <div class="font-bold text-lg mt-4 mb-2 text-pink-700">Kelas Menulis / Workshop</div>
         <div class="text-gray-600 text-center mb-4 text-base">Bimbingan menulis kreatif, workshop, dan ruang kolaborasi bersama mentor berpengalaman.</div>
         <a href="/kursus/kelas-menulis" class="mt-auto px-5 py-2 rounded-full font-semibold bg-gradient-to-r from-pink-500 to-purple-400 text-white shadow-md transition-all duration-200 hover:scale-105 hover:shadow-xl hover:from-purple-400 hover:to-pink-500 focus:outline-none focus:ring-4 focus:ring-pink-200">Akses Materi</a>
+      <a href="/pembayaran?nama_kursus=Kelas%20Menulis%20%2F%20Workshop&id_kursus=3&harga=0" class="mt-2 px-5 py-2 rounded-full font-semibold bg-gradient-to-r from-green-500 to-emerald-400 text-white shadow-md transition-all duration-200 hover:scale-105 hover:shadow-xl hover:from-emerald-400 hover:to-green-500 focus:outline-none focus:ring-4 focus:ring-green-300" data-id-kursus="3">Beli</a>
       </div>
     </div>
   </section>
+<script type="module" src="/cek-pembelian.js"></script>
 </Layout>
