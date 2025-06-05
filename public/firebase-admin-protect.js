@@ -6,7 +6,7 @@ import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10
 async function loadFirebaseConfig() {
   return new Promise((resolve) => {
     const script = document.createElement('script');
-    script.src = '/firebase-config.js';
+    script.src = '/firebaseConfig.js';
     script.onload = () => resolve(window.firebaseConfig);
     document.head.appendChild(script);
   });

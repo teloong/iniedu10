@@ -180,6 +180,15 @@ document.getElementById('email').value = user.email || '';
               } else {
                 document.getElementById("pembayaran-status").innerHTML =
                   '<span class="text-green-600">Pembelian berhasil disimpan! Silakan cek riwayat pembelian Anda.</span>';
+                // Trigger event custom agar halaman kursus update tombol beli secara real-time
+                try {
+                  // Jika dibuka dari tab lain
+                  if (window.opener) {
+                    window.opener.dispatchEvent(new Event('pembelian:berhasil'));
+                  }
+                  // Untuk tab yang sama
+                  window.dispatchEvent(new Event('pembelian:berhasil'));
+                } catch (e) { /* ignore */ }
                 setTimeout(() => {
                   window.location.replace("/kursus");
                 }, 2000);

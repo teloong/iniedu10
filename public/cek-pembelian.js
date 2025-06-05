@@ -19,32 +19,44 @@ if (!getApps().length) {
 }
 const auth = getAuth(app);
 
-onAuthStateChanged(auth, async (user) => {
+async function cekPembelianDanUpdateTombol(user) {
   if (!user) return;
-  // Ambil semua tombol beli
   const beliButtons = document.querySelectorAll('[data-id-kursus]');
   if (!beliButtons.length) return;
-
-  // Query pembelian user
+  // Disable semua tombol beli sebelum pengecekan selesai
+  beliButtons.forEach(btn => {
+    btn.style.pointerEvents = 'none';
+    btn.style.opacity = '0.6';
+    btn.setAttribute('aria-disabled', 'true');
+  });
   const { data, error } = await supabase
     .from('pembelian_kursus')
     .select('id_kursus')
     .eq('user_uid', user.uid);
-
-  console.log('Cek Pembelian - Data:', data, 'Error:', error);
   const boughtIds = (data || []).map(row => String(row.id_kursus));
-  console.log('Cek Pembelian - boughtIds:', boughtIds);
-
   beliButtons.forEach(btn => {
     const id = btn.getAttribute('data-id-kursus');
-    console.log('Cek Pembelian - Button id:', id);
-    // Gunakan == agar "2" dan 2 dianggap sama
     if (boughtIds.some(bid => bid == id)) {
-      // Ganti tombol dengan badge
-      const badge = document.createElement('span');
-      badge.className = 'mt-2 px-5 py-2 rounded-full font-semibold bg-green-100 text-green-700 shadow-md';
-      badge.innerText = 'Sudah Dibeli';
-      btn.parentNode.replaceChild(badge, btn);
+      const warning = document.createElement('span');
+      warning.className = 'mt-2 px-5 py-2 rounded bg-red-100 text-red-600 font-semibold block text-center border border-red-300';
+      warning.innerText = 'Anda sudah pernah membeli kursus ini.';
+      btn.parentNode.replaceChild(warning, btn);
+    } else {
+      // Enable tombol beli jika belum dibeli
+      btn.style.pointerEvents = '';
+      btn.style.opacity = '';
+      btn.removeAttribute('aria-disabled');
     }
   });
+}
+
+
+onAuthStateChanged(auth, (user) => {
+  cekPembelianDanUpdateTombol(user);
+});
+
+// Tambahkan event listener custom agar bisa update real-time setelah pembayaran
+window.addEventListener('pembelian:berhasil', async function() {
+  const user = auth.currentUser;
+  await cekPembelianDanUpdateTombol(user);
 });

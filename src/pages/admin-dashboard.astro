@@ -1,5 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import AdminDashboardCharts from '../components/AdminDashboardCharts.astro';
+import AdminSidebar from '../components/AdminSidebar.astro';
+import { supabase } from '../utils/supabase.js';
 
 // ===== Firebase Admin SDK untuk server-side (ambil user) =====
 import admin from 'firebase-admin';
@@ -22,48 +25,139 @@ const listUsers = async () => {
 
 const users = await listUsers();
 const userCount = users.length; // Hanya menghitung jumlah user yang diambil (max 10, default listUsers)
+
+// Ambil jumlah video dari Supabase
+const { count: videoCount } = await supabase
+  .from('videos')
+  .select('*', { count: 'exact', head: true });
+
+// Ambil jumlah kursus dari Supabase (tabel: kursus)
+const { count: kursusCount } = await supabase
+  .from('kursus')
+  .select('*', { count: 'exact', head: true });
 ---
 
 <Layout title="Admin Dashboard - IniEdu">
-  <section class="max-w-6xl mx-auto mt-12">
-    <h1 class="text-3xl font-bold text-center mb-8 text-blue-700">Admin Dashboard</h1>
-    <!-- Statistik Ringkas Real-time -->
-    <div class="flex flex-wrap gap-4 mb-8 justify-center">
-      <div class="flex-1 min-w-[180px] bg-blue-100 rounded-xl p-4 shadow text-center">
-        <div class="text-2xl font-bold text-blue-700">{userCount}</div>
-        <div class="text-gray-600">User Terdaftar</div>
-      </div>
-      <div class="flex-1 min-w-[180px] bg-yellow-100 rounded-xl p-4 shadow text-center">
-        <div id="videoCount" class="text-2xl font-bold text-yellow-700">...</div>
-        <div class="text-gray-600">Video Pembelajaran</div>
-      </div>
-      <div class="flex-1 min-w-[180px] bg-purple-100 rounded-xl p-4 shadow text-center">
-        <div class="text-2xl font-bold text-purple-700">-</div>
-        <div class="text-gray-600">Total Transaksi</div>
+
+<!-- Proteksi tetap ada di atas -->
+<div id="dashboard-root"></div>
+<script type="module">
+  import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js';
+  import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js';
+  if (!window.location.pathname.includes('/admin-dashboard')) { sessionStorage.removeItem('adminReloaded'); }
+  async function loadFirebaseConfig() {
+    return new Promise((resolve) => {
+      if (window.firebaseConfig) return resolve(window.firebaseConfig);
+      const script = document.createElement('script');
+      script.src = '/firebaseConfig.js';
+      script.onload = () => resolve(window.firebaseConfig);
+      document.head.appendChild(script);
+    });
+  }
+  let app, auth;
+  (async () => {
+    const firebaseConfig = await loadFirebaseConfig();
+    app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = '/login';
+      } else if (user.email !== 'lemindes@gmail.com') {
+        alert('Akses khusus admin.');
+        window.location.href = '/profil';
+      } else {
+        if (!sessionStorage.getItem('adminReloaded')) {
+          sessionStorage.setItem('adminReloaded', '1');
+          window.location.reload();
+        }
+      }
+    });
+  })();
+</script>
+
+<!-- SIDEBAR & MAIN DASHBOARD -->
+<div class="min-h-screen bg-gray-50 flex">
+  <div class="sticky top-0 h-screen hidden md:block">
+    <AdminSidebar active="dashboard" />
+  </div>
+  <main class="flex-1 overflow-x-auto">
+    <div class="max-w-7xl mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8 text-blue-900">Dashboard Admin</h1>
+  <!-- Statistik Card -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
+      <div class="text-blue-600 text-3xl mb-2"><svg width="32" height="32" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#dbeafe"/><path d="M12 12a4 4 0 100-8 4 4 0 000 8zm0 2c-3.314 0-6 1.343-6 3v1a1 1 0 001 1h10a1 1 0 001-1v-1c0-1.657-2.686-3-6-3z" fill="#2563eb"/></svg></div>
+      <div class="text-lg font-bold">{userCount}</div>
+      <div class="text-gray-500">User Terdaftar</div>
+    </div>
+    <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
+      <div class="text-yellow-600 text-3xl mb-2"><svg width="32" height="32" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#fef9c3"/><path d="M7 17V7a2 2 0 012-2h6a2 2 0 012 2v10" stroke="#ca8a04" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="text-lg font-bold">{videoCount}</div>
+      <div class="text-gray-500">Video Pembelajaran</div>
+    </div>
+    <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
+      <div class="text-green-600 text-3xl mb-2"><svg width="32" height="32" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#dcfce7"/><path d="M8 17V7a2 2 0 012-2h4a2 2 0 012 2v10" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="text-lg font-bold">{kursusCount}</div>
+      <div class="text-gray-500">Total Kursus</div>
+    </div>
+    <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
+      <div class="text-purple-600 text-3xl mb-2"><svg width="32" height="32" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ede9fe"/><path d="M8 12h8M12 8v8" stroke="#7c3aed" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="text-lg font-bold">-</div>
+      <div class="text-gray-500">Fitur Lain</div>
+    </div>
+  </div>
+  <!-- Grafik & Kalender -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="md:col-span-2 bg-white rounded-xl shadow p-6">
+      <div class="font-semibold mb-2 text-blue-700">Grafik Aktivitas</div>
+      <canvas id="activityChart" height="120"></canvas>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script is:inline>
+        document.addEventListener('DOMContentLoaded', function() {
+          const ctx = document.getElementById('activityChart').getContext('2d');
+          new window.Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'],
+              datasets: [{
+                label: 'Aktivitas User',
+                data: [2, 4, 7, 3, 5, 6, 4], // Dummy, bisa diganti data real
+                borderColor: '#2563eb',
+                backgroundColor: 'rgba(37,99,235,0.1)',
+                fill: true,
+                tension: 0.4
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: { legend: { display: false } }
+            }
+          });
+        });
+      </script>
+    </div>
+    <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
+      <div class="font-semibold mb-2 text-purple-700">Kalender Mini</div>
+      <div class="w-full">
+        <iframe src="https://calendar.google.com/calendar/embed?src=id.indonesian%23holiday%40group.v.calendar.google.com&ctz=Asia/Jakarta" style="border:0" width="100%" height="170" frameborder="0" scrolling="no"></iframe>
       </div>
     </div>
-    <!-- Navigasi Admin -->
-    <div class="flex flex-wrap gap-4 justify-center mb-8">
-      <a href="/admin-video" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow transition-all font-semibold">Kelola Video Pembelajaran</a>
-      <a href="#" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow transition-all font-semibold">Kelola User</a>
-      <a href="#" class="bg-gray-100 text-gray-700 px-4 py-2 rounded shadow transition-all font-semibold">Laporan Transaksi</a>
-      <a href="#" class="bg-gray-100 text-gray-700 px-4 py-2 rounded shadow transition-all font-semibold">Pengaturan</a>
-    </div>
-    <!-- Tabel Data Ringkas -->
-    <div class="grid md:grid-cols-2 gap-6">
-      <div class="bg-white rounded-xl shadow p-4 mb-8">
-        <div class="font-semibold mb-2">User Terbaru</div>
-        <table class="min-w-full text-sm">
-          <thead>
-            <tr class="text-left text-gray-500 border-b">
-              <th>Nama</th><th>Email</th><th>Tanggal Daftar</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map(user => (
-              <tr>
-                <td>{user.displayName || '-'}</td>
-                <td>{user.email}</td>
+  </div>
+  <!-- Tabel Data User Terbaru & Transaksi (dummy) -->
+  <div class="grid md:grid-cols-2 gap-6">
+    <div class="bg-white rounded-xl shadow p-4 mb-8">
+      <div class="font-semibold mb-2">User Terbaru</div>
+      <table class="min-w-full text-sm">
+        <thead>
+          <tr class="text-left text-gray-500 border-b">
+            <th>Nama</th><th>Email</th><th>Tanggal Daftar</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users.map(user => (
+            <tr>
+              <td>{user.displayName || '-'}</td>
+              <td>{user.email}</td>
                 <td>{user.metadata.creationTime}</td>
               </tr>
             ))}
