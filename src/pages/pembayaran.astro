@@ -81,8 +81,34 @@ import Layout from "../layouts/Layout.astro";
           document.getElementById('id_kursus_display').innerText = params.get('id_kursus') || '';
           document.getElementById('id_kursus').value = params.get('id_kursus') || '';
 
-          document.getElementById('harga_display').innerText = params.get('harga') || '';
-          document.getElementById('harga').value = params.get('harga') || '';
+          document.getElementById('harga_display').innerText = 'Memuat harga...';
+          document.getElementById('harga').value = '';
+          const idKursus = params.get('id_kursus');
+          if (idKursus) {
+            // Supabase fetch kursus
+            import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm').then(({ createClient }) => {
+              const supabaseUrl = "https://jcfizceoycwdvpqpwhrj.supabase.co";
+              const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA";
+              const supabase = createClient(supabaseUrl, supabaseKey);
+              supabase
+                .from('kursus')
+                .select('harga')
+                .eq('id', idKursus)
+                .single()
+                .then(({ data, error }) => {
+                  if (error || !data) {
+                    document.getElementById('harga_display').innerText = 'Gagal mengambil harga';
+                    document.getElementById('harga').value = '';
+                  } else {
+                    document.getElementById('harga_display').innerText = data.harga;
+                    document.getElementById('harga').value = data.harga;
+                  }
+                });
+            });
+          } else {
+            document.getElementById('harga_display').innerText = '';
+            document.getElementById('harga').value = '';
+          }
 
           // Firebase Modular Auth
           import {
@@ -137,61 +163,32 @@ document.getElementById('email').value = user.email || '';
                   '<span class="text-red-600">User belum login!</span>';
                 return;
               }
-              const id_kursus = document.getElementById("id_kursus").value;
-              // Cek apakah sudah pernah beli kursus ini
-              const { data: pembelian, error: cekErr } = await supabase
-                .from("pembelian_kursus")
-                .select("id")
-                .eq("user_uid", user.uid)
-                .eq("id_kursus", id_kursus);
-              if (cekErr) {
-                document.getElementById("pembayaran-status").innerHTML =
-                  '<span class="text-red-600">Gagal cek database: ' + cekErr.message + '</span>';
-                return;
-              }
-              if (pembelian && pembelian.length > 0) {
-                document.getElementById("pembayaran-status").innerHTML =
-                  '<span class="text-yellow-600">Anda sudah pernah membeli kursus ini.</span>';
-                return;
-              }
-              const data = {
-                user_uid: user.uid,
-                email: user.email,
-                nama_lengkap: document.getElementById("nama_lengkap").value,
-                nama_kursus: document.getElementById("nama_kursus").value,
-                id_kursus: id_kursus,
-                harga: document.getElementById("harga").value,
-                status_pembayaran: "paid",
-                waktu_pembelian: new Date().toISOString(),
-                payment_reference: "",
-              };
-              const { error } = await supabase
-                .from("pembelian_kursus")
-                .insert([data]);
-              if (error) {
-                let msg = error.message;
-                if (msg.includes("duplicate key value") || msg.includes("unique_user_kursus")) {
-                  msg = "Anda sudah pernah membeli kursus ini.";
+              // Ambil data dari form
+              const nama_lengkap = document.getElementById("nama_lengkap").value;
+              const email = user.email;
+              const amount = parseInt(document.getElementById("harga").value);
+              document.getElementById("pembayaran-status").innerHTML =
+                '<span class="text-blue-600">Membuat invoice, mohon tunggu...</span>';
+              try {
+                const res = await fetch('https://jcfizceoycwdvpqpwhrj.functions.supabase.co/create_invoice', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    name: nama_lengkap,
+                    email: email,
+                    amount: amount
+                  })
+                });
+                const data = await res.json();
+                if (data && data.invoice_url) {
+                  window.location.href = data.invoice_url;
                 } else {
-                  msg = "Gagal menyimpan ke database: " + msg;
+                  document.getElementById("pembayaran-status").innerHTML =
+                    '<span class="text-red-600">Gagal membuat invoice. Silakan coba lagi.</span>';
                 }
+              } catch (err) {
                 document.getElementById("pembayaran-status").innerHTML =
-                  '<span class="text-red-600">' + msg + "</span>";
-              } else {
-                document.getElementById("pembayaran-status").innerHTML =
-                  '<span class="text-green-600">Pembelian berhasil disimpan! Silakan cek riwayat pembelian Anda.</span>';
-                // Trigger event custom agar halaman kursus update tombol beli secara real-time
-                try {
-                  // Jika dibuka dari tab lain
-                  if (window.opener) {
-                    window.opener.dispatchEvent(new Event('pembelian:berhasil'));
-                  }
-                  // Untuk tab yang sama
-                  window.dispatchEvent(new Event('pembelian:berhasil'));
-                } catch (e) { /* ignore */ }
-                setTimeout(() => {
-                  window.location.replace("/kursus");
-                }, 2000);
+                  '<span class="text-red-600">Terjadi kesalahan saat membuat invoice.</span>';
               }
             });
         </script>
