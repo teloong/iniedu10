@@ -65,7 +65,9 @@ import Layout from "../layouts/Layout.astro";
             </div>
             <button
               type="submit"
+              id="submit-btn"
               class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mt-4"
+              disabled
               >Konfirmasi Pembelian</button
             >
           </form>
@@ -75,40 +77,48 @@ import Layout from "../layouts/Layout.astro";
           // Ambil data kursus dari query string
           const params = new URLSearchParams(window.location.search);
           // Set display value dan hidden input value
-          document.getElementById('nama_kursus_display').innerText = params.get('nama_kursus') || '';
-          document.getElementById('nama_kursus').value = params.get('nama_kursus') || '';
-
           document.getElementById('id_kursus_display').innerText = params.get('id_kursus') || '';
-          document.getElementById('id_kursus').value = params.get('id_kursus') || '';
+document.getElementById('id_kursus').value = params.get('id_kursus') || '';
 
-          document.getElementById('harga_display').innerText = 'Memuat harga...';
+document.getElementById('harga_display').innerText = 'Memuat harga...';
+document.getElementById('harga').value = '';
+document.getElementById('nama_kursus_display').innerText = 'Memuat nama kursus...';
+document.getElementById('nama_kursus').value = '';
+const idKursus = params.get('id_kursus');
+if (idKursus) {
+  // Supabase fetch kursus
+  import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm').then(({ createClient }) => {
+    const supabaseUrl = "https://jcfizceoycwdvpqpwhrj.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA";
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    supabase
+      .from('kursus')
+      .select('nama_kursus,harga')
+      .eq('id', idKursus)
+      .single()
+      .then(({ data, error }) => {
+        const submitBtn = document.getElementById('submit-btn');
+        if (error || !data) {
+          document.getElementById('harga_display').innerText = 'Gagal mengambil harga';
           document.getElementById('harga').value = '';
-          const idKursus = params.get('id_kursus');
-          if (idKursus) {
-            // Supabase fetch kursus
-            import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm').then(({ createClient }) => {
-              const supabaseUrl = "https://jcfizceoycwdvpqpwhrj.supabase.co";
-              const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA";
-              const supabase = createClient(supabaseUrl, supabaseKey);
-              supabase
-                .from('kursus')
-                .select('harga')
-                .eq('id', idKursus)
-                .single()
-                .then(({ data, error }) => {
-                  if (error || !data) {
-                    document.getElementById('harga_display').innerText = 'Gagal mengambil harga';
-                    document.getElementById('harga').value = '';
-                  } else {
-                    document.getElementById('harga_display').innerText = data.harga;
-                    document.getElementById('harga').value = data.harga;
-                  }
-                });
-            });
-          } else {
-            document.getElementById('harga_display').innerText = '';
-            document.getElementById('harga').value = '';
-          }
+          document.getElementById('nama_kursus_display').innerText = 'Gagal mengambil nama kursus';
+          document.getElementById('nama_kursus').value = '';
+          if (submitBtn) submitBtn.disabled = true;
+        } else {
+          document.getElementById('harga_display').innerText = data.harga;
+          document.getElementById('harga').value = data.harga;
+          document.getElementById('nama_kursus_display').innerText = data.nama_kursus;
+          document.getElementById('nama_kursus').value = data.nama_kursus;
+          if (submitBtn) submitBtn.disabled = false;
+        }
+      });
+  });
+} else {
+  document.getElementById('harga_display').innerText = '';
+  document.getElementById('harga').value = '';
+  document.getElementById('nama_kursus_display').innerText = '';
+  document.getElementById('nama_kursus').value = '';
+}
 
           // Firebase Modular Auth
           import {
@@ -165,9 +175,16 @@ document.getElementById('email').value = user.email || '';
               }
               // Ambil data dari form
               const nama_kursus = document.getElementById("nama_kursus").value;
-console.log("[DEBUG] Nama kursus yang dikirim ke backend:", nama_kursus);
+              const nama_lengkap = document.getElementById("nama_lengkap").value;
               const email = user.email;
               const amount = parseInt(document.getElementById("harga").value);
+              // Debug log sebelum submit
+              console.log("[DEBUG] Data yang dikirim ke backend:", {
+                nama_lengkap,
+                nama_kursus,
+                email,
+                amount
+              });
               document.getElementById("pembayaran-status").innerHTML =
                 '<span class="text-blue-600">Membuat invoice, mohon tunggu...</span>';
               try {
@@ -175,10 +192,10 @@ console.log("[DEBUG] Nama kursus yang dikirim ke backend:", nama_kursus);
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({
-                    name: nama_lengkap,
+                    name: nama_lengkap, // diambil dari input
                     email: email,
                     amount: amount,
-                    nama_kursus: nama_kursus // pastikan variable ini berisi nama kursus yang dipilih user
+                    nama_kursus: nama_kursus // diambil dari hasil fetch database
                   })
                 });
                 const data = await res.json();

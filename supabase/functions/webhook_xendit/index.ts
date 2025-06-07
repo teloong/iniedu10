@@ -26,8 +26,18 @@ serve(async (req) => {
     // Ambil data yang diperlukan dari webhook
     const user_uid = body.user_id || null;
     const email = body.payer_email || null;
-    const nama_lengkap = body.payer_name || null;
-    const nama_kursus = body.description || null;
+    let nama_kursus = null;
+    let nama_lengkap = null;
+    if (body.metadata && (body.metadata.nama_kursus || body.metadata.nama_lengkap)) {
+      nama_kursus = body.metadata.nama_kursus || null;
+      nama_lengkap = body.metadata.nama_lengkap || null;
+    } else if (body.description && body.description.includes('|||')) {
+      const split = body.description.split('|||');
+      nama_kursus = split[0];
+      nama_lengkap = split[1] || null;
+    } else {
+      nama_kursus = body.description || null;
+    }
     const id_kursus = body.external_id || null;
     const harga = body.amount || null;
 

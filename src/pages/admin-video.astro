@@ -39,41 +39,19 @@ import Layout from '../layouts/Layout.astro';
 
 <script type="module">
   import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-  import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js';
-  import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js';
-
-  // Loader config dari /public/firebaseConfig.js
-  async function loadFirebaseConfig() {
-    return new Promise((resolve) => {
-      if (window.firebaseConfig) return resolve(window.firebaseConfig);
-      const script = document.createElement('script');
-      script.src = '/firebaseConfig.js';
-      script.onload = () => resolve(window.firebaseConfig);
-      document.head.appendChild(script);
-    });
-  }
-
-  // Inisialisasi Firebase
-  let app, auth;
-  (async () => {
-    const firebaseConfig = await loadFirebaseConfig();
-    app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-    auth = getAuth(app);
-    // Proteksi: hanya email admin yang boleh akses
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        window.location.href = '/login';
-      } else if (user.email !== 'lemindes@gmail.com') {
-        alert('Akses khusus admin.');
-        window.location.href = '/profil';
-      }
-    });
-  })();
 
   // Inisialisasi Supabase
   const supabaseUrl = 'https://jcfizceoycwdvpqpwhrj.supabase.co';
   const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA';
   const supabase = createClient(supabaseUrl, supabaseKey);
+
+  // Proteksi: hanya user yang login Supabase yang bisa akses halaman ini
+  (async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      window.location.href = '/admin-login';
+    }
+  })();
 
   // Validasi YouTube URL
   function isValidYouTubeUrl(url) {
