@@ -1110,4 +1110,26 @@ import Layout from "../layouts/Layout.astro";
       }
     }
   </style>
+<script is:inline>
+  // Memastikan AOS di-refresh ketika user scroll ke bawah (khusus untuk kasus footer tidak muncul)
+  let lastScroll = 0;
+  let footerShown = false;
+  window.addEventListener('scroll', function() {
+    const footer = document.querySelector('footer');
+    if (!footer) return;
+    const rect = footer.getBoundingClientRect();
+    const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+    // Jika footer mulai terlihat di viewport dan belum pernah di-refresh
+    if (rect.top < windowHeight && !footerShown) {
+      if (window.AOS && typeof window.AOS.refresh === 'function') {
+        window.AOS.refresh();
+      }
+      footerShown = true;
+    }
+    // Reset jika user scroll ke atas lagi (opsional)
+    if (rect.top > windowHeight) {
+      footerShown = false;
+    }
+  });
+</script>
 </footer>
