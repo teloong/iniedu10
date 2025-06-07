@@ -11,11 +11,12 @@ serve(async (req) => {
     });
   }
 
-  const { name, email, amount } = await req.json();
+  const { name, email, amount, nama_kursus } = await req.json();
+console.log("[DEBUG] Body create_invoice:", { name, email, amount, nama_kursus });
   const XENDIT_SECRET_KEY = Deno.env.get("XENDIT_SECRET_KEY");
 
   console.log("DEBUG XENDIT_SECRET_KEY (first 8 chars):", XENDIT_SECRET_KEY ? XENDIT_SECRET_KEY.slice(0,8) : "undefined");
-  console.log("DEBUG req body:", { name, email, amount });
+  console.log("DEBUG req body:", { name, email, amount, nama_kursus });
 
   const response = await fetch("https://api.xendit.co/v2/invoices", {
     method: "POST",
@@ -26,7 +27,7 @@ serve(async (req) => {
     body: JSON.stringify({
       external_id: "order-" + Date.now(),
       payer_email: email,
-      description: "Pembayaran IniEdu",
+      description: nama_kursus || "Pembayaran IniEdu",
       amount: amount,
       success_redirect_url: "http://localhost:4321/sukses"
     }),

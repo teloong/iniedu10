@@ -164,7 +164,8 @@ document.getElementById('email').value = user.email || '';
                 return;
               }
               // Ambil data dari form
-              const nama_lengkap = document.getElementById("nama_lengkap").value;
+              const nama_kursus = document.getElementById("nama_kursus").value;
+console.log("[DEBUG] Nama kursus yang dikirim ke backend:", nama_kursus);
               const email = user.email;
               const amount = parseInt(document.getElementById("harga").value);
               document.getElementById("pembayaran-status").innerHTML =
@@ -176,7 +177,8 @@ document.getElementById('email').value = user.email || '';
                   body: JSON.stringify({
                     name: nama_lengkap,
                     email: email,
-                    amount: amount
+                    amount: amount,
+                    nama_kursus: nama_kursus // pastikan variable ini berisi nama kursus yang dipilih user
                   })
                 });
                 const data = await res.json();
