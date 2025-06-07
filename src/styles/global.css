@@ -44,6 +44,25 @@ html, body {
   /* Jangan set overflow-y di sini agar scroll utama tetap normal */
 }
 
+/* Agar scrollbar area selalu stabil, mencegah flick navbar saat refresh */
+
+
+/* Hilangkan scrollbar saat tidak diperlukan, tapi tambahkan padding-right pada .container jika scrollbar muncul */
+html {
+  overflow-y: auto;
+}
+
+body::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-right: calc(100vw - 100%);
+  }
+}
+
 @layer components {
 
 
