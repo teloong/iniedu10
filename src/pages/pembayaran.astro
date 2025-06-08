@@ -16,14 +16,32 @@ import Layout from "../layouts/Layout.astro";
         <div
           class="bg-white rounded-2xl shadow-xl p-8 border-b-4 border-blue-400 w-full max-w-xs mx-auto flex flex-col items-center"
         >
-          <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" class="mb-4">
-  <circle cx="22" cy="22" r="22" fill="#22c55e" opacity=".13"/>
-  <rect x="10" y="16" width="24" height="14" rx="4" fill="#22c55e"/>
-  <rect x="14" y="20" width="16" height="4" rx="2" fill="#fff"/>
-  <rect x="26" y="23" width="4" height="2" rx="1" fill="#16a34a"/>
-  <rect x="14" y="23" width="6" height="2" rx="1" fill="#a7f3d0"/>
-  <rect x="12" y="18" width="20" height="2" rx="1" fill="#16a34a" opacity=".4"/>
-</svg>
+          <svg
+            width="44"
+            height="44"
+            viewBox="0 0 44 44"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            class="mb-4"
+          >
+            <circle cx="22" cy="22" r="22" fill="#22c55e" opacity=".13"
+            ></circle>
+            <rect x="10" y="16" width="24" height="14" rx="4" fill="#22c55e"
+            ></rect>
+            <rect x="14" y="20" width="16" height="4" rx="2" fill="#fff"></rect>
+            <rect x="26" y="23" width="4" height="2" rx="1" fill="#16a34a"
+            ></rect>
+            <rect x="14" y="23" width="6" height="2" rx="1" fill="#a7f3d0"
+            ></rect>
+            <rect
+              x="12"
+              y="18"
+              width="20"
+              height="2"
+              rx="1"
+              fill="#16a34a"
+              opacity=".4"></rect>
+          </svg>
           <h1 class="text-lg font-bold mb-2 text-blue-700 text-center">
             Pembayaran Kursus
           </h1>
@@ -35,18 +53,33 @@ import Layout from "../layouts/Layout.astro";
           <form id="form-pembayaran" class="space-y-3 w-full">
             <div>
               <label class="block text-gray-600 mb-1">Nama Kursus</label>
-              <div id="nama_kursus_display" class="w-full border rounded px-3 py-2 bg-gray-50 text-gray-700 cursor-default select-none flex items-center" style="min-height:2.5rem;"></div>
-<input type="hidden" id="nama_kursus" name="nama_kursus" />
+              <div
+                id="nama_kursus_display"
+                class="w-full border rounded px-3 py-2 bg-gray-50 text-gray-700 cursor-default select-none flex items-center"
+                style="min-height:2.5rem;"
+              >
+              </div>
+              <input type="hidden" id="nama_kursus" name="nama_kursus" />
             </div>
             <div>
               <label class="block text-gray-600 mb-1">ID Kursus</label>
-              <div id="id_kursus_display" class="w-full border rounded px-3 py-2 bg-gray-50 text-gray-700 cursor-default select-none flex items-center" style="min-height:2.5rem;"></div>
-<input type="hidden" id="id_kursus" name="id_kursus" />
+              <div
+                id="id_kursus_display"
+                class="w-full border rounded px-3 py-2 bg-gray-50 text-gray-700 cursor-default select-none flex items-center"
+                style="min-height:2.5rem;"
+              >
+              </div>
+              <input type="hidden" id="id_kursus" name="id_kursus" />
             </div>
             <div>
               <label class="block text-gray-600 mb-1">Harga</label>
-              <div id="harga_display" class="w-full border rounded px-3 py-2 bg-gray-50 text-gray-700 cursor-default select-none flex items-center" style="min-height:2.5rem;"></div>
-<input type="hidden" id="harga" name="harga" />
+              <div
+                id="harga_display"
+                class="w-full border rounded px-3 py-2 bg-gray-50 text-gray-700 cursor-default select-none flex items-center"
+                style="min-height:2.5rem;"
+              >
+              </div>
+              <input type="hidden" id="harga" name="harga" />
             </div>
             <div>
               <label class="block text-gray-600 mb-1">Nama Lengkap</label>
@@ -60,15 +93,19 @@ import Layout from "../layouts/Layout.astro";
             </div>
             <div>
               <label class="block text-gray-600 mb-1">Email</label>
-              <div id="email_display" class="w-full border rounded px-3 py-2 bg-gray-50 text-gray-700 cursor-default select-none flex items-center" style="min-height:2.5rem;"></div>
-<input type="hidden" id="email" name="email" />
+              <div
+                id="email_display"
+                class="w-full border rounded px-3 py-2 bg-gray-50 text-gray-700 cursor-default select-none flex items-center"
+                style="min-height:2.5rem;"
+              >
+              </div>
+              <input type="hidden" id="email" name="email" />
             </div>
             <button
               type="submit"
               id="submit-btn"
               class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mt-4"
-              disabled
-              >Konfirmasi Pembelian</button
+              disabled>Konfirmasi Pembelian</button
             >
           </form>
           <div id="pembayaran-status" class="mt-4"></div>
@@ -77,48 +114,60 @@ import Layout from "../layouts/Layout.astro";
           // Ambil data kursus dari query string
           const params = new URLSearchParams(window.location.search);
           // Set display value dan hidden input value
-          document.getElementById('id_kursus_display').innerText = params.get('id_kursus') || '';
-document.getElementById('id_kursus').value = params.get('id_kursus') || '';
+          document.getElementById("id_kursus_display").innerText =
+            params.get("id_kursus") || "";
+          document.getElementById("id_kursus").value =
+            params.get("id_kursus") || "";
 
-document.getElementById('harga_display').innerText = 'Memuat harga...';
-document.getElementById('harga').value = '';
-document.getElementById('nama_kursus_display').innerText = 'Memuat nama kursus...';
-document.getElementById('nama_kursus').value = '';
-const idKursus = params.get('id_kursus');
-if (idKursus) {
-  // Supabase fetch kursus
-  import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm').then(({ createClient }) => {
-    const supabaseUrl = "https://jcfizceoycwdvpqpwhrj.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA";
-    const supabase = createClient(supabaseUrl, supabaseKey);
-    supabase
-      .from('kursus')
-      .select('nama_kursus,harga')
-      .eq('id', idKursus)
-      .single()
-      .then(({ data, error }) => {
-        const submitBtn = document.getElementById('submit-btn');
-        if (error || !data) {
-          document.getElementById('harga_display').innerText = 'Gagal mengambil harga';
-          document.getElementById('harga').value = '';
-          document.getElementById('nama_kursus_display').innerText = 'Gagal mengambil nama kursus';
-          document.getElementById('nama_kursus').value = '';
-          if (submitBtn) submitBtn.disabled = true;
-        } else {
-          document.getElementById('harga_display').innerText = data.harga;
-          document.getElementById('harga').value = data.harga;
-          document.getElementById('nama_kursus_display').innerText = data.nama_kursus;
-          document.getElementById('nama_kursus').value = data.nama_kursus;
-          if (submitBtn) submitBtn.disabled = false;
-        }
-      });
-  });
-} else {
-  document.getElementById('harga_display').innerText = '';
-  document.getElementById('harga').value = '';
-  document.getElementById('nama_kursus_display').innerText = '';
-  document.getElementById('nama_kursus').value = '';
-}
+          document.getElementById("harga_display").innerText =
+            "Memuat harga...";
+          document.getElementById("harga").value = "";
+          document.getElementById("nama_kursus_display").innerText =
+            "Memuat nama kursus...";
+          document.getElementById("nama_kursus").value = "";
+          const idKursus = params.get("id_kursus");
+          if (idKursus) {
+            // Supabase fetch kursus
+            import(
+              "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm"
+            ).then(({ createClient }) => {
+              const supabaseUrl = "https://jcfizceoycwdvpqpwhrj.supabase.co";
+              const supabaseKey =
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA";
+              const supabase = createClient(supabaseUrl, supabaseKey);
+              supabase
+                .from("kursus")
+                .select("nama_kursus,harga")
+                .eq("id", idKursus)
+                .single()
+                .then(({ data, error }) => {
+                  const submitBtn = document.getElementById("submit-btn");
+                  if (error || !data) {
+                    document.getElementById("harga_display").innerText =
+                      "Gagal mengambil harga";
+                    document.getElementById("harga").value = "";
+                    document.getElementById("nama_kursus_display").innerText =
+                      "Gagal mengambil nama kursus";
+                    document.getElementById("nama_kursus").value = "";
+                    if (submitBtn) submitBtn.disabled = true;
+                  } else {
+                    document.getElementById("harga_display").innerText =
+                      data.harga;
+                    document.getElementById("harga").value = data.harga;
+                    document.getElementById("nama_kursus_display").innerText =
+                      data.nama_kursus;
+                    document.getElementById("nama_kursus").value =
+                      data.nama_kursus;
+                    if (submitBtn) submitBtn.disabled = false;
+                  }
+                });
+            });
+          } else {
+            document.getElementById("harga_display").innerText = "";
+            document.getElementById("harga").value = "";
+            document.getElementById("nama_kursus_display").innerText = "";
+            document.getElementById("nama_kursus").value = "";
+          }
 
           // Firebase Modular Auth
           import {
@@ -149,10 +198,11 @@ if (idKursus) {
             if (!user) {
               window.location.href = "/login";
             } else {
-              document.getElementById("nama_lengkap").value = user.displayName || "";
-document.getElementById('email_display').innerText = user.email || '';
-document.getElementById('email').value = user.email || '';
-
+              document.getElementById("nama_lengkap").value =
+                user.displayName || "";
+              document.getElementById("email_display").innerText =
+                user.email || "";
+              document.getElementById("email").value = user.email || "";
             }
           });
 
@@ -175,7 +225,8 @@ document.getElementById('email').value = user.email || '';
               }
               // Ambil data dari form
               const nama_kursus = document.getElementById("nama_kursus").value;
-              const nama_lengkap = document.getElementById("nama_lengkap").value;
+              const nama_lengkap =
+                document.getElementById("nama_lengkap").value;
               const email = user.email;
               const amount = parseInt(document.getElementById("harga").value);
               // Debug log sebelum submit
@@ -183,27 +234,50 @@ document.getElementById('email').value = user.email || '';
                 nama_lengkap,
                 nama_kursus,
                 email,
-                amount
+                amount,
               });
               document.getElementById("pembayaran-status").innerHTML =
                 '<span class="text-blue-600">Membuat invoice, mohon tunggu...</span>';
               try {
-                const res = await fetch('https://jcfizceoycwdvpqpwhrj.functions.supabase.co/create_invoice', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    name: nama_lengkap, // diambil dari input
-                    email: email,
-                    amount: amount,
-                    nama_kursus: nama_kursus // diambil dari hasil fetch database
-                  })
-                });
-                const data = await res.json();
-                if (data && data.invoice_url) {
-                  window.location.href = data.invoice_url;
+                const res = await fetch(
+                  "https://jcfizceoycwdvpqpwhrj.functions.supabase.co/create_invoice",
+                  {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      name: nama_lengkap, // diambil dari input
+                      email: email,
+                      amount: amount,
+                      nama_kursus: nama_kursus, // diambil dari hasil fetch database
+                    }),
+                  }
+                );
+                if (res.ok) {
+                  const data = await res.json();
+                  if (data && data.invoice_url) {
+                    window.location.href = data.invoice_url;
+                  } else {
+                    document.getElementById("pembayaran-status").innerHTML =
+                      '<span class="text-red-600">Gagal membuat invoice. Silakan coba lagi.</span>';
+                  }
                 } else {
+                  let pesan = "Gagal membuat invoice. Silakan coba lagi.";
+                  try {
+                    const errData = await res.json();
+                    if (
+                      res.status === 409 ||
+                      (errData &&
+                        errData.error &&
+                        errData.error.includes("sudah pernah membeli"))
+                    ) {
+                      pesan =
+                        "<span class='text-red-600'>Kamu sudah pernah membeli kursus ini.</span>";
+                    } else if (errData && errData.error) {
+                      pesan = `<span class='text-red-600'>${errData.error}</span>`;
+                    }
+                  } catch {}
                   document.getElementById("pembayaran-status").innerHTML =
-                    '<span class="text-red-600">Gagal membuat invoice. Silakan coba lagi.</span>';
+                    pesan;
                 }
               } catch (err) {
                 document.getElementById("pembayaran-status").innerHTML =
