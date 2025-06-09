@@ -42,7 +42,6 @@ const { count: kursusCount } = await supabase
     try {
       const res = await fetch('/users-latest.json');
       if (!res.ok) {
-        console.warn('File users-latest.json belum ada. Jalankan script fetch-users.cjs untuk generate data user.');
         return;
       }
       const data = await res.json();
@@ -79,7 +78,6 @@ const { count: kursusCount } = await supabase
         if (window.Chart) {
           const ctx = document.getElementById('activityChart').getContext('2d');
           if (window._userChart) window._userChart.destroy();
-          // Suppress Chart.js deprecated warning by using correct ctx
           window._userChart = new window.Chart(ctx, {
             type: 'line',
             data: {
@@ -101,8 +99,7 @@ const { count: kursusCount } = await supabase
         }
       }
     } catch (err) {
-      // Tampilkan warning saja, bukan error merah
-      console.warn('Gagal fetch user terbaru:', err.message || err);
+      if (videoCountEl) videoCountEl.textContent = '-';
     }
   }
   document.addEventListener('DOMContentLoaded', fetchLatestUsers);
@@ -213,7 +210,6 @@ const { count: kursusCount } = await supabase
         .from('videos')
         .select('*', { count: 'exact', head: true });
       if (error) {
-        console.error('Supabase fetch error:', error);
         if (videoCountEl) videoCountEl.textContent = '-';
         return;
       }
@@ -223,7 +219,7 @@ const { count: kursusCount } = await supabase
         if (videoCountEl) videoCountEl.textContent = '-';
       }
     } catch (err) {
-      console.error('Fetch video count exception:', err);
+      ('Fetch video count exception:', err);
       if (videoCountEl) videoCountEl.textContent = '-';
     }
   }

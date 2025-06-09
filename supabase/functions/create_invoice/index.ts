@@ -1,4 +1,6 @@
+// @ts-ignore
 import { serve } from "https://deno.land/std@0.131.0/http/server.ts";
+// @ts-ignore
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
@@ -7,7 +9,9 @@ const corsHeaders = {
 };
 
 // Inisialisasi Supabase client
+// @ts-ignore
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+// @ts-ignore
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
@@ -28,15 +32,8 @@ serve(async (req) => {
   } catch (e) {
     body = { error: "Failed to parse JSON body" };
   }
-  console.log("[DEBUG] Body create_invoice:", body);
 
   const { name, email, amount, nama_kursus, user_uid, id_kursus } = body;
-  console.log("[DEBUG] name:", name);
-  console.log("[DEBUG] email:", email);
-  console.log("[DEBUG] amount:", amount);
-  console.log("[DEBUG] nama_kursus:", nama_kursus);
-  console.log("[DEBUG] user_uid:", user_uid);
-  console.log("[DEBUG] id_kursus:", id_kursus);
 
   // VALIDASI ANTI DUPLIKAT
   // VALIDASI ANTI DUPLIKAT BERDASARKAN EMAIL + NAMA_KURSUS
@@ -55,19 +52,8 @@ serve(async (req) => {
     }
   }
 
-  if (!nama_kursus) {
-    console.log("[WARNING] nama_kursus kosong, fallback ke 'Pembayaran IniEdu'");
-  }
-  if (!name) {
-    console.log("[WARNING] name (nama_lengkap) kosong!");
-  }
-if (!name) {
-  console.log("[WARNING] name (nama_lengkap) kosong!");
-}
-  const XENDIT_SECRET_KEY = Deno.env.get("XENDIT_SECRET_KEY");
-
-  console.log("DEBUG XENDIT_SECRET_KEY (first 8 chars):", XENDIT_SECRET_KEY ? XENDIT_SECRET_KEY.slice(0,8) : "undefined");
-  console.log("DEBUG req body:", { name, email, amount, nama_kursus });
+  // @ts-ignore
+const XENDIT_SECRET_KEY = Deno.env.get("XENDIT_SECRET_KEY");
 
   const response = await fetch("https://api.xendit.co/v2/invoices", {
     method: "POST",
@@ -78,18 +64,18 @@ if (!name) {
     body: JSON.stringify({
       external_id: "order-" + Date.now(),
       payer_email: email,
-
-      description: nama_kursus || "Pembayaran IniEdu", // hanya nama kursus
+      description: nama_kursus || "Pembayaran IniEdu", 
       metadata: {
         nama_kursus: nama_kursus || "Pembayaran IniEdu",
-        nama_lengkap: name || ""
+        nama_lengkap: name || "",
+        user_uid: user_uid,
+        id_kursus: id_kursus,
+        email: email
       },
       amount: amount,
       success_redirect_url: "http://localhost:4321/sukses"
     }),
   });
-
-  console.log("DEBUG Xendit response status:", response.status);
 
   let data;
   try {
@@ -98,7 +84,27 @@ if (!name) {
     data = { error: await response.text() };
   }
 
-  console.log("DEBUG Xendit response body:", data);
+  // Hanya insert ke pembelian_kursus jika invoice berhasil dibuat dan user_uid ada
+  if (data && data.id && user_uid && nama_kursus && email) {
+    const waktu_pembelian = new Date().toISOString();
+    const { error: insertError } = await supabase.from("pembelian_kursus").insert([
+      {
+        user_uid,
+        email,
+        nama_lengkap: name,
+        nama_kursus,
+        id_kursus,
+        harga: amount,
+        status_pembayaran: "PAID",
+        waktu_pembelian: new Date().toISOString(),
+        payment_method: data.payment_method || null
+      },
+    ]);
+    // Tidak perlu log, cukup lanjutkan
+
+  } else if (!user_uid) {
+  
+  }
 
   return new Response(JSON.stringify(data), {
     headers: {

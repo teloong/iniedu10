@@ -5,7 +5,7 @@ import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12
 async function loadFirebaseConfig() {
   return new Promise((resolve) => {
     const script = document.createElement('script');
-    script.src = '/firebaseConfig.js'; // <- perbaiki di sini!
+    script.src = '/firebaseConfig.js'; 
     script.onload = () => resolve(window.firebaseConfig);
     document.head.appendChild(script);
   });
@@ -13,7 +13,7 @@ async function loadFirebaseConfig() {
 
 document.addEventListener('DOMContentLoaded', async () => {
   const firebaseConfig = await loadFirebaseConfig();
-  console.log("Config di protect.js:", firebaseConfig);
+  ("Config di protect.js:", firebaseConfig);
 
   let app;
   if (!getApps().length) {
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const auth = getAuth(app);
 
   onAuthStateChanged(auth, (user) => {
-    console.log("User di protect.js:", user);
+    ("User di protect.js:", user);
     if (!user) {
       window.location.href = "/login";
     }

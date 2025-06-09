@@ -182,7 +182,7 @@ import Layout from "../layouts/Layout.astro";
             apiKey: "AIzaSyAlxYWD4bCwpoKEErXDX1_4AZC9wzQTkwA",
             authDomain: "iniedu.firebaseapp.com",
             projectId: "iniedu",
-            storageBucket: "iniedu.firebasestorage.app",
+            storageBucket: "iniedu.appspot.com",
             messagingSenderId: "743403637628",
             appId: "1:743403637628:web:15b40396e94c8b91ce32f9",
             measurementId: "G-P2NBXXWM7T",
@@ -229,13 +229,6 @@ import Layout from "../layouts/Layout.astro";
                 document.getElementById("nama_lengkap").value;
               const email = user.email;
               const amount = parseInt(document.getElementById("harga").value);
-              // Debug log sebelum submit
-              console.log("[DEBUG] Data yang dikirim ke backend:", {
-                nama_lengkap,
-                nama_kursus,
-                email,
-                amount,
-              });
               document.getElementById("pembayaran-status").innerHTML =
                 '<span class="text-blue-600">Membuat invoice, mohon tunggu...</span>';
               try {
@@ -249,6 +242,8 @@ import Layout from "../layouts/Layout.astro";
                       email: email,
                       amount: amount,
                       nama_kursus: nama_kursus, // diambil dari hasil fetch database
+                      user_uid: user.uid, // KIRIM UID KE BACKEND
+                      id_kursus: parseInt(idKursus) // KIRIM ID KURSUS SEBAGAI INTEGER KE BACKEND
                     }),
                   }
                 );

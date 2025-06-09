@@ -57,7 +57,7 @@
             </div>
             <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4 leading-tight">${data.title}</h1>
             <div class="mb-2">
-              <img src="${data.image || 'https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=800&q=80'}" alt="Sampul Artikel" class="w-full rounded-xl shadow mb-1" />
+              ${data.image ? `<img src="${data.image}" alt="Sampul Artikel" class="w-full rounded-xl shadow mb-1" />` : ''}
               <div class="text-xs text-gray-400">${data.source ? 'Sumber: '+data.source : ''}</div>
             </div>
             <article class="prose prose-blue max-w-none mb-8">${data.content.replace(/\n/g,'<br/>')}</article>
@@ -69,7 +69,6 @@
           const commentsList = document.getElementById('comments-list');
           const { data, error } = await supabase.from('blog_comment').select('*').eq('blog_id', id);
           if (error) {
-            console.error(error);
             return;
           }
           commentsList.innerHTML = '';
@@ -100,7 +99,7 @@
           const { data, error } = await supabase.from('blog_comment').insert([{ blog_id: id, nama, email, komentar }]);
           if (error) {
             alert('Gagal kirim komentar: ' + error.message);
-            console.error(error);
+            (error);
             return;
           }
           loadComments();

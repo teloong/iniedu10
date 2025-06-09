@@ -4,6 +4,7 @@ import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWith
 const firebaseConfig = window.firebaseConfig;
 const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
 const auth = getAuth(app);
+window.auth = auth; // Expose ke global agar bisa diakses dari console
 
 const formContainer = document.getElementById("firebase-auth-form");
 const messageDiv = document.getElementById("firebase-auth-message");
@@ -53,6 +54,17 @@ function renderForm() {
     window.location.href = "/";
   };
 }
+
+// Fungsi global untuk ambil JWT Firebase dari console browser
+window.getFirebaseToken = async function() {
+  if (auth && auth.currentUser) {
+    const token = await auth.currentUser.getIdToken();
+    console.log("JWT Firebase:", token);
+    return token;
+  } else {
+    console.log("User belum login atau auth tidak tersedia");
+  }
+};
 
 onAuthStateChanged(auth, (user) => {
   if (user) {

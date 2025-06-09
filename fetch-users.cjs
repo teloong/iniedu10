@@ -15,6 +15,6 @@ async function main() {
       created_at: u.metadata.creationTime.slice(0, 10)
     }));
   fs.writeFileSync('./public/users-latest.json', JSON.stringify({ users }, null, 2));
-  console.log('User terbaru berhasil disimpan ke public/users-latest.json');
+  ('User terbaru berhasil disimpan ke public/users-latest.json');
 }
 main();

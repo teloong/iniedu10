@@ -35,3 +35,12 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 </Layout>
+
+<!-- Proteksi akses materi, hanya untuk user yang sudah membeli kursus ini -->
+<style>
+  body.protected-hide { visibility: hidden !important; }
+</style>
+<script>
+  document.body.classList.add('protected-hide');
+</script>
+<script type="module" src="/protect-materi.js"></script>
