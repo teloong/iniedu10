@@ -4,6 +4,7 @@ import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWith
 const firebaseConfig = window.firebaseConfig;
 const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
 const auth = getAuth(app);
+window.auth = auth; // Expose ke global agar bisa diakses dari console
 
 const formContainer = document.getElementById("firebase-auth-form");
 const messageDiv = document.getElementById("firebase-auth-message");
@@ -54,13 +55,56 @@ function renderForm() {
   };
 }
 
+// Fungsi global untuk ambil JWT Firebase dari console browser
+window.getFirebaseToken = async function() {
+  if (auth && auth.currentUser) {
+    const token = await auth.currentUser.getIdToken();
+    ("JWT Firebase:", token);
+    return token;
+  } else {
+    ("User belum login atau auth tidak tersedia");
+  }
+};
+
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+const SUPABASE_URL = "https://jcfizceoycwdvpqpwhrj.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA";
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+async function syncUserToSupabase(user) {
+  if (!user) return;
+  try {
+    const token = await user.getIdToken();
+    const response = await fetch("https://jcfizceoycwdvpqpwhrj.functions.supabase.co/sync_user", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token })
+    });
+    const result = await response.json();
+    // jika berhasil, tidak perlu tampilkan pesan di console
+    if (!result.success) {
+      ("Gagal sync user ke Supabase:", result.error);
+    }
+  } catch (err) {
+    ("Gagal sync user ke Supabase:", err);
+  }
+}
+
+
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    formContainer.innerHTML = `<div class='text-green-600 font-semibold text-center'>Halo, ${user.email}<br>Anda sudah login.</div><button id=\"logout-btn\" class=\"mt-4 bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded w-full\">Keluar</button>`;
-    document.getElementById("logout-btn").onclick = async () => {
-      await signOut(auth);
-      window.location.href = "/";
-    };
+    syncUserToSupabase(user);
+    if (formContainer) {
+      formContainer.innerHTML = `<div class='text-green-600 font-semibold text-center'>Halo, ${user.email}<br>Anda sudah login.</div><button id=\"logout-btn\" class=\"mt-4 bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded w-full\">Keluar</button>`;
+      const logoutBtn = document.getElementById("logout-btn");
+      if (logoutBtn) {
+        logoutBtn.onclick = async () => {
+          await signOut(auth);
+          window.location.href = "/";
+        };
+      }
+    }
   } else {
     renderForm();
   }

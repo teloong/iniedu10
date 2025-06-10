@@ -13,7 +13,7 @@ window.firebaseConfig = {
   apiKey: "AIzaSyAlxYWD4bCwpoKEErXDX1_4AZC9wzQTkwA",
   authDomain: "iniedu.firebaseapp.com",
   projectId: "iniedu",
-  storageBucket: "iniedu.firebasestorage.app",
+  storageBucket: "iniedu.appspot.com",
   messagingSenderId: "743403637628",
   appId: "1:743403637628:web:15b40396e94c8b91ce32f9",
   measurementId: "G-P2NBXXWM7T"
@@ -64,8 +64,7 @@ onAuthStateChanged(auth, (user) => {
   <li class="flex items-start gap-2"><svg class="w-5 h-5 text-yellow-500 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20l9-5-9-5-9 5 9 5z" fill="#fef9c3"/><path d="M12 12V4M12 12l9 5-9 5-9-5 9-5z" stroke="#facc15"/></svg>Kuis & latihan soal untuk menguji pemahaman</li>
   <li class="flex items-start gap-2"><svg class="w-5 h-5 text-purple-500 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4" fill="#ede9fe" stroke="#a78bfa"/><path d="M8 12h8M12 8v8" stroke="#a78bfa"/></svg>Sertifikat digital setelah menyelesaikan kursus</li>
 </ul>
-        <a href="materi-digital" class="mt-auto px-5 py-2 rounded-full font-semibold bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md transition-all duration-200 hover:scale-105 hover:shadow-xl hover:from-cyan-400 hover:to-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-300" data-akses-id-kursus="1">Akses Materi</a>
-      <a href="/pembayaran?nama_kursus=Konten%20Pembelajaran%20Digital&id_kursus=1&harga=0" class="mt-2 px-5 py-2 rounded-full font-semibold bg-gradient-to-r from-green-500 to-emerald-400 text-white shadow-md transition-all duration-200 hover:scale-105 hover:shadow-xl hover:from-emerald-400 hover:to-green-500 focus:outline-none focus:ring-4 focus:ring-green-300" data-id-kursus="1">Beli</a>
+        <button class="btn-kursus mt-auto px-5 py-2 rounded-full font-semibold shadow-md transition-all duration-200 focus:outline-none focus:ring-4 w-full" data-id-kursus="1">Loading...</button>
       </div>
       <!-- Card 2: Simulasi Ujian -->
       <div class="bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center transition-all duration-300 border-b-4 border-yellow-400 hover:scale-105 hover:-rotate-x-3 hover:rotate-y-3 hover:shadow-[0_8px_32px_0_rgba(255,179,0,0.17),0_2px_12px_0_rgba(255,179,0,0.13)] hover:border-b-[6px] hover:border-yellow-500 hover:bg-gradient-to-br hover:from-white hover:to-yellow-50 group relative overflow-hidden" data-aos="zoom-in" data-aos-delay="200">
@@ -77,8 +76,7 @@ onAuthStateChanged(auth, (user) => {
   <li class="flex items-start gap-2"><svg class="w-5 h-5 text-blue-500 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2" fill="#e0f2fe" stroke="#38bdf8"/><path d="M16 3v4M8 3v4" stroke="#38bdf8" stroke-width="2"/></svg>Analisis skor & grafik performa ujian</li>
   <li class="flex items-start gap-2"><svg class="w-5 h-5 text-pink-500 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4" fill="#fce7f3" stroke="#f472b6"/><path d="M8 12h8M12 8v8" stroke="#f472b6"/></svg>Rekomendasi materi belajar sesuai hasil try out</li>
 </ul>
-        <a href="/kursus/simulasi-ujian" class="mt-auto px-5 py-2 rounded-full font-semibold bg-gradient-to-r from-yellow-400 to-orange-400 text-white shadow-md transition-all duration-200 hover:scale-105 hover:shadow-xl hover:from-orange-400 hover:to-yellow-400 focus:outline-none focus:ring-4 focus:ring-yellow-200" data-akses-id-kursus="2">Akses Materi</a>
-      <a href="/pembayaran?nama_kursus=Simulasi%20Ujian&id_kursus=2&harga=0" class="mt-2 px-5 py-2 rounded-full font-semibold bg-gradient-to-r from-green-500 to-emerald-400 text-white shadow-md transition-all duration-200 hover:scale-105 hover:shadow-xl hover:from-emerald-400 hover:to-green-500 focus:outline-none focus:ring-4 focus:ring-green-300" data-id-kursus="2">Beli</a>
+        <button class="btn-kursus mt-auto px-5 py-2 rounded-full font-semibold shadow-md transition-all duration-200 focus:outline-none focus:ring-4 w-full" data-id-kursus="2">Loading...</button>
       </div>
       <!-- Card 3: Kelas Menulis/Workshop -->
       <div class="bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center transition-all duration-300 border-b-4 border-pink-400 hover:scale-105 hover:-rotate-x-3 hover:rotate-y-3 hover:shadow-[0_8px_32px_0_rgba(224,64,251,0.17),0_2px_12px_0_rgba(224,64,251,0.13)] hover:border-b-[6px] hover:border-pink-500 hover:bg-gradient-to-br hover:from-white hover:to-pink-50 group relative overflow-hidden" data-aos="zoom-in" data-aos-delay="300">
@@ -90,10 +88,11 @@ onAuthStateChanged(auth, (user) => {
   <li class="flex items-start gap-2"><svg class="w-5 h-5 text-blue-500 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2" fill="#e0f2fe" stroke="#38bdf8"/><path d="M16 3v4M8 3v4" stroke="#38bdf8" stroke-width="2"/></svg>Kolaborasi & diskusi bersama komunitas penulis</li>
   <li class="flex items-start gap-2"><svg class="w-5 h-5 text-purple-500 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4" fill="#ede9fe" stroke="#a78bfa"/><path d="M8 12h8M12 8v8" stroke="#a78bfa"/></svg>Portofolio karya & sertifikat workshop eksklusif</li>
 </ul>
-        <a href="/kursus/kelas-menulis" class="mt-auto px-5 py-2 rounded-full font-semibold bg-gradient-to-r from-pink-500 to-purple-400 text-white shadow-md transition-all duration-200 hover:scale-105 hover:shadow-xl hover:from-purple-400 hover:to-pink-500 focus:outline-none focus:ring-4 focus:ring-pink-200" data-akses-id-kursus="3">Akses Materi</a>
-      <a href="/pembayaran?nama_kursus=Kelas%20Menulis%20%2F%20Workshop&id_kursus=3&harga=0" class="mt-2 px-5 py-2 rounded-full font-semibold bg-gradient-to-r from-green-500 to-emerald-400 text-white shadow-md transition-all duration-200 hover:scale-105 hover:shadow-xl hover:from-emerald-400 hover:to-green-500 focus:outline-none focus:ring-4 focus:ring-green-300" data-id-kursus="3">Beli</a>
+        <button class="btn-kursus mt-auto px-5 py-2 rounded-full font-semibold shadow-md transition-all duration-200 focus:outline-none focus:ring-4 w-full" data-id-kursus="3">Loading...</button>
       </div>
     </div>
   </section>
-<script type="module" src="/cek-pembelian.js"></script>
+<script type="module" src="/firebaseConfig.js"></script>
+<script type="module" src="/kursus-button.js"></script>
+<script type="module" src="/firebase-auth.js"></script>
 </Layout>
