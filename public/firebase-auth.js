@@ -59,10 +59,10 @@ function renderForm() {
 window.getFirebaseToken = async function() {
   if (auth && auth.currentUser) {
     const token = await auth.currentUser.getIdToken();
-    console.log("JWT Firebase:", token);
+    ("JWT Firebase:", token);
     return token;
   } else {
-    console.log("User belum login atau auth tidak tersedia");
+    ("User belum login atau auth tidak tersedia");
   }
 };
 
@@ -84,10 +84,10 @@ async function syncUserToSupabase(user) {
     const result = await response.json();
     // jika berhasil, tidak perlu tampilkan pesan di console
     if (!result.success) {
-      console.error("Gagal sync user ke Supabase:", result.error);
+      ("Gagal sync user ke Supabase:", result.error);
     }
   } catch (err) {
-    console.error("Gagal sync user ke Supabase:", err);
+    ("Gagal sync user ke Supabase:", err);
   }
 }
 

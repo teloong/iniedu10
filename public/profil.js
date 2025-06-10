@@ -49,7 +49,7 @@ async function renderProfile(user) {
     setLogoutHandler();
   } catch (err) {
     profileDiv.innerHTML = '<div class="text-red-600">Terjadi error saat memuat profil.</div>';
-    console.error('Error load profil:', err);
+    ('Error load profil:', err);
   }
 }
 
@@ -67,7 +67,7 @@ onAuthStateChanged(auth, async (user) => {
         table: 'users',
         filter: `uid=eq.${user.uid}`
       }, payload => {
-        console.log('Realtime perubahan profil user:', payload);
+        ('Realtime perubahan profil user:', payload);
         renderProfile(user);
       })
       .subscribe();

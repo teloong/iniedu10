@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
           boughtIds = data.pembelian.map(row => row.id_kursus?.toString());
         }
       } catch (e) {
-        console.error('Gagal ambil data pembelian:', e);
+        ('Gagal ambil data pembelian:', e);
         buttons.forEach(btn => setButtonError(btn));
         return;
       }
@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
         table: 'pembelian_kursus',
         filter: `user_uid=eq.${user.uid}`
       }, payload => {
-        console.log('Realtime perubahan pembelian:', payload);
+        ('Realtime perubahan pembelian:', payload);
         refreshButtons();
       })
       .subscribe();
