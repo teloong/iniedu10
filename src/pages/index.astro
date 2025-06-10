@@ -799,10 +799,10 @@ import Layout from "../layouts/Layout.astro";
         <img
           src="https://iniedu.com/wp-content/uploads/2022/07/iniedu-logogram-768x830.png"
           alt="Logo Iniedu"
-          class="w-14 aspect-[768/830] object-contain"
           width="56"
           height="60"
-          loading="lazy"
+          class="w-14 aspect-[768/830] object-contain max-w-full h-auto"
+          fetchpriority="high"
         />
         <span class="text-2xl font-bold text-[#232b4d]">Iniedu</span>
       </div>
