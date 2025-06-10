@@ -69,35 +69,49 @@ document.addEventListener("DOMContentLoaded", () => {
       buttons.forEach(btn => setButtonLogin(btn));
       return;
     }
-    // Ambil semua id kursus dari tombol
-    const kursusIds = Array.from(document.querySelectorAll('.btn-kursus')).map(btn => btn.getAttribute('data-id-kursus'));
-    if (!user) return;
-    // Query pembelian via Edge Function get_pembelian_user
-    console.log('Firebase user.uid:', user.uid);
-    let boughtIds = [];
-    try {
-      const endpoint = "https://jcfizceoycwdvpqpwhrj.functions.supabase.co/get_pembelian_user";
-      const idToken = await user.getIdToken();
-      const res = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: idToken })
-      });
-      const result = await res.json();
-      boughtIds = (result.pembelian || []).map(row => String(row.id_kursus));
-      console.log('DEBUG hasil pembelian:', result.pembelian);
-    } catch (error) {
-      console.error('Gagal cek pembelian (Edge Function):', error);
-      buttons.forEach(btn => setButtonError(btn));
-      return;
-    }
-    buttons.forEach(btn => {
-      const id = btn.getAttribute('data-id-kursus');
-      if (boughtIds.includes(String(id))) {
-        setButtonAkses(btn, id);
-      } else {
-        setButtonBeli(btn, id);
+    // Fungsi untuk refresh status tombol kursus
+    async function refreshButtons() {
+      const kursusIds = Array.from(document.querySelectorAll('.btn-kursus')).map(btn => btn.getAttribute('data-id-kursus'));
+      let boughtIds = [];
+      try {
+        const endpoint = "https://jcfizceoycwdvpqpwhrj.functions.supabase.co/get_pembelian_user";
+        const idToken = await user.getIdToken();
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token: idToken })
+        });
+        const data = await res.json();
+        if (data && Array.isArray(data.pembelian)) {
+          boughtIds = data.pembelian.map(row => row.id_kursus?.toString());
+        }
+      } catch (e) {
+        console.error('Gagal ambil data pembelian:', e);
+        buttons.forEach(btn => setButtonError(btn));
+        return;
       }
-    });
+      buttons.forEach(btn => {
+        const id = btn.getAttribute('data-id-kursus');
+        if (boughtIds.includes(id)) {
+          setButtonAkses(btn, id);
+        } else {
+          setButtonBeli(btn, id);
+        }
+      });
+    }
+    // Panggil pertama kali saat login
+    await refreshButtons();
+    // Subscribe realtime ke pembelian_kursus milik user login
+    const channel = supabase.channel('public:pembelian_kursus')
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'pembelian_kursus',
+        filter: `user_uid=eq.${user.uid}`
+      }, payload => {
+        console.log('Realtime perubahan pembelian:', payload);
+        refreshButtons();
+      })
+      .subscribe();
   });
 });

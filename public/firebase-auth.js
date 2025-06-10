@@ -74,28 +74,20 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 async function syncUserToSupabase(user) {
   if (!user) return;
-  const { uid, email, displayName } = user;
-  let namaAuto = displayName;
-  if (!namaAuto) {
-    if (typeof email === 'string' && email.includes('@')) {
-      namaAuto = email.split('@')[0];
-    } else {
-      namaAuto = '-';
+  try {
+    const token = await user.getIdToken();
+    const response = await fetch("https://jcfizceoycwdvpqpwhrj.functions.supabase.co/sync_user", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token })
+    });
+    const result = await response.json();
+    // jika berhasil, tidak perlu tampilkan pesan di console
+    if (!result.success) {
+      console.error("Gagal sync user ke Supabase:", result.error);
     }
-  }
-  const { error } = await supabase
-    .from('users')
-    .upsert([
-      {
-        uid,
-        email,
-        display_name: namaAuto
-      }
-    ], { onConflict: ['uid'] });
-  if (error) {
-    console.error('Gagal sync user ke Supabase:', error);
-  } else {
-    console.log('User berhasil di-sync ke Supabase');
+  } catch (err) {
+    console.error("Gagal sync user ke Supabase:", err);
   }
 }
 
