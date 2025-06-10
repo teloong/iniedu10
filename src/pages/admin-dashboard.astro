@@ -1,246 +1,284 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import AdminDashboardCharts from '../components/AdminDashboardCharts.astro';
-import AdminSidebar from '../components/AdminSidebar.astro';
-import { supabase } from '../utils/supabase.js';
+import Layout from "../layouts/Layout.astro";
+import AdminSidebar from "../components/AdminSidebar.astro";
+import { supabase } from "../utils/supabase.js";
 
 // Ambil jumlah user dari Supabase
 const { count: userCount } = await supabase
-  .from('users')
-  .select('*', { count: 'exact', head: true });
+  .from("users")
+  .select("*", { count: "exact", head: true });
 
 // Ambil jumlah video dari Supabase
 const { count: videoCount } = await supabase
-  .from('videos')
-  .select('*', { count: 'exact', head: true });
+  .from("videos")
+  .select("*", { count: "exact", head: true });
 
 // Ambil jumlah kursus dari Supabase
 const { count: kursusCount } = await supabase
-  .from('kursus')
-  .select('*', { count: 'exact', head: true });
+  .from("kursus")
+  .select("*", { count: "exact", head: true });
 ---
+
 <Layout title="Dashboard Admin" bodyClass="admin-dashboard">
-  <!-- Seluruh isi dashboard admin mulai dari sini -->
-
-<!-- Proteksi tetap ada di atas -->
-<div id="dashboard-root"></div>
-<script type="module">
-  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-  // Inisialisasi Supabase
-  const supabaseUrl = 'https://jcfizceoycwdvpqpwhrj.supabase.co';
-  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA';
-  const supabase = createClient(supabaseUrl, supabaseKey);
-  // Proteksi: hanya user login Supabase yang bisa akses
-  (async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      window.location.href = '/admin-login';
-    }
-  })();
-
-  // Fetch user terbaru dari endpoint backend
-  async function fetchLatestUsers() {
-    try {
-      const res = await fetch('/users-latest.json');
-      if (!res.ok) {
-        return;
+  <!-- Proteksi tetap ada di atas -->
+  <div id="dashboard-root"></div>
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+    const supabaseUrl = "https://jcfizceoycwdvpqpwhrj.supabase.co";
+    const supabaseKey =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA";
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    // Proteksi: hanya user login Supabase yang bisa akses
+    (async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (!session) {
+        window.location.href = "/admin-login";
       }
-      const data = await res.json();
-      if (Array.isArray(data.users)) {
-        // Update tabel user terbaru
-        const tbody = document.querySelector('table.min-w-full tbody');
-        tbody.innerHTML = '';
-        data.users.forEach(user => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${user.displayName || '-'}</td>
-            <td>${user.email}</td>
-            <td>${user.created_at}</td>
-          `;
-          tbody.appendChild(tr);
-        });
-        // Update statistik
-        document.querySelectorAll('.text-lg.font-bold')[0].textContent = data.users.length > 0 ? data.users.length : '-';
-        // Update chart aktivitas user (dummy: jumlah user baru per hari 7 hari terakhir)
-        const chartLabels = [];
-        const chartData = [];
-        const dateMap = {};
-        data.users.forEach(u => {
-          dateMap[u.created_at] = (dateMap[u.created_at] || 0) + 1;
-        });
-        const now = new Date();
-        for (let i = 6; i >= 0; i--) {
-          const d = new Date(now);
-          d.setDate(now.getDate() - i);
-          const dateStr = d.toISOString().slice(0, 10);
-          chartLabels.push(dateStr);
-          chartData.push(dateMap[dateStr] || 0);
+    })();
+
+    // Fetch user terbaru dari endpoint backend
+    async function fetchLatestUsers() {
+      try {
+        const res = await fetch("/users-latest.json");
+        if (!res.ok) {
+          return;
         }
-        if (window.Chart) {
-          const ctx = document.getElementById('activityChart').getContext('2d');
-          if (window._userChart && typeof window._userChart.destroy === 'function') {
-            window._userChart.destroy();
+        const data = await res.json();
+        if (Array.isArray(data.users)) {
+          // Update tabel user terbaru
+          const tbody = document.querySelector("table.min-w-full tbody");
+          tbody.innerHTML = "";
+          data.users.forEach((user) => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td class="py-2 px-3">${user.displayName || "-"}</td>
+              <td class="py-2 px-3">${user.email}</td>
+              <td class="py-2 px-3">${user.created_at}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+          // Update statistik
+          document.querySelectorAll(".stat-user-count").forEach((el) => {
+            el.textContent = data.users.length > 0 ? data.users.length : "-";
+          });
+          // Update chart aktivitas user (dummy: jumlah user baru per hari 7 hari terakhir)
+          const chartLabels = [];
+          const chartData = [];
+          const dateMap = {};
+          data.users.forEach((u) => {
+            dateMap[u.created_at] = (dateMap[u.created_at] || 0) + 1;
+          });
+          const now = new Date();
+          for (let i = 6; i >= 0; i--) {
+            const d = new Date(now);
+            d.setDate(now.getDate() - i);
+            const dateStr = d.toISOString().slice(0, 10);
+            chartLabels.push(dateStr);
+            chartData.push(dateMap[dateStr] || 0);
           }
-          window._userChart = new window.Chart(ctx, {
-            type: 'line',
-            data: {
-              labels: chartLabels,
-              datasets: [{
-                label: 'User Baru',
-                data: chartData,
-                borderColor: '#2563eb',
-                backgroundColor: 'rgba(37,99,235,0.1)',
-                fill: true,
-                tension: 0.4
-              }]
-            },
-            options: {
-              responsive: true,
-              plugins: { legend: { display: false } }
+          if (window.Chart) {
+            // Inisialisasi variabel global chart jika belum ada
+            if (typeof window._userChart === 'undefined') window._userChart = null;
+            const ctx = document.getElementById("activityChart").getContext("2d");
+            if (window._userChart && typeof window._userChart.destroy === "function") {
+              window._userChart.destroy();
             }
-          });
+            window._userChart = new window.Chart(ctx, {
+              type: "line",
+              data: {
+                labels: chartLabels,
+                datasets: [
+                  {
+                    label: "User Baru",
+                    data: chartData,
+                    borderColor: "#2563eb",
+                    backgroundColor: "rgba(37,99,235,0.1)",
+                    fill: true,
+                    tension: 0.4,
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+              },
+            });
+          }
         }
+      } catch (err) {
+        console.error("Gagal fetch user terbaru:", err);
       }
-    } catch (err) {
-      // Tampilkan error ke console, tidak perlu update videoCountEl karena tidak ada elemen tersebut
-      console.error('Gagal fetch user terbaru:', err);
     }
-  }
-  document.addEventListener('DOMContentLoaded', fetchLatestUsers);
-</script>
+    document.addEventListener("DOMContentLoaded", fetchLatestUsers);
+  </script>
 
-<!-- SIDEBAR & MAIN DASHBOARD -->
-<div class="min-h-screen bg-gray-50 flex">
-  <div class="sticky top-0 h-screen hidden md:block">
-    {/** Sidebar admin */}
-    <AdminSidebar active="dashboard" />
-  </div>
-  <main class="flex-1 overflow-x-auto">
-    <div class="max-w-7xl mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold mb-8 text-blue-900">Dashboard Admin</h1>
-      <!-- Statistik Card -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
-          <div class="text-sm text-gray-500 mb-2">Total User</div>
-          <div class="text-lg font-bold">{userCount ?? '-'}</div>
+  <!-- SIDEBAR & MAIN DASHBOARD -->
+  <div class="min-h-screen bg-gray-50 flex">
+    <div class="sticky top-0 h-screen hidden md:block">
+      <AdminSidebar active="dashboard" />
+    </div>
+    <main class="flex-1 overflow-x-auto">
+      <div class="max-w-7xl mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-8 text-blue-900">Dashboard Admin</h1>
+        <!-- Statistik Card (rapi satu baris) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-10">
+          <div
+            class="bg-white rounded-xl shadow p-6 flex flex-col items-center"
+          >
+            <div class="mb-2 text-blue-600 text-3xl">
+              <svg width="32" height="32" fill="none" viewBox="0 0 24 24"
+                ><circle cx="12" cy="12" r="12" fill="#dbeafe"></circle><path
+                  d="M12 12a4 4 0 100-8 4 4 0 000 8zm0 2c-3.314 0-6 1.343-6 3v1a1 1 0 001 1h10a1 1 0 001-1v-1c0-1.657-2.686-3-6-3z"
+                  fill="#2563eb"></path></svg
+              >
+            </div>
+            <div class="text-sm text-gray-500 mb-1">Total User</div>
+            <div class="text-2xl font-bold stat-user-count">
+              {userCount ?? "-"}
+            </div>
+          </div>
+          <div
+            class="bg-white rounded-xl shadow p-6 flex flex-col items-center"
+          >
+            <div class="mb-2 text-yellow-600 text-3xl">
+              <svg width="32" height="32" fill="none" viewBox="0 0 24 24"
+                ><circle cx="12" cy="12" r="12" fill="#fef9c3"></circle><path
+                  d="M7 17V7a2 2 0 012-2h6a2 2 0 012 2v10"
+                  stroke="#ca8a04"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"></path></svg
+              >
+            </div>
+            <div class="text-sm text-gray-500 mb-1">Total Video</div>
+            <div class="text-2xl font-bold">{videoCount ?? "-"}</div>
+          </div>
+          <div
+            class="bg-white rounded-xl shadow p-6 flex flex-col items-center"
+          >
+            <div class="mb-2 text-green-600 text-3xl">
+              <svg width="32" height="32" fill="none" viewBox="0 0 24 24"
+                ><circle cx="12" cy="12" r="12" fill="#dcfce7"></circle><path
+                  d="M8 17V7a2 2 0 012-2h4a2 2 0 012 2v10"
+                  stroke="#16a34a"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"></path></svg
+              >
+            </div>
+            <div class="text-sm text-gray-500 mb-1">Total Kursus</div>
+            <div class="text-2xl font-bold">{kursusCount ?? "-"}</div>
+          </div>
+          <div
+            class="bg-white rounded-xl shadow p-6 flex flex-col items-center"
+          >
+            <div class="mb-2 text-purple-600 text-3xl">
+              <svg width="32" height="32" fill="none" viewBox="0 0 24 24"
+                ><circle cx="12" cy="12" r="12" fill="#ede9fe"></circle><path
+                  d="M8 12h8M12 8v8"
+                  stroke="#7c3aed"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"></path></svg
+              >
+            </div>
+            <div class="text-sm text-gray-500 mb-1">Fitur Lain</div>
+            <div class="text-2xl font-bold">-</div>
+          </div>
         </div>
-        <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
-          <div class="text-sm text-gray-500 mb-2">Total Video</div>
-          <div class="text-lg font-bold">{videoCount ?? '-'}</div>
+
+        <!-- Grafik & Kalender -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          <div class="md:col-span-2 bg-white rounded-xl shadow p-6">
+            <div class="font-semibold mb-2 text-blue-700">Grafik Aktivitas</div>
+            <canvas id="activityChart" height="120"></canvas>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            
+          </div>
+          <div
+            class="bg-white rounded-xl shadow p-6 flex flex-col items-center"
+          >
+            <div class="font-semibold mb-2 text-purple-700">Kalender Mini</div>
+            <div class="w-full">
+              <iframe
+                src="https://calendar.google.com/calendar/embed?src=id.indonesian%23holiday%40group.v.calendar.google.com&ctz=Asia/Jakarta"
+                style="border:0"
+                width="100%"
+                height="170"
+                frameborder="0"
+                scrolling="no"></iframe>
+            </div>
+          </div>
         </div>
-        <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
-          <div class="text-sm text-gray-500 mb-2">Total Kursus</div>
-          <div class="text-lg font-bold">{kursusCount ?? '-'}</div>
+
+        <!-- Tabel Data User Terbaru & Transaksi -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-white rounded-xl shadow p-6">
+            <div class="font-semibold mb-4 text-blue-700">User Terbaru</div>
+            <table class="min-w-full text-sm border rounded-lg overflow-hidden">
+              <thead>
+                <tr class="text-left text-gray-500 border-b">
+                  <th class="py-2 px-3">Nama</th>
+                  <th class="py-2 px-3">Email</th>
+                  <th class="py-2 px-3">Tanggal Daftar</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Data user terbaru akan diisi otomatis oleh JS -->
+              </tbody>
+            </table>
+          </div>
+          <div
+            class="bg-white rounded-xl shadow p-6 flex flex-col justify-center items-center min-h-[200px]"
+          >
+            <div class="font-semibold mb-4 text-purple-700">
+              Transaksi Terakhir
+            </div>
+            <div class="text-gray-400 text-center">
+              Belum ada data transaksi.
+            </div>
+          </div>
         </div>
       </div>
-      <div class="text-blue-600 text-3xl mb-2"><svg width="32" height="32" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#dbeafe"/><path d="M12 12a4 4 0 100-8 4 4 0 000 8zm0 2c-3.314 0-6 1.343-6 3v1a1 1 0 001 1h10a1 1 0 001-1v-1c0-1.657-2.686-3-6-3z" fill="#2563eb"/></svg></div>
-      <div class="text-lg font-bold">{userCount}</div>
-      <div class="text-gray-500">User Terdaftar</div>
-    </div>
-    <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
-      <div class="text-yellow-600 text-3xl mb-2"><svg width="32" height="32" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#fef9c3"/><path d="M7 17V7a2 2 0 012-2h6a2 2 0 012 2v10" stroke="#ca8a04" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="text-lg font-bold">{videoCount}</div>
-      <div class="text-gray-500">Video Pembelajaran</div>
-    </div>
-    <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
-      <div class="text-green-600 text-3xl mb-2"><svg width="32" height="32" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#dcfce7"/><path d="M8 17V7a2 2 0 012-2h4a2 2 0 012 2v10" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="text-lg font-bold">{kursusCount}</div>
-      <div class="text-gray-500">Total Kursus</div>
-    </div>
-    <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
-      <div class="text-purple-600 text-3xl mb-2"><svg width="32" height="32" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#ede9fe"/><path d="M8 12h8M12 8v8" stroke="#7c3aed" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="text-lg font-bold">-</div>
-      <div class="text-gray-500">Fitur Lain</div>
-    </div>
+    </main>
   </div>
-  <!-- Grafik & Kalender -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <div class="md:col-span-2 bg-white rounded-xl shadow p-6">
-      <div class="font-semibold mb-2 text-blue-700">Grafik Aktivitas</div>
-      <canvas id="activityChart" height="120"></canvas>
-      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-      <script is:inline>
-        document.addEventListener('DOMContentLoaded', function() {
-          const ctx = document.getElementById('activityChart').getContext('2d');
-          new window.Chart(ctx, {
-            type: 'line',
-            data: {
-              labels: ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'],
-              datasets: [{
-                label: 'Aktivitas User',
-                data: [2, 4, 7, 3, 5, 6, 4], // Dummy, bisa diganti data real
-                borderColor: '#2563eb',
-                backgroundColor: 'rgba(37,99,235,0.1)',
-                fill: true,
-                tension: 0.4
-              }]
-            },
-            options: {
-              responsive: true,
-              plugins: { legend: { display: false } }
-            }
-          });
-        });
-      </script>
-    </div>
-    <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
-      <div class="font-semibold mb-2 text-purple-700">Kalender Mini</div>
-      <div class="w-full">
-        <iframe src="https://calendar.google.com/calendar/embed?src=id.indonesian%23holiday%40group.v.calendar.google.com&ctz=Asia/Jakarta" style="border:0" width="100%" height="170" frameborder="0" scrolling="no"></iframe>
-      </div>
-    </div>
-  </div>
-  <!-- Tabel Data User Terbaru & Transaksi (dummy) -->
-  <div class="grid md:grid-cols-2 gap-6">
-    <div class="bg-white rounded-xl shadow p-4 mb-8">
-      <div class="font-semibold mb-2">User Terbaru</div>
-      <table class="min-w-full text-sm">
-        <thead>
-          <tr class="text-left text-gray-500 border-b">
-            <th>Nama</th><th>Email</th><th>Tanggal Daftar</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Data user terbaru akan diisi otomatis oleh JS -->
-          </tbody>
-        </table>
-      </div>
-      <div class="bg-white rounded-xl shadow p-4 mb-8">
-        <div class="font-semibold mb-2">Transaksi Terakhir</div>
-        <div class="text-gray-400 text-center">Belum ada data transaksi.</div>
-      </div>
-    </div>
-  </section>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"
+  ></script>
+</Layout>
 <script type="module">
-  const supabaseUrl = 'https://jcfizceoycwdvpqpwhrj.supabase.co';
-  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA';
+  // Inisialisasi Supabase JS Client
+  const supabaseUrl = "https://jcfizceoycwdvpqpwhrj.supabase.co";
+  const supabaseKey =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA";
   const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-  // Loading state
-  const videoCountEl = document.getElementById('videoCount');
-  if (videoCountEl) videoCountEl.textContent = '...';
+  // Pastikan ada elemen dengan id videoCount di HTML!
+  const videoCountEl = document.getElementById("videoCount");
+  if (videoCountEl) videoCountEl.textContent = "...";
 
+  // Ambil jumlah video dari Supabase dan tampilkan
   async function fetchVideoCount() {
     try {
       const { count, error } = await supabase
-        .from('videos')
-        .select('*', { count: 'exact', head: true });
+        .from("videos")
+        .select("*", { count: "exact", head: true });
       if (error) {
-        if (videoCountEl) videoCountEl.textContent = '-';
+        if (videoCountEl) videoCountEl.textContent = "-";
+        console.error("Gagal ambil jumlah video:", error.message);
         return;
       }
-      if (typeof count === 'number') {
+      if (typeof count === "number") {
         if (videoCountEl) videoCountEl.textContent = count;
       } else {
-        if (videoCountEl) videoCountEl.textContent = '-';
+        if (videoCountEl) videoCountEl.textContent = "-";
       }
     } catch (err) {
-      ('Fetch video count exception:', err);
-      if (videoCountEl) videoCountEl.textContent = '-';
+      console.error("Fetch video count exception:", err);
+      if (videoCountEl) videoCountEl.textContent = "-";
     }
   }
   fetchVideoCount();
 </script>
-
-

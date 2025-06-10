@@ -1,40 +1,43 @@
 ---
+import Layout from '../layouts/Layout.astro';
 import AdminSidebar from '../components/AdminSidebar.astro';
 ---
-<div class="min-h-screen bg-gray-50 flex">
-  <div class="sticky top-0 h-screen hidden md:block">
-    <AdminSidebar active="blog" />
-  </div>
-  <main class="flex-1 overflow-x-auto">
-    <div class="max-w-4xl mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold mb-8 text-blue-900">Kelola Blog</h1>
-      <div class="bg-white rounded-xl shadow p-6 mb-8">
-        <h2 class="text-xl font-semibold mb-4">Tambah Blog Baru</h2>
-        <form id="blog-form" class="flex flex-col gap-4">
-          <input type="text" id="blog-title" class="border rounded p-2" placeholder="Judul Blog" required />
-          <textarea id="blog-content" class="border rounded p-2 min-h-[120px]" placeholder="Isi Blog" required></textarea>
-          <input type="text" id="blog-author" class="border rounded p-2" placeholder="Penulis" required />
-          <input type="url" id="blog-image" class="border rounded p-2" placeholder="URL Gambar (opsional)" />
-          <input type="text" id="blog-source" class="border rounded p-2" placeholder="Sumber (opsional, misal: Kompas.com)" />
-          <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded transition-all">Tambah Blog</button>
-        </form>
-      </div>
-      <div class="bg-white rounded-xl shadow p-6">
-        <h2 class="text-xl font-semibold mb-4">Daftar Blog</h2>
-        <table class="min-w-full text-sm">
-          <thead>
-            <tr class="text-left text-gray-500 border-b">
-              <th>Gambar</th><th>Judul</th><th>Penulis</th><th>Sumber</th><th>Tanggal</th><th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody id="blog-list">
-            <!-- Blog list will be rendered here -->
-          </tbody>
-        </table>
-      </div>
+<Layout title="Kelola Blog" bodyClass="admin-blog">
+  <div class="min-h-screen bg-gray-50 flex">
+    <div class="sticky top-0 h-screen hidden md:block">
+      <AdminSidebar active="blog" />
     </div>
-  </main>
-</div>
+    <main class="flex-1 overflow-x-auto">
+      <div class="max-w-4xl mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-8 text-blue-900">Kelola Blog</h1>
+        <div class="bg-white rounded-xl shadow p-6 mb-8">
+          <h2 class="text-xl font-semibold mb-4">Tambah Blog Baru</h2>
+          <form id="blog-form" class="flex flex-col gap-4">
+            <input type="text" id="blog-title" class="border rounded p-2" placeholder="Judul Blog" required />
+            <textarea id="blog-content" class="border rounded p-2 min-h-[120px]" placeholder="Isi Blog" required></textarea>
+            <input type="text" id="blog-author" class="border rounded p-2" placeholder="Penulis" required />
+            <input type="url" id="blog-image" class="border rounded p-2" placeholder="URL Gambar (opsional)" />
+            <input type="text" id="blog-source" class="border rounded p-2" placeholder="Sumber (opsional, misal: Kompas.com)" />
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded transition-all">Tambah Blog</button>
+          </form>
+        </div>
+        <div class="bg-white rounded-xl shadow p-6">
+          <h2 class="text-xl font-semibold mb-4">Daftar Blog</h2>
+          <table class="min-w-full text-sm">
+            <thead>
+              <tr class="text-left text-gray-500 border-b">
+                <th>Gambar</th><th>Judul</th><th>Penulis</th><th>Sumber</th><th>Tanggal</th><th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="blog-list">
+              <!-- Blog list will be rendered here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</Layout>
 <script type="module">
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 const supabaseUrl = 'https://jcfizceoycwdvpqpwhrj.supabase.co';
