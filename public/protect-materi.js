@@ -28,7 +28,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const auth = getAuth();
 
 function blokirAkses() {
-  alert("Akses materi hanya untuk user yang sudah membeli kursus ini.\nAnda akan diarahkan kembali ke halaman kursus.");
+
   window.location.href = "/kursus";
 }
 

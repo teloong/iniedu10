@@ -5,6 +5,7 @@ import '../styles/global.css';
 
 interface Props {
 	title: string;
+	bodyClass?: string;
 }
 
 const { title = 'IniEdu - Platform Pendidikan Online' } = Astro.props;
@@ -50,8 +51,13 @@ const { title = 'IniEdu - Platform Pendidikan Online' } = Astro.props;
 	  <link rel="preload" as="image" href="/lcp-3d-kelas-online.webp" imagesrcset="/lcp-3d-kelas-online.webp 370w, /lcp-3d-kelas-online-240.webp 240w" imagesizes="(max-width: 480px) 240px, 370px" />
 </head>
 	
-	<body class="flex flex-col bg-gray-50">
+	<body class={`flex flex-col bg-gray-50 ${Astro.props.bodyClass ?? ''}`}>
 		<Header />
+		<style>
+		body.admin-dashboard header {
+			display: none !important;
+		}
+		</style>
 		<!-- Tombol Login/Profil Firebase Global -->
 		<div id="auth-action" class="hidden flex gap-2 items-center justify-end p-4">
 			<button id="login-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Login</button>
