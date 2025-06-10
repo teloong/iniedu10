@@ -1,9 +1,8 @@
 {
   "redirects": [
     {
-      "source": "/(.*)",
-      "has": [{ "host": "iniedu.id" }],
-      "destination": "https://www.iniedu.id/$1",
+      "source": "/:path*",
+      "destination": "https://www.iniedu.id/:path*",
       "permanent": true
     }
   ]
