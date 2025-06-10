@@ -69,38 +69,28 @@ document.addEventListener("DOMContentLoaded", () => {
       buttons.forEach(btn => setButtonLogin(btn));
       return;
     }
-    // Ambil JWT Firebase user dan set ke Supabase agar policy RLS bisa jalan
-    try {
-      const token = await user.getIdToken();
-      // Proses sign-in ke Supabase Auth dengan JWT Firebase agar user muncul di Supabase Auth Users
-      await fetch(`${SUPABASE_URL}/auth/v1/token?provider=firebase`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id_token: token })
-      });
-      if (supabase.auth && typeof supabase.auth.setSession === 'function') {
-        await supabase.auth.setSession({ access_token: token, refresh_token: '' }); // supabase-js v2
-      }
-    } catch (e) {
-      console.error('Gagal sign-in ke Supabase Auth:', e);
-    }
-
-    // Ambil semua id kursus dari tombol dan pastikan bertipe integer
+    // Ambil semua id kursus dari tombol
     const kursusIds = Array.from(document.querySelectorAll('.btn-kursus')).map(btn => btn.getAttribute('data-id-kursus'));
     if (!user) return;
-    // Debug: pastikan user.uid sama dengan user_uid di database
+    // Query pembelian via Edge Function get_pembelian_user
     console.log('Firebase user.uid:', user.uid);
-    const { data: pembelian, error } = await supabase
-      .from('pembelian_kursus')
-      .select('id_kursus')
-      .in('id_kursus', kursusIds);
-    console.log('DEBUG hasil pembelian:', pembelian);
-    if (error) {
-      ('Gagal cek pembelian:', error);
+    let boughtIds = [];
+    try {
+      const endpoint = "https://jcfizceoycwdvpqpwhrj.functions.supabase.co/get_pembelian_user";
+      const idToken = await user.getIdToken();
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: idToken })
+      });
+      const result = await res.json();
+      boughtIds = (result.pembelian || []).map(row => String(row.id_kursus));
+      console.log('DEBUG hasil pembelian:', result.pembelian);
+    } catch (error) {
+      console.error('Gagal cek pembelian (Edge Function):', error);
       buttons.forEach(btn => setButtonError(btn));
       return;
     }
-    const boughtIds = pembelian.map(row => String(row.id_kursus));
     buttons.forEach(btn => {
       const id = btn.getAttribute('data-id-kursus');
       if (boughtIds.includes(String(id))) {
