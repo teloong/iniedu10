@@ -3,6 +3,18 @@ import AdminSidebar from "../components/AdminSidebar.astro";
 ---
 
 <link rel="stylesheet" href="/src/styles/global.css" />
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+  const supabaseUrl = 'https://jcfizceoycwdvpqpwhrj.supabase.co';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA';
+  const supabase = createClient(supabaseUrl, supabaseKey);
+  (async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session || session.user.email !== "lemindes@gmail.com") {
+      window.location.href = "/admin-login";
+    }
+  })();
+</script>
 <div class="min-h-screen bg-gray-50 flex">
   <div class="sticky top-0 h-screen hidden md:block">
     <AdminSidebar active="daftar-video" />

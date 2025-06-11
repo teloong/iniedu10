@@ -59,7 +59,7 @@ import AdminSidebar from '../components/AdminSidebar.astro';
   // Proteksi: hanya user yang login Supabase yang bisa akses halaman ini
   (async () => {
     const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
+    if (!session || session.user.email !== "lemindes@gmail.com") {
       window.location.href = '/admin-login';
     }
   })();
