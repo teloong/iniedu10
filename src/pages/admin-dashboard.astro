@@ -112,7 +112,7 @@ const { count: kursusCount } = await supabase
         }
       }
     } catch (err) {
-      console.error("Gagal fetch user terbaru:", err);
+      
     }
   }
   document.addEventListener("DOMContentLoaded", fetchLatestUsers);
@@ -264,7 +264,7 @@ const { count: kursusCount } = await supabase
         return;
       }
       // Debug: log session info
-      console.log("[DEBUG] Session Supabase:", session);
+      
       // Cek email admin
       const adminEmail = "lemindes@gmail.com";
       if (session.user.email !== adminEmail) {
@@ -278,10 +278,10 @@ const { count: kursusCount } = await supabase
         .from("videos")
         .select("*", { count: "exact", head: true });
       // Debug: log hasil query count
-      console.log("[DEBUG] Hasil query count video:", { count, error });
+      
       if (error) {
         if (videoCountEl) videoCountEl.textContent = "-";
-        console.error("Gagal ambil jumlah video:", error.message);
+        
         return;
       }
       if (typeof count === "number") {
@@ -290,7 +290,7 @@ const { count: kursusCount } = await supabase
         if (videoCountEl) videoCountEl.textContent = "-";
       }
     } catch (err) {
-      console.error("Fetch video count exception:", err);
+      
       if (videoCountEl) videoCountEl.textContent = "-";
     }
   }

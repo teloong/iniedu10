@@ -79,8 +79,8 @@ serve(async (req) => {
     .select("id_kursus")
     .eq("user_uid", uid);
 
-  console.log("[DEBUG] UID:", uid);
-  console.log("[DEBUG] Pembelian kursus:", pembelian);
+  
+  
 
   if (errorPembelian) {
     return new Response(JSON.stringify({ error: errorPembelian.message }), {
@@ -90,7 +90,7 @@ serve(async (req) => {
   }
 
   const idKursus = pembelian.map(p => p.id_kursus).filter(id => !!id && id !== '').map(id => Number(id));
-  console.log("[DEBUG] idKursus:", idKursus);
+  
 
   let videos = [];
   if (idKursus.length > 0) {
@@ -101,7 +101,7 @@ serve(async (req) => {
       .eq("kelas", kelas)
       .eq("mapel", mapel);
 
-    console.log("[DEBUG] Query videos, id_kursus:", idKursus, "kelas:", kelas, "mapel:", mapel, "Result:", videoData);
+    
 
     if (errorVideo) {
       return new Response(JSON.stringify({ error: errorVideo.message }), {

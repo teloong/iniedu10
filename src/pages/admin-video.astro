@@ -114,7 +114,7 @@ import AdminSidebar from '../components/AdminSidebar.astro';
     const id_kursus = document.getElementById('id_kursus').value;
     const description = document.getElementById('deskripsi').value.trim();
     // Debug: tampilkan payload
-    console.log('Payload:', { title, url, kelas, mapel, id_kursus, description });
+    
     if (!title || !kelas || !mapel || !url || !id_kursus) {
       videoMessage.textContent = 'Semua field wajib diisi!';
       return;
@@ -129,10 +129,10 @@ import AdminSidebar from '../components/AdminSidebar.astro';
       // Update video
       const { error, data } = await supabase.from('videos').update({ title, kelas, mapel, url, id_kursus, description }).eq('id', editId);
       // Debug: tampilkan response update
-      console.log('Update result:', { error, data });
+      
       if (error) {
         videoMessage.textContent = 'Gagal mengupdate video.';
-        console.error('Supabase update error:', error);
+        
       } else {
         videoMessage.textContent = 'Berhasil mengupdate video!';
         setTimeout(() => { window.location.href = '/admin-daftar-video'; }, 1000);
@@ -141,12 +141,12 @@ import AdminSidebar from '../components/AdminSidebar.astro';
       // Tambah baru
       const { error, data } = await supabase.from('videos').insert([{ title, url, kelas, mapel, id_kursus, description }]);
       // Debug: tampilkan response insert
-      console.log('Insert result:', { error, data });
+      
       if (error) {
         videoMessage.textContent = 'Gagal menambah video.';
         videoMessage.classList.remove('text-green-600');
         videoMessage.classList.add('text-red-500');
-        console.error('Supabase insert error:', error);
+        
       } else {
         form.reset();
         videoMessage.textContent = 'Berhasil menambah video!';

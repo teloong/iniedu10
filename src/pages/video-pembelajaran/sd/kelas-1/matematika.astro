@@ -82,7 +82,7 @@ import Layout from "../../../../layouts/Layout.astro";
           videoMessage.textContent = "Silakan login untuk melihat video.";
           return;
         }
-        console.log("[DEBUG] UID user login:", user.uid);
+        
         const token = await user.getIdToken();
         fetchVideosWithToken(token);
       });
