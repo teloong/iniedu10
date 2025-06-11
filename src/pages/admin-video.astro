@@ -10,7 +10,7 @@ import AdminSidebar from '../components/AdminSidebar.astro';
     <section class="max-w-2xl mx-auto mt-12 bg-white rounded-2xl shadow-lg p-8">
     <h1 class="text-2xl font-bold text-center mb-6 text-blue-700">Admin: Kelola Video Pembelajaran</h1>
     <form id="video-form" class="flex flex-col gap-4 mb-8">
-      <input type="text" id="judul" required placeholder="Judul Video" class="border rounded p-2" />
+      <input type="text" id="title" required placeholder="Judul Video" class="border rounded p-2" />
       <select id="kelas" required class="border rounded p-2">
         <option value="">Pilih Kelas</option>
         <option value="1">Kelas 1</option>
@@ -87,7 +87,7 @@ import AdminSidebar from '../components/AdminSidebar.astro';
         videoMessage.textContent = 'Gagal memuat data video untuk diedit.';
         return;
       }
-      document.getElementById('judul').value = data.judul || '';
+      document.getElementById('title').value = data.title || '';
       document.getElementById('kelas').value = data.kelas || '';
       document.getElementById('mapel').value = data.mapel || '';
       document.getElementById('url').value = data.url || '';
@@ -102,56 +102,20 @@ import AdminSidebar from '../components/AdminSidebar.astro';
   // Jalankan prefill saat halaman dimuat
   prefillEditForm();
 
-  // Ambil dan tampilkan daftar video
-  async function fetchVideos() {
-    const { data, error } = await supabase.from('videos').select('*').order('created_at', { ascending: false });
-    videoList.innerHTML = '';
-    if (error) {
-      videoMessage.textContent = 'Gagal mengambil data video.';
-      return;
-    }
-    if (!data || data.length === 0) {
-      videoList.innerHTML = '<li class="text-center text-gray-500">Belum ada video.</li>';
-    } else {
-      data.forEach(video => {
-        const li = document.createElement('li');
-        li.className = 'p-4 bg-gray-100 rounded shadow flex flex-col md:flex-row md:items-center md:justify-between';
-        li.innerHTML = `
-          <div>
-            <div class="font-semibold">${video.title}</div>
-            <div class="text-sm text-gray-600 mb-1">Kelas: ${video.kelas} | Mapel: ${video.mapel}</div>
-            <div class="text-xs text-gray-500 mb-2">${video.description || ''}</div>
-            <a href="${video.url}" target="_blank" class="text-blue-600 underline">Lihat Video</a>
-          </div>
-          <button data-id="${video.id}" class="hapus-btn bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded mt-2 md:mt-0">Hapus</button>
-        `;
-        videoList.appendChild(li);
-      });
-    }
-    // Tambah event hapus
-    document.querySelectorAll('.hapus-btn').forEach(btn => {
-      btn.onclick = async (e) => {
-        const id = btn.getAttribute('data-id');
-        if (confirm('Yakin ingin menghapus video ini?')) {
-          await supabase.from('videos').delete().eq('id', id);
-          fetchVideos();
-        }
-      };
-    });
-  }
-  fetchVideos();
 
   // Tambah video baru
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     videoMessage.textContent = '';
-    const judul = document.getElementById('judul').value.trim();
+    const title = document.getElementById('title').value.trim();
     const kelas = document.getElementById('kelas').value;
     const mapel = document.getElementById('mapel').value;
     const url = document.getElementById('url').value.trim();
     const id_kursus = document.getElementById('id_kursus').value;
     const description = document.getElementById('deskripsi').value.trim();
-    if (!judul || !kelas || !mapel || !url || !id_kursus) {
+    // Debug: tampilkan payload
+    console.log('Payload:', { title, url, kelas, mapel, id_kursus, description });
+    if (!title || !kelas || !mapel || !url || !id_kursus) {
       videoMessage.textContent = 'Semua field wajib diisi!';
       return;
     }
@@ -163,21 +127,31 @@ import AdminSidebar from '../components/AdminSidebar.astro';
     const editId = form.dataset.editId;
     if (editId) {
       // Update video
-      const { error } = await supabase.from('videos').update({ judul, kelas, mapel, url, id_kursus, description }).eq('id', editId);
+      const { error, data } = await supabase.from('videos').update({ title, kelas, mapel, url, id_kursus, description }).eq('id', editId);
+      // Debug: tampilkan response update
+      console.log('Update result:', { error, data });
       if (error) {
         videoMessage.textContent = 'Gagal mengupdate video.';
+        console.error('Supabase update error:', error);
       } else {
         videoMessage.textContent = 'Berhasil mengupdate video!';
         setTimeout(() => { window.location.href = '/admin-daftar-video'; }, 1000);
       }
     } else {
       // Tambah baru
-      const { error } = await supabase.from('videos').insert([{ judul, url, kelas, mapel, id_kursus, description }]);
+      const { error, data } = await supabase.from('videos').insert([{ title, url, kelas, mapel, id_kursus, description }]);
+      // Debug: tampilkan response insert
+      console.log('Insert result:', { error, data });
       if (error) {
         videoMessage.textContent = 'Gagal menambah video.';
+        videoMessage.classList.remove('text-green-600');
+        videoMessage.classList.add('text-red-500');
+        console.error('Supabase insert error:', error);
       } else {
         form.reset();
         videoMessage.textContent = 'Berhasil menambah video!';
+        videoMessage.classList.remove('text-red-500');
+        videoMessage.classList.add('text-green-600');
       }
     }
   });

@@ -61,35 +61,55 @@ const { data: blogs, error } = await supabase
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.min.js"></script>
 <script>
+  // Untuk TypeScript: deklarasikan properti di Window agar tidak error di seluruh file
+  declare global {
+    interface Window {
+      supabase: any;
+      hapusBlog: (id: string) => Promise<void>;
+    }
+  }
+  // @ts-ignore
+  window.supabase = window.supabase || undefined;
+  // @ts-ignore
+  window.hapusBlog = window.hapusBlog || undefined;
+
   document.addEventListener('DOMContentLoaded', function() {
     const supabaseClient = window.supabase.createClient(
       'https://jcfizceoycwdvpqpwhrj.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA'
     );
     window.supabase = supabaseClient;
+    // id: string agar tidak error TS
     window.hapusBlog = async function(id) {
       const { error } = await window.supabase.from('blog').delete().eq('id', id);
       if (!error) {
         const alertBox = document.getElementById('blog-success-alert');
-        alertBox.textContent = 'Artikel berhasil dihapus!';
-        alertBox.classList.remove('hidden');
+        if (alertBox) {
+          alertBox.textContent = 'Artikel berhasil dihapus!';
+          alertBox.classList.remove('hidden');
+        }
         // Hapus baris blog dari tabel tanpa reload
-        const row = document.querySelector(`button.btn-hapus-blog[data-id="${id}"]`).closest('tr');
-        if(row) row.remove();
+        const row = document.querySelector(`button.btn-hapus-blog[data-id="${id}"]`);
+        if(row && row.closest) {
+          const tr = row.closest('tr');
+          if(tr) tr.remove();
+        }
       }
     }
     // Tambah event listener ke semua tombol hapus
     document.querySelectorAll('.btn-hapus-blog').forEach(btn => {
-      btn.addEventListener('click', function() {
+      btn.addEventListener('click', function(this: HTMLElement) {
         // Sembunyikan alert jika klik tombol lain
-        document.getElementById('blog-success-alert').classList.add('hidden');
+        const alertBox = document.getElementById('blog-success-alert');
+        if (alertBox) alertBox.classList.add('hidden');
         const id = this.getAttribute('data-id');
-        window.hapusBlog(id);
+        if (id) window.hapusBlog(id);
       });
     });
     document.querySelectorAll('.btn-edit-blog').forEach(btn => {
       btn.addEventListener('click', function() {
-        document.getElementById('blog-success-alert').classList.add('hidden');
+        const alertBox = document.getElementById('blog-success-alert');
+        if (alertBox) alertBox.classList.add('hidden');
       });
     });
   });
