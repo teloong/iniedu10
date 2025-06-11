@@ -37,13 +37,17 @@ import Layout from "../../../../layouts/Layout.astro";
         videoMessage.textContent = "";
         videoList.innerHTML = "";
         try {
+          const kelas = 2;
+          const mapel = "Seni Musik";
           const res = await fetch(
-            "https://iniedu.id/api/akses_video?kelas=2&mapel=seni-musik",
+            "https://jcfizceoycwdvpqpwhrj.functions.supabase.co/akses_video",
             {
-              headers: { Authorization: `Bearer ${token}` },
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ token, kelas, mapel })
             }
           );
-          const videos = await res.json();
+          const { videos } = await res.json();
           if (!Array.isArray(videos) || videos.length === 0) {
             videoMessage.textContent = "Belum ada video untuk mapel ini.";
             return;
@@ -65,7 +69,7 @@ import Layout from "../../../../layouts/Layout.astro";
             const div = document.createElement("div");
             div.className = "p-4 bg-gray-50 rounded shadow";
             div.innerHTML = `
-              <div class='font-semibold text-lg mb-2'>${video.judul}</div>
+              <div class='font-semibold text-lg mb-2'>${video.title || video.judul || "-"} </div>
               ${embed}
               <div class='text-sm text-gray-600 mb-1'>${video.description || ""}</div>
             `;

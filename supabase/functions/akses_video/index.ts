@@ -40,8 +40,16 @@ serve(async (req) => {
   }
 
   const token = body.token;
+  const kelas = body.kelas;
+  const mapel = body.mapel;
   if (!token) {
     return new Response(JSON.stringify({ error: "Token tidak ditemukan" }), {
+      status: 400,
+      headers: corsHeaders,
+    });
+  }
+  if (!kelas || !mapel) {
+    return new Response(JSON.stringify({ error: "Kelas dan mapel wajib dikirim" }), {
       status: 400,
       headers: corsHeaders,
     });
@@ -89,9 +97,11 @@ serve(async (req) => {
     const { data: videoData, error: errorVideo } = await supabase
       .from("videos")
       .select("*")
-      .in("id_kursus", idKursus);
+      .in("id_kursus", idKursus)
+      .eq("kelas", kelas)
+      .eq("mapel", mapel);
 
-    console.log("[DEBUG] Query videos, id_kursus:", idKursus, "Result:", videoData);
+    console.log("[DEBUG] Query videos, id_kursus:", idKursus, "kelas:", kelas, "mapel:", mapel, "Result:", videoData);
 
     if (errorVideo) {
       return new Response(JSON.stringify({ error: errorVideo.message }), {

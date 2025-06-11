@@ -2,10 +2,10 @@
 import Layout from "../../../../layouts/Layout.astro";
 ---
 
-<Layout title="Video Pembelajaran SD Kelas 1 - Matematika">
+<Layout title="Video Pembelajaran SD Kelas 3 - Seni Musik">
   <section class="max-w-2xl mx-auto mt-12 bg-white rounded-2xl shadow-lg p-8">
     <h1 class="text-2xl font-bold text-center mb-6 text-blue-700">
-      Video Pembelajaran SD Kelas 1 - Matematika
+      Video Pembelajaran SD Kelas 3 - Seni Musik
     </h1>
     <div id="video-list" class="space-y-8"></div>
     <div id="video-message" class="text-center text-red-500 mt-6"></div>
@@ -18,7 +18,6 @@ import Layout from "../../../../layouts/Layout.astro";
         getAuth,
         onAuthStateChanged,
       } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-      // GANTI dengan konfigurasi Firebase kamu!
       const firebaseConfig = {
         apiKey: "AIzaSyAlxYWD4bCwpoKEErXDX1_4AZC9wzQTkwA",
         authDomain: "iniedu.firebaseapp.com",
@@ -38,17 +37,21 @@ import Layout from "../../../../layouts/Layout.astro";
         videoMessage.textContent = "";
         videoList.innerHTML = "";
         try {
-          const kelas = 1;
-          const mapel = "Matematika";
+          const kelas = 3;
+          const mapel = "Seni Musik";
           const res = await fetch(
             "https://jcfizceoycwdvpqpwhrj.functions.supabase.co/akses_video",
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ token, kelas, mapel }),
+              body: JSON.stringify({ token, kelas, mapel })
             }
           );
           const { videos } = await res.json();
+          if (!Array.isArray(videos) || videos.length === 0) {
+            videoMessage.textContent = "Belum ada video untuk mapel ini.";
+            return;
+          }
           videos.forEach((video) => {
             let embed = "";
             if (video.url) {
@@ -82,7 +85,6 @@ import Layout from "../../../../layouts/Layout.astro";
           videoMessage.textContent = "Silakan login untuk melihat video.";
           return;
         }
-        console.log("[DEBUG] UID user login:", user.uid);
         const token = await user.getIdToken();
         fetchVideosWithToken(token);
       });
