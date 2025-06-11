@@ -1,8 +1,8 @@
 ---
-import Layout from '../layouts/Layout.astro';
+// import Layout dari layout utama di-nonaktifkan untuk halaman admin
 import AdminSidebar from '../components/AdminSidebar.astro';
 ---
-<Layout title="Kelola Blog" bodyClass="admin-blog">
+<link rel="stylesheet" href="/src/styles/global.css"/>
   <div class="min-h-screen bg-gray-50 flex">
     <div class="sticky top-0 h-screen hidden md:block">
       <AdminSidebar active="blog" />
@@ -11,8 +11,9 @@ import AdminSidebar from '../components/AdminSidebar.astro';
       <div class="max-w-4xl mx-auto px-4 py-8">
         <h1 class="text-3xl font-bold mb-8 text-blue-900">Kelola Blog</h1>
         <div class="bg-white rounded-xl shadow p-6 mb-8">
-          <h2 class="text-xl font-semibold mb-4">Tambah Blog Baru</h2>
+          <h2 id="form-title" class="text-xl font-semibold mb-4">Tambah Blog Baru</h2>
           <form id="blog-form" class="flex flex-col gap-4">
+            <div id="blog-success-alert" class="hidden text-green-600 font-semibold mb-2"></div>
             <input type="text" id="blog-title" class="border rounded p-2" placeholder="Judul Blog" required />
             <textarea id="blog-content" class="border rounded p-2 min-h-[120px]" placeholder="Isi Blog" required></textarea>
             <input type="text" id="blog-author" class="border rounded p-2" placeholder="Penulis" required />
@@ -21,61 +22,19 @@ import AdminSidebar from '../components/AdminSidebar.astro';
             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded transition-all">Tambah Blog</button>
           </form>
         </div>
-        <div class="bg-white rounded-xl shadow p-6">
-          <h2 class="text-xl font-semibold mb-4">Daftar Blog</h2>
-          <table class="min-w-full text-sm">
-            <thead>
-              <tr class="text-left text-gray-500 border-b">
-                <th>Gambar</th><th>Judul</th><th>Penulis</th><th>Sumber</th><th>Tanggal</th><th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="blog-list">
-              <!-- Blog list will be rendered here -->
-            </tbody>
-          </table>
-        </div>
+        
       </div>
     </main>
   </div>
-</Layout>
+
 <script type="module">
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 const supabaseUrl = 'https://jcfizceoycwdvpqpwhrj.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// Tidak perlu renderBlogs dan event handler blog-list di halaman ini
 let editingId = null;
-
-async function renderBlogs() {
-  const tbody = document.getElementById('blog-list');
-  tbody.innerHTML = '<tr><td colspan="6" class="text-center text-gray-400">Loading...</td></tr>';
-  const { data, error } = await supabase.from('blog').select('*').order('created_at', { ascending: false });
-  if (error) {
-    tbody.innerHTML = `<tr><td colspan='6' class='text-red-600 text-center'>Gagal load data blog: ${error.message}</td></tr>`;
-    return;
-  }
-  if (!data || data.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" class="text-center text-gray-400">Belum ada blog.</td></tr>';
-    return;
-  }
-  tbody.innerHTML = '';
-  data.forEach((blog) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${blog.image ? `<img src='${blog.image}' alt='cover' class='w-16 h-12 object-cover rounded'/>` : '-'}</td>
-      <td>${blog.title}</td>
-      <td>${blog.author}</td>
-      <td>${blog.source || '-'}</td>
-      <td>${blog.created_at ? new Date(blog.created_at).toLocaleDateString() : '-'}</td>
-      <td>
-        <button class='text-blue-600 hover:underline' data-edit="${blog.id}">Edit</button>
-        <button class='text-red-600 hover:underline ml-2' data-delete="${blog.id}">Hapus</button>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
 async function handleSubmit(e) {
   e.preventDefault();
   const title = document.getElementById('blog-title').value.trim();
@@ -84,42 +43,55 @@ async function handleSubmit(e) {
   const image = document.getElementById('blog-image').value.trim();
   const source = document.getElementById('blog-source').value.trim();
   if (!title || !content || !author) return;
-  if (editingId) {
-    // Update
-    const { error } = await supabase.from('blog').update({ title, content, author, image, source }).eq('id', editingId);
-    if (error) alert('Gagal update blog: ' + error.message);
-    editingId = null;
+  const alertBox = document.getElementById('blog-success-alert');
+  if (window.editingBlogId) {
+    // update blog
+    const { error } = await supabase.from('blog').update({ title, content, author, image, source }).eq('id', window.editingBlogId);
+    if (error) {
+      alert('Gagal update blog: ' + error.message);
+      return;
+    }
+    alertBox.textContent = 'Artikel berhasil diubah!';
+    alertBox.classList.remove('hidden');
   } else {
-    // Insert
+    // tambah baru
     const { error } = await supabase.from('blog').insert([{ title, content, author, image, source }]);
-    if (error) alert('Gagal tambah blog: ' + error.message);
+    if (error) {
+      alert('Gagal tambah blog: ' + error.message);
+      return;
+    }
+    alertBox.textContent = 'Artikel berhasil ditambah!';
+    alertBox.classList.remove('hidden');
+    document.getElementById('blog-form').reset();
   }
-  document.getElementById('blog-form').reset();
-  renderBlogs();
 }
 
 document.getElementById('blog-form').onsubmit = handleSubmit;
 
-document.getElementById('blog-list').onclick = async function(e) {
-  if (e.target.dataset.delete) {
-    if (!confirm('Yakin ingin menghapus blog ini?')) return;
-    const { error } = await supabase.from('blog').delete().eq('id', e.target.dataset.delete);
-    if (error) alert('Gagal hapus blog: ' + error.message);
-    renderBlogs();
-  } else if (e.target.dataset.edit) {
-    const { data, error } = await supabase.from('blog').select('*').eq('id', e.target.dataset.edit).single();
-    if (error) {
-      alert('Gagal mengambil data blog: ' + error.message);
-      return;
+// Prefill form jika mode edit
+const params = new URLSearchParams(window.location.search);
+const editId = params.get('edit');
+if (editId) {
+  (async () => {
+    const { data, error } = await supabase.from('blog').select('*').eq('id', editId).single();
+    if (!error && data) {
+      document.getElementById('blog-title').value = data.title || '';
+      document.getElementById('blog-content').value = data.content || '';
+      document.getElementById('blog-author').value = data.author || '';
+      document.getElementById('blog-image').value = data.image || '';
+      document.getElementById('blog-source').value = data.source || '';
+      document.getElementById('form-title').textContent = 'Edit Blog';
+      // Simpan id yang sedang diedit
+      window.editingBlogId = editId;
     }
-    document.getElementById('blog-title').value = data.title;
-    document.getElementById('blog-content').value = data.content;
-    document.getElementById('blog-author').value = data.author;
-    document.getElementById('blog-image').value = data.image || '';
-    document.getElementById('blog-source').value = data.source || '';
-    editingId = data.id;
-  }
-};
+  })();
+}
 
-document.addEventListener('DOMContentLoaded', renderBlogs);
+// Sembunyikan alert jika user mulai mengetik lagi
+['blog-title','blog-content','blog-author','blog-image','blog-source'].forEach(id => {
+  document.getElementById(id).addEventListener('input', () => {
+    document.getElementById('blog-success-alert').classList.add('hidden');
+  });
+});
+
 </script>

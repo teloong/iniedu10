@@ -1,0 +1,93 @@
+---
+import AdminSidebar from '../components/AdminSidebar.astro';
+---
+<link rel="stylesheet" href="/src/styles/global.css"/>
+<div class="min-h-screen bg-gray-50 flex">
+  <div class="sticky top-0 h-screen hidden md:block">
+    <AdminSidebar active="daftar-video" />
+  </div>
+  <main class="flex-1 overflow-x-auto">
+    <div class="max-w-5xl mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8 text-blue-900">Daftar Video Pembelajaran</h1>
+      <div id="video-success-alert" class="hidden text-green-600 font-semibold mb-4"></div>
+      <div class="bg-white rounded-xl shadow p-6">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead>
+            <tr class="bg-gray-100">
+              <th class="px-4 py-2 text-left">Judul</th>
+              <th class="px-4 py-2 text-left">Kelas</th>
+              <th class="px-4 py-2 text-left">Mapel</th>
+              <th class="px-4 py-2 text-left">Kursus</th>
+              <th class="px-4 py-2 text-left">URL</th>
+              <th class="px-4 py-2 text-left">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="video-list"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+const supabaseUrl = 'https://jcfizceoycwdvpqpwhrj.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA';
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+async function renderVideos() {
+  const { data, error } = await supabase.from('videos').select('*').order('id', { ascending: false });
+  const tbody = document.getElementById('video-list');
+  tbody.innerHTML = '';
+  if (error) {
+    tbody.innerHTML = '<tr><td colspan="6" class="text-center text-red-600">Gagal memuat data video.</td></tr>';
+    return;
+  }
+  if (!data || data.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="text-center">Belum ada video.</td></tr>';
+    return;
+  }
+  for (const video of data) {
+    tbody.innerHTML += `
+      <tr>
+        <td class="px-4 py-2">${video.judul || '-'}</td>
+        <td class="px-4 py-2">${video.kelas || '-'}</td>
+        <td class="px-4 py-2">${video.mapel || '-'}</td>
+        <td class="px-4 py-2">${video.id_kursus || '-'}</td>
+        <td class="px-4 py-2"><a href="${video.url}" class="text-blue-600 hover:underline" target="_blank">Lihat</a></td>
+        <td class="px-4 py-2">
+          <a href="/admin-video?edit=${video.id}" class="text-blue-600 hover:underline btn-edit-video" data-id="${video.id}">Edit</a>
+          <button class="text-red-600 hover:underline btn-hapus-video ml-2" data-id="${video.id}">Hapus</button>
+        </td>
+      </tr>
+    `;
+  }
+}
+
+window.hapusVideo = async function(id) {
+  const { error } = await supabase.from('videos').delete().eq('id', id);
+  if (!error) {
+    const alertBox = document.getElementById('video-success-alert');
+    alertBox.textContent = 'Video berhasil dihapus!';
+    alertBox.classList.remove('hidden');
+    // Hapus baris video dari tabel tanpa reload
+    const row = document.querySelector(`button.btn-hapus-video[data-id="${id}"]`).closest('tr');
+    if(row) row.remove();
+  }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  await renderVideos();
+  document.getElementById('video-success-alert').classList.add('hidden');
+  // Event delegation untuk tombol hapus
+  document.getElementById('video-list').addEventListener('click', function(e) {
+    if (e.target.classList.contains('btn-hapus-video')) {
+      document.getElementById('video-success-alert').classList.add('hidden');
+      const id = e.target.getAttribute('data-id');
+      window.hapusVideo(id);
+    }
+    if (e.target.classList.contains('btn-edit-video')) {
+      document.getElementById('video-success-alert').classList.add('hidden');
+    }
+  });
+});
+</script>

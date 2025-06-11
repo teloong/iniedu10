@@ -1,0 +1,96 @@
+---
+import AdminSidebar from '../components/AdminSidebar.astro';
+import { supabase } from '../utils/supabase.js';
+// Ambil semua blog dari Supabase
+const { data: blogs, error } = await supabase
+  .from('blog')
+  .select('*')
+  .order('created_at', { ascending: false });
+---
+<link rel="stylesheet" href="/src/styles/global.css"/>
+
+
+<div class="min-h-screen bg-gray-50 flex">
+  <div class="sticky top-0 h-screen hidden md:block">
+    <AdminSidebar active="daftar-blog" />
+  </div>
+  <main class="flex-1 overflow-x-auto">
+    <div class="max-w-4xl mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8 text-blue-900">Daftar Blog</h1>
+      <div id="blog-success-alert" class="hidden text-red-600 font-semibold mb-4"></div>
+      <div class="bg-white rounded-xl shadow p-6">
+        <table class="min-w-full text-sm">
+          <thead>
+            <tr class="text-left text-gray-500 border-b">
+              <th>Gambar</th>
+              <th>Judul</th>
+              <th>Penulis</th>
+              <th>Sumber</th>
+              <th>Tanggal</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {error ? (
+              <tr><td colspan="6" class="text-red-500">Gagal mengambil data blog.</td></tr>
+            ) : !blogs || blogs.length === 0 ? (
+              <tr><td colspan="6" class="text-center text-gray-500">Belum ada blog.</td></tr>
+            ) : (
+              blogs.map(blog => (
+                <tr class="border-b">
+                  <td>
+                    {blog.image ? <img src={blog.image} alt="Gambar" class="w-14 h-10 object-cover rounded" /> : '-'}
+                  </td>
+                  <td>{blog.title}</td>
+                  <td>{blog.author}</td>
+                  <td>{blog.source || '-'}</td>
+                  <td>{blog.created_at ? new Date(blog.created_at).toLocaleDateString('id-ID') : '-'}</td>
+                  <td>
+                    <a href={`/admin-blog?edit=${blog.id}`} class="text-blue-600 hover:underline btn-edit-blog" data-id={blog.id}>Edit</a>
+<button class="text-red-600 hover:underline btn-hapus-blog" data-id={blog.id}>Hapus</button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const supabaseClient = window.supabase.createClient(
+      'https://jcfizceoycwdvpqpwhrj.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA'
+    );
+    window.supabase = supabaseClient;
+    window.hapusBlog = async function(id) {
+      const { error } = await window.supabase.from('blog').delete().eq('id', id);
+      if (!error) {
+        const alertBox = document.getElementById('blog-success-alert');
+        alertBox.textContent = 'Artikel berhasil dihapus!';
+        alertBox.classList.remove('hidden');
+        // Hapus baris blog dari tabel tanpa reload
+        const row = document.querySelector(`button.btn-hapus-blog[data-id="${id}"]`).closest('tr');
+        if(row) row.remove();
+      }
+    }
+    // Tambah event listener ke semua tombol hapus
+    document.querySelectorAll('.btn-hapus-blog').forEach(btn => {
+      btn.addEventListener('click', function() {
+        // Sembunyikan alert jika klik tombol lain
+        document.getElementById('blog-success-alert').classList.add('hidden');
+        const id = this.getAttribute('data-id');
+        window.hapusBlog(id);
+      });
+    });
+    document.querySelectorAll('.btn-edit-blog').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.getElementById('blog-success-alert').classList.add('hidden');
+      });
+    });
+  });
+</script>

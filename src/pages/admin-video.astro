@@ -1,9 +1,13 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import AdminSidebar from '../components/AdminSidebar.astro';
 ---
-
-<Layout title="Admin - Kelola Video Pembelajaran">
-  <section class="max-w-2xl mx-auto mt-12 bg-white rounded-2xl shadow-lg p-8">
+<link rel="stylesheet" href="/src/styles/global.css"/>
+<div class="min-h-screen bg-gray-50 flex">
+  <div class="sticky top-0 h-screen hidden md:block">
+    <AdminSidebar active="videopembelajaran" />
+  </div>
+  <main class="flex-1 overflow-x-auto">
+    <section class="max-w-2xl mx-auto mt-12 bg-white rounded-2xl shadow-lg p-8">
     <h1 class="text-2xl font-bold text-center mb-6 text-blue-700">Admin: Kelola Video Pembelajaran</h1>
     <form id="video-form" class="flex flex-col gap-4 mb-8">
       <input type="text" id="judul" required placeholder="Judul Video" class="border rounded p-2" />
@@ -29,13 +33,20 @@ import Layout from '../layouts/Layout.astro';
       </select>
       <input type="url" id="url" placeholder="URL Video (YouTube)" class="border rounded p-2" />
       <div class="text-xs text-gray-500 mb-2">Masukkan link YouTube (mode privat/unlisted) yang ingin di-embed.</div>
+      <select id="id_kursus" required class="border rounded p-2">
+        <option value="">Pilih Kursus</option>
+        <option value="1">Konten Pembelajaran Digital</option>
+        <option value="2">Simulasi Ujian</option>
+        <option value="3">Kelas Menulis / Workshop</option>
+      </select>
+      <div class="text-xs text-gray-500 mb-2">Pilih kursus yang sesuai untuk video ini.</div>
       <textarea id="deskripsi" placeholder="Deskripsi (opsional)" class="border rounded p-2"></textarea>
       <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded">Tambah Video</button>
       <div id="video-message" class="text-center text-red-500"></div>
     </form>
     <!-- Tidak ada lagi list video di dashboard admin -->
   </section>
-</Layout>
+
 
 <script type="module">
   import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
@@ -61,8 +72,35 @@ import Layout from '../layouts/Layout.astro';
   }
 
   const form = document.getElementById('video-form');
-  const videoList = document.getElementById('video-list');
   const videoMessage = document.getElementById('video-message');
+
+  // Prefill form jika mode edit
+  async function prefillEditForm() {
+    const params = new URLSearchParams(window.location.search);
+    const editId = params.get('edit');
+    if (editId) {
+      // Ganti tombol
+      form.querySelector('button[type="submit"]').textContent = 'Update Video';
+      // Ambil data video dari Supabase
+      const { data, error } = await supabase.from('videos').select('*').eq('id', editId).single();
+      if (error || !data) {
+        videoMessage.textContent = 'Gagal memuat data video untuk diedit.';
+        return;
+      }
+      document.getElementById('judul').value = data.judul || '';
+      document.getElementById('kelas').value = data.kelas || '';
+      document.getElementById('mapel').value = data.mapel || '';
+      document.getElementById('url').value = data.url || '';
+      document.getElementById('id_kursus').value = data.id_kursus || '';
+      document.getElementById('deskripsi').value = data.description || '';
+      form.dataset.editId = editId;
+    } else {
+      form.querySelector('button[type="submit"]').textContent = 'Tambah Video';
+      form.dataset.editId = '';
+    }
+  }
+  // Jalankan prefill saat halaman dimuat
+  prefillEditForm();
 
   // Ambil dan tampilkan daftar video
   async function fetchVideos() {
@@ -107,12 +145,13 @@ import Layout from '../layouts/Layout.astro';
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     videoMessage.textContent = '';
-    const title = document.getElementById('judul').value.trim();
+    const judul = document.getElementById('judul').value.trim();
     const kelas = document.getElementById('kelas').value;
     const mapel = document.getElementById('mapel').value;
     const url = document.getElementById('url').value.trim();
+    const id_kursus = document.getElementById('id_kursus').value;
     const description = document.getElementById('deskripsi').value.trim();
-    if (!title || !kelas || !mapel || !url) {
+    if (!judul || !kelas || !mapel || !url || !id_kursus) {
       videoMessage.textContent = 'Semua field wajib diisi!';
       return;
     }
@@ -120,13 +159,26 @@ import Layout from '../layouts/Layout.astro';
       videoMessage.textContent = 'Mohon masukkan URL YouTube yang valid!';
       return;
     }
-    const { error } = await supabase.from('videos').insert([{ title, url, kelas, mapel, description }]);
-    if (error) {
-      videoMessage.textContent = 'Gagal menambah video.';
+    // Cek mode edit atau tambah baru
+    const editId = form.dataset.editId;
+    if (editId) {
+      // Update video
+      const { error } = await supabase.from('videos').update({ judul, kelas, mapel, url, id_kursus, description }).eq('id', editId);
+      if (error) {
+        videoMessage.textContent = 'Gagal mengupdate video.';
+      } else {
+        videoMessage.textContent = 'Berhasil mengupdate video!';
+        setTimeout(() => { window.location.href = '/admin-daftar-video'; }, 1000);
+      }
     } else {
-      form.reset();
-      fetchVideos();
-      videoMessage.textContent = 'Berhasil menambah video!';
+      // Tambah baru
+      const { error } = await supabase.from('videos').insert([{ judul, url, kelas, mapel, id_kursus, description }]);
+      if (error) {
+        videoMessage.textContent = 'Gagal menambah video.';
+      } else {
+        form.reset();
+        videoMessage.textContent = 'Berhasil menambah video!';
+      }
     }
   });
 </script>

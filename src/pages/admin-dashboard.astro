@@ -1,5 +1,5 @@
 ---
-import Layout from "../layouts/Layout.astro";
+// import Layout dari layout utama di-nonaktifkan untuk halaman admin
 import AdminSidebar from "../components/AdminSidebar.astro";
 import { supabase } from "../utils/supabase.js";
 
@@ -18,8 +18,7 @@ const { count: kursusCount } = await supabase
   .from("kursus")
   .select("*", { count: "exact", head: true });
 ---
-
-<Layout title="Dashboard Admin" bodyClass="admin-dashboard">
+<link rel="stylesheet" href="/src/styles/global.css"/>
   <!-- Proteksi tetap ada di atas -->
   <div id="dashboard-root"></div>
   <script type="module">
@@ -247,7 +246,7 @@ const { count: kursusCount } = await supabase
   <script
     src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"
   ></script>
-</Layout>
+
 <script type="module">
   // Inisialisasi Supabase JS Client
   const supabaseUrl = "https://jcfizceoycwdvpqpwhrj.supabase.co";
