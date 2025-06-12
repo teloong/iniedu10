@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import AdminSidebar from '../components/AdminSidebar.astro';
 import { supabase } from '../utils/supabase.js';
+import '../styles/global.css';
 // Ambil semua blog dari Supabase
 const { data: blogs, error } = await supabase
   .from('blog')
@@ -13,11 +14,53 @@ const { data: blogs, error } = await supabase
   const supabaseUrl = 'https://jcfizceoycwdvpqpwhrj.supabase.co';
   const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA';
   const supabase = createClient(supabaseUrl, supabaseKey);
+  const edgeUrl = 'https://jcfizceoycwdvpqpwhrj.functions.supabase.co/insert_blog'; // Ganti jika endpoint berubah
+
   (async () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session || session.user.email !== "lemindes@gmail.com") {
       window.location.href = "/admin-login";
+      return;
     }
+
+    // Event delegation untuk hapus blog
+    document.addEventListener('click', async (e) => {
+      const target = e.target;
+      if (target.matches && target.matches('.btn-hapus-blog')) {
+        e.preventDefault();
+        const id = target.getAttribute('data-id');
+        if (!id) return;
+        const res = await fetch(edgeUrl, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`
+          },
+          body: JSON.stringify({ id })
+        });
+        const result = await res.json();
+        const alertBox = document.getElementById('blog-success-alert');
+        if (res.ok) {
+          if (alertBox) {
+            alertBox.textContent = 'Artikel berhasil dihapus!';
+            alertBox.classList.remove('hidden');
+          }
+          // Hapus baris blog dari tabel tanpa reload
+          const row = target.closest('tr');
+          if(row) row.remove();
+        } else {
+          if (alertBox) {
+            alertBox.textContent = result.error || 'Gagal menghapus blog';
+            alertBox.classList.remove('hidden');
+          }
+        }
+      }
+      if (target.matches && target.matches('.btn-edit-blog')) {
+        // Sembunyikan alert jika klik tombol edit
+        const alertBox = document.getElementById('blog-success-alert');
+        if (alertBox) alertBox.classList.add('hidden');
+      }
+    });
   })();
 </script>
 

@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import AdminSidebar from '../components/AdminSidebar.astro';
+import '../styles/global.css';
 ---
   <div class="min-h-screen bg-gray-50 flex">
     <div class="sticky top-0 h-screen hidden md:block">
@@ -49,7 +50,7 @@ import AdminSidebar from '../components/AdminSidebar.astro';
       </section>
     </main>
   </div>
-  
+
 <script type="module">
   import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 

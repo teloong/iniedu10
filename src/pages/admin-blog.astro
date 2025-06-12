@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import AdminSidebar from '../components/AdminSidebar.astro';
+import '../styles/global.css';
 ---
   <div class="min-h-screen bg-gray-50 flex">
     <div class="sticky top-0 h-screen hidden md:block">
@@ -30,73 +31,85 @@ import AdminSidebar from '../components/AdminSidebar.astro';
   const supabaseUrl = 'https://jcfizceoycwdvpqpwhrj.supabase.co';
   const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA';
   const supabase = createClient(supabaseUrl, supabaseKey);
+  const edgeUrl = 'https://jcfizceoycwdvpqpwhrj.functions.supabase.co/insert_blog'; // Ganti jika endpoint berubah
+
+  let editingId = null;
+
   (async () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session || session.user.email !== "lemindes@gmail.com") {
       window.location.href = "/admin-login";
-    }
-  })();
-
-
-// Tidak perlu renderBlogs dan event handler blog-list di halaman ini
-let editingId = null;
-async function handleSubmit(e) {
-  e.preventDefault();
-  const title = document.getElementById('blog-title').value.trim();
-  const content = document.getElementById('blog-content').value.trim();
-  const author = document.getElementById('blog-author').value.trim();
-  const image = document.getElementById('blog-image').value.trim();
-  const source = document.getElementById('blog-source').value.trim();
-  if (!title || !content || !author) return;
-  const alertBox = document.getElementById('blog-success-alert');
-  if (window.editingBlogId) {
-    // update blog
-    const { error } = await supabase.from('blog').update({ title, content, author, image, source }).eq('id', window.editingBlogId);
-    if (error) {
-      alert('Gagal update blog: ' + error.message);
       return;
     }
-    alertBox.textContent = 'Artikel berhasil diubah!';
-    alertBox.classList.remove('hidden');
-  } else {
-    // tambah baru
-    const { error } = await supabase.from('blog').insert([{ title, content, author, image, source }]);
-    if (error) {
-      alert('Gagal tambah blog: ' + error.message);
-      return;
-    }
-    alertBox.textContent = 'Artikel berhasil ditambah!';
-    alertBox.classList.remove('hidden');
-    document.getElementById('blog-form').reset();
-  }
-}
 
-document.getElementById('blog-form').onsubmit = handleSubmit;
-
-// Prefill form jika mode edit
-const params = new URLSearchParams(window.location.search);
-const editId = params.get('edit');
-if (editId) {
-  (async () => {
-    const { data, error } = await supabase.from('blog').select('*').eq('id', editId).single();
-    if (!error && data) {
-      document.getElementById('blog-title').value = data.title || '';
-      document.getElementById('blog-content').value = data.content || '';
-      document.getElementById('blog-author').value = data.author || '';
-      document.getElementById('blog-image').value = data.image || '';
-      document.getElementById('blog-source').value = data.source || '';
-      document.getElementById('form-title').textContent = 'Edit Blog';
-      // Simpan id yang sedang diedit
-      window.editingBlogId = editId;
+    // Prefill form jika mode edit
+    const params = new URLSearchParams(window.location.search);
+    editingId = params.get('edit');
+    if (editingId) {
+      const { data, error } = await supabase.from('blog').select('*').eq('id', editingId).single();
+      if (!error && data) {
+        document.getElementById('blog-title').value = data.title || '';
+        document.getElementById('blog-content').value = data.content || '';
+        document.getElementById('blog-author').value = data.author || '';
+        document.getElementById('blog-image').value = data.image || '';
+        document.getElementById('blog-source').value = data.source || '';
+        document.getElementById('form-title').textContent = 'Edit Blog';
+      }
     }
+
+    // Submit handler
+    document.getElementById('blog-form').onsubmit = async function(e) {
+      e.preventDefault();
+      const title = document.getElementById('blog-title').value.trim();
+      const content = document.getElementById('blog-content').value.trim();
+      const author = document.getElementById('blog-author').value.trim();
+      const image = document.getElementById('blog-image').value.trim();
+      const source = document.getElementById('blog-source').value.trim();
+      const alertBox = document.getElementById('blog-success-alert');
+      alertBox.classList.add('hidden');
+      if (!title || !content || !author) {
+        alertBox.textContent = 'Judul, penulis, dan isi blog wajib diisi';
+        alertBox.classList.remove('hidden');
+        alertBox.classList.add('text-red-600');
+        return;
+      }
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        alertBox.textContent = 'Session login admin tidak ditemukan!';
+        alertBox.classList.remove('hidden');
+        alertBox.classList.add('text-red-600');
+        return;
+      }
+      let method = editingId ? 'PUT' : 'POST';
+      let payload = editingId ? { id: editingId, title, content, author, image, source } : { title, content, author, image, source };
+      const res = await fetch(edgeUrl, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify(payload)
+      });
+      const result = await res.json();
+      if (res.ok) {
+        alertBox.textContent = editingId ? 'Artikel berhasil diubah!' : 'Artikel berhasil ditambah!';
+        alertBox.classList.remove('hidden');
+        alertBox.classList.remove('text-red-600');
+        alertBox.classList.add('text-green-600');
+        if (!editingId) document.getElementById('blog-form').reset();
+      } else {
+        alertBox.textContent = result.error || 'Gagal menyimpan blog';
+        alertBox.classList.remove('hidden');
+        alertBox.classList.remove('text-green-600');
+        alertBox.classList.add('text-red-600');
+      }
+    };
+
+    // Sembunyikan alert jika user mulai mengetik lagi
+    ['blog-title','blog-content','blog-author','blog-image','blog-source'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => {
+        document.getElementById('blog-success-alert').classList.add('hidden');
+      });
+    });
   })();
-}
-
-// Sembunyikan alert jika user mulai mengetik lagi
-['blog-title','blog-content','blog-author','blog-image','blog-source'].forEach(id => {
-  document.getElementById(id).addEventListener('input', () => {
-    document.getElementById('blog-success-alert').classList.add('hidden');
-  });
-});
-
 </script>

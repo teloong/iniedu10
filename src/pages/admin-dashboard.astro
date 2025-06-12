@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import AdminSidebar from "../components/AdminSidebar.astro";
 import { supabase } from "../utils/supabase.js";
+import '../styles/global.css';
 
 // Ambil jumlah user dari Supabase
 const { count: userCount } = await supabase
