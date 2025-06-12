@@ -1,7 +1,7 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import AdminSidebar from '../components/AdminSidebar.astro';
-import '../styles/global.css';
+import Layout from "../layouts/Layout.astro";
+import AdminSidebar from "../components/AdminSidebar.astro";
+import "../styles/global.css";
 ---
 
 <Layout title="Daftar Blog">
@@ -11,13 +11,19 @@ import '../styles/global.css';
     </div>
     <main class="flex-1 overflow-x-auto">
       <div class="max-w-4xl mx-auto px-4 py-8">
-        <div id="blog-success-alert" class="hidden text-red-600 font-semibold mb-4"></div>
+        <div
+          id="blog-success-alert"
+          class="hidden text-red-600 font-semibold mb-4"
+        >
+        </div>
         <div class="bg-white rounded-xl shadow p-6">
           <table class="min-w-full text-sm">
             <thead>
               <tr class="text-left text-gray-500 border-b">
                 <th>Judul</th>
                 <th>Penulis</th>
+                <th>Jabatan Penulis</th>
+                <th>Foto Penulis</th>
                 <th>Sumber</th>
                 <th>Gambar</th>
                 <th>Tanggal</th>
@@ -34,48 +40,58 @@ import '../styles/global.css';
   </div>
 
   <script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-    const supabaseUrl = 'https://jcfizceoycwdvpqpwhrj.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA';
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+    const supabaseUrl = "https://jcfizceoycwdvpqpwhrj.supabase.co";
+    const supabaseKey =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA";
     const supabase = createClient(supabaseUrl, supabaseKey);
-    const edgeUrl = 'https://jcfizceoycwdvpqpwhrj.functions.supabase.co/insert_blog';
+    const edgeUrl =
+      "https://jcfizceoycwdvpqpwhrj.functions.supabase.co/insert_blog";
 
     async function renderBlogs() {
-      const tbody = document.getElementById('blog-list');
+      const tbody = document.getElementById("blog-list");
       if (!tbody) return;
-      tbody.innerHTML = '<tr><td colspan="6">Memuat data blog...</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="8">Memuat data blog...</td></tr>';
       const { data, error } = await supabase
-        .from('blog')
-        .select('*')
-        .order('created_at', { ascending: false });
-      tbody.innerHTML = '';
+        .from("blog")
+        .select("*")
+        .order("created_at", { ascending: false });
+      tbody.innerHTML = "";
       if (error) {
-        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-red-600">Gagal memuat data blog.</td></tr>';
+        tbody.innerHTML =
+          '<tr><td colspan="8" class="text-center text-red-600">Gagal memuat data blog.</td></tr>';
         return;
       }
       if (!data || data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="text-center">Belum ada blog.</td></tr>';
+        tbody.innerHTML =
+          '<tr><td colspan="8" class="text-center">Belum ada blog.</td></tr>';
         return;
       }
       for (const blog of data) {
         tbody.innerHTML += `
           <tr class="border-b">
-            <td class="px-4 py-2">${blog.title || '-'}</td>
-            <td class="px-4 py-2">${blog.author || '-'}</td>
+            <td class="px-4 py-2">${blog.title || "-"}</td>
+            <td class="px-4 py-2">${blog.author || "-"}</td>
+            <td class="px-4 py-2">${blog.author_role || "-"}</td>
             <td class="px-4 py-2">
-              ${blog.source && blog.source !== 'EMPTY'
-                ? `<a href="${blog.source}" target="_blank" class="text-blue-600 underline">Sumber</a>`
-                : '-'}
+              <img src="${blog.author_photo || "https://ui-avatars.com/api/?name=" + encodeURIComponent(blog.author || "A") + "&background=2563eb&color=fff"}" alt="Foto Penulis" class="w-10 h-10 rounded-full object-cover border" />
             </td>
             <td class="px-4 py-2">
-  <img
-    src="${blog.image && blog.image !== 'EMPTY' ? blog.image : '/default.jpg'}"
-    alt="Gambar"
-    class="w-16 h-10 object-cover rounded"
-    onerror="if(!this._defaulted){this._defaulted=true;this.src='/default.jpg'}"
-  />
-</td>
-            <td class="px-4 py-2">${blog.created_at ? new Date(blog.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) : '-'}</td>
+              ${
+                blog.source && blog.source !== "EMPTY"
+                  ? `<a href="${blog.source}" target="_blank" class="text-blue-600 underline">Sumber</a>`
+                  : "-"
+              }
+            </td>
+            <td class="px-4 py-2">
+              <img
+                src="${blog.image && blog.image !== "EMPTY" ? blog.image : "/default.jpg"}"
+                alt="Gambar"
+                class="w-16 h-10 object-cover rounded"
+                onerror="if(!this._defaulted){this._defaulted=true;this.src='/default.jpg'}"
+              />
+            </td>
+            <td class="px-4 py-2">${blog.created_at ? new Date(blog.created_at).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" }) : "-"}</td>
             <td class="px-4 py-2">
               <a href="/admin-blog?edit=${blog.id}" class="text-blue-600 hover:underline btn-edit-blog" data-id="${blog.id}">Edit</a>
               <button class="text-red-600 hover:underline btn-hapus-blog ml-2" data-id="${blog.id}">Hapus</button>
@@ -87,7 +103,9 @@ import '../styles/global.css';
 
     // Autentikasi dan inisialisasi
     (async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session || session.user.email !== "lemindes@gmail.com") {
         window.location.href = "/admin-login";
         return;
@@ -96,38 +114,38 @@ import '../styles/global.css';
       await renderBlogs();
 
       // Event delegation untuk hapus blog
-      document.addEventListener('click', async (e) => {
+      document.addEventListener("click", async (e) => {
         const target = e.target;
-        if (target.matches && target.matches('.btn-hapus-blog')) {
+        if (target.matches && target.matches(".btn-hapus-blog")) {
           e.preventDefault();
-          const id = target.getAttribute('data-id');
+          const id = target.getAttribute("data-id");
           if (!id) return;
           const res = await fetch(edgeUrl, {
-            method: 'DELETE',
+            method: "DELETE",
             headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${session.access_token}`
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session.access_token}`,
             },
-            body: JSON.stringify({ id })
+            body: JSON.stringify({ id }),
           });
           const result = await res.json();
-          const alertBox = document.getElementById('blog-success-alert');
+          const alertBox = document.getElementById("blog-success-alert");
           if (res.ok) {
             if (alertBox) {
-              alertBox.textContent = 'Artikel berhasil dihapus!';
-              alertBox.classList.remove('hidden');
+              alertBox.textContent = "Artikel berhasil dihapus!";
+              alertBox.classList.remove("hidden");
             }
             await renderBlogs();
           } else {
             if (alertBox) {
-              alertBox.textContent = result.error || 'Gagal menghapus blog';
-              alertBox.classList.remove('hidden');
+              alertBox.textContent = result.error || "Gagal menghapus blog";
+              alertBox.classList.remove("hidden");
             }
           }
         }
-        if (target.matches && target.matches('.btn-edit-blog')) {
-          const alertBox = document.getElementById('blog-success-alert');
-          if (alertBox) alertBox.classList.add('hidden');
+        if (target.matches && target.matches(".btn-edit-blog")) {
+          const alertBox = document.getElementById("blog-success-alert");
+          if (alertBox) alertBox.classList.add("hidden");
         }
       });
     })();

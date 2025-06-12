@@ -50,27 +50,27 @@ import '../styles/global.css';
   </div>
 </Layout>
 <script type="module">
-  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-  const supabaseUrl = "https://jcfizceoycwdvpqpwhrj.supabase.co";
-  const supabaseKey =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA";
-  const supabase = createClient(supabaseUrl, supabaseKey);
+  import { supabase, fetchVideos, subscribeVideos } from '/videos.js';
 
+  // Proteksi akses admin
+  (async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session || session.user.email !== "lemindes@gmail.com") {
+      window.location.href = "/admin-login";
+    }
+  })();
+
+  // Render daftar video
   async function renderVideos() {
-    const { data, error } = await supabase
-      .from("videos")
-      .select("*")
-      .order("id", { ascending: false });
+    const { data, error } = await fetchVideos();
     const tbody = document.getElementById("video-list");
     tbody.innerHTML = "";
     if (error) {
-      tbody.innerHTML =
-        '<tr><td colspan="6" class="text-center text-red-600">Gagal memuat data video.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="6" class="text-center text-red-600">Gagal memuat data video.</td></tr>';
       return;
     }
     if (!data || data.length === 0) {
-      tbody.innerHTML =
-        '<tr><td colspan="6" class="text-center">Belum ada video.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="6" class="text-center">Belum ada video.</td></tr>';
       return;
     }
     for (const video of data) {
@@ -86,9 +86,14 @@ import '../styles/global.css';
           <button class="text-red-600 hover:underline btn-hapus-video ml-2" data-id="${video.id}">Hapus</button>
         </td>
       </tr>
-    `;
+      `;
     }
   }
+
+  // Subscribe realtime perubahan videos
+  subscribeVideos(() => {
+    renderVideos();
+  });
 
   window.hapusVideo = async function (id) {
     const { error } = await supabase.from("videos").delete().eq("id", id);

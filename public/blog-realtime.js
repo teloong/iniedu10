@@ -12,7 +12,7 @@ supabase
     'postgres_changes',
     { event: '*', schema: 'public', table: 'blog' },
     payload => {
-      console.log('Perubahan realtime pada tabel blog:', payload);
+      ('Perubahan realtime pada tabel blog:', payload);
       // TODO: Update UI blog di sini jika ingin langsung render ulang
       // Contoh: fetch ulang data, atau update list secara manual
     }

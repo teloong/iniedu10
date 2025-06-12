@@ -16,11 +16,8 @@ function jsonResponse(data: any, status = 200) {
 // Helper: Validasi admin (JWT Supabase)
 async function validateAdmin(req: Request) {
   const authHeader = req.headers.get("Authorization");
-  console.log("[validateAdmin] Authorization header:", authHeader);
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
-  console.log("[validateAdmin] SUPABASE_URL:", supabaseUrl);
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    console.log("[validateAdmin] Tidak ada Authorization header yang valid.");
     return { error: "Unauthorized", status: 401 };
   }
   const jwt = authHeader.replace("Bearer ", "");
@@ -32,30 +29,31 @@ async function validateAdmin(req: Request) {
         "apikey": Deno.env.get("SUPABASE_ANON_KEY") || ""
       }
     });
-    console.log("[validateAdmin] /auth/v1/user status:", verifyRes.status);
+
   } catch (e) {
-    console.log("[validateAdmin] ERROR fetch /auth/v1/user:", e);
+
     return { error: "Gagal verifikasi token: " + e, status: 500 };
   }
   if (!verifyRes.ok) {
     let errorText = await verifyRes.text();
-    console.log("[validateAdmin] /auth/v1/user NOT OK, status:", verifyRes.status, "body:", errorText);
+
     return { error: "Token tidak valid", status: 401 };
   }
-  let userInfo = {};
+  type UserInfo = { email?: string; [key: string]: any };
+  let userInfo: UserInfo = {};
   try {
     userInfo = await verifyRes.json();
-    console.log("[validateAdmin] userInfo:", userInfo);
+
   } catch (e) {
-    console.log("[validateAdmin] ERROR parsing userInfo JSON:", e);
+
     return { error: "Gagal parsing user info", status: 500 };
   }
   const ADMIN_EMAIL = "lemindes@gmail.com";
-  if (userInfo.email !== ADMIN_EMAIL) {
-    console.log("[validateAdmin] Email bukan admin:", userInfo.email);
+  if (!userInfo.email || userInfo.email !== ADMIN_EMAIL) {
+
     return { error: "Hanya admin yang boleh mengelola blog", status: 403 };
   }
-  console.log("[validateAdmin] ADMIN VERIFIED:", userInfo.email);
+
   return { userInfo };
 }
 
@@ -81,7 +79,16 @@ serve(async (req) => {
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
   );
 
-  let body = {};
+  let body: {
+    id?: string;
+    title?: string;
+    author?: string;
+    author_role?: string;
+    author_photo?: string;
+    content?: string;
+    image?: string;
+    source?: string;
+  } = {};
   try {
     body = await req.json();
   } catch (e) {}
@@ -89,22 +96,24 @@ serve(async (req) => {
   // Routing method
   if (req.method === "POST") {
     // INSERT blog
-    const { title, author, content, image, source } = body;
+    const { title, author, author_role, author_photo, content, image, source } = body;
     if (!title || !author || !content) {
       return jsonResponse({ error: "Title, author, dan content wajib diisi" }, 400);
     }
     const { data, error } = await supabase
       .from("blog")
-      .insert([{ title, author, content, image, source }]);
+      .insert([{ title, author, author_role, author_photo, content, image, source }]);
     if (error) return jsonResponse({ error: error.message }, 400);
     return jsonResponse({ data });
   } else if (req.method === "PUT") {
     // UPDATE blog
-    const { id, title, author, content, image, source } = body;
+    const { id, title, author, author_role, author_photo, content, image, source } = body;
     if (!id) return jsonResponse({ error: "ID blog wajib diisi" }, 400);
     const updateData: any = {};
     if (title) updateData.title = title;
     if (author) updateData.author = author;
+    if (author_role) updateData.author_role = author_role;
+    if (author_photo) updateData.author_photo = author_photo;
     if (content) updateData.content = content;
     if (image) updateData.image = image;
     if (source) updateData.source = source;

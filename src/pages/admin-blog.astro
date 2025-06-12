@@ -17,6 +17,8 @@ import '../styles/global.css';
             <input type="text" id="blog-title" class="border rounded p-2" placeholder="Judul Blog" required />
             <textarea id="blog-content" class="border rounded p-2 min-h-[120px]" placeholder="Isi Blog" required></textarea>
             <input type="text" id="blog-author" class="border rounded p-2" placeholder="Penulis" required />
+            <input type="text" id="blog-author-role" class="border rounded p-2" placeholder="Jabatan/Pekerjaan Penulis (opsional)" />
+            <input type="url" id="blog-author-photo" class="border rounded p-2" placeholder="URL Foto Profil Penulis (opsional)" />
             <input type="url" id="blog-image" class="border rounded p-2" placeholder="URL Gambar (opsional)" />
             <input type="text" id="blog-source" class="border rounded p-2" placeholder="Sumber (opsional, misal: Kompas.com)" />
             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded transition-all">Tambah Blog</button>
@@ -53,6 +55,8 @@ import '../styles/global.css';
         document.getElementById('blog-title').value = data.title || '';
         document.getElementById('blog-content').value = data.content || '';
         document.getElementById('blog-author').value = data.author || '';
+        document.getElementById('blog-author-role').value = data.author_role || '';
+        document.getElementById('blog-author-photo').value = data.author_photo || '';
         document.getElementById('blog-image').value = data.image || '';
         document.getElementById('blog-source').value = data.source || '';
         document.getElementById('form-title').textContent = 'Edit Blog';
@@ -65,6 +69,8 @@ import '../styles/global.css';
       const title = document.getElementById('blog-title').value.trim();
       const content = document.getElementById('blog-content').value.trim();
       const author = document.getElementById('blog-author').value.trim();
+      const author_role = document.getElementById('blog-author-role').value.trim();
+      const author_photo = document.getElementById('blog-author-photo').value.trim();
       const image = document.getElementById('blog-image').value.trim();
       const source = document.getElementById('blog-source').value.trim();
       const alertBox = document.getElementById('blog-success-alert');
@@ -83,7 +89,7 @@ import '../styles/global.css';
         return;
       }
       let method = editingId ? 'PUT' : 'POST';
-      let payload = editingId ? { id: editingId, title, content, author, image, source } : { title, content, author, image, source };
+      let payload = editingId ? { id: editingId, title, content, author, author_role, author_photo, image, source } : { title, content, author, author_role, author_photo, image, source };
       const res = await fetch(edgeUrl, {
         method,
         headers: {
