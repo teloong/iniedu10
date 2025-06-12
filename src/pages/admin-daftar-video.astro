@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import AdminSidebar from "../components/AdminSidebar.astro";
 import '../styles/global.css';
 ---
-
+<Layout title="Daftar Video">
 <!-- Proteksi login (hanya jalan di browser) -->
 <script type="module">
   import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
@@ -48,7 +48,7 @@ import '../styles/global.css';
       </div>
     </main>
   </div>
-
+</Layout>
 <script type="module">
   import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
   const supabaseUrl = "https://jcfizceoycwdvpqpwhrj.supabase.co";

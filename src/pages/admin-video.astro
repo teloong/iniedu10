@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import AdminSidebar from '../components/AdminSidebar.astro';
 import '../styles/global.css';
 ---
+<Layout title="Video Pembelajaran">
   <div class="min-h-screen bg-gray-50 flex">
     <div class="sticky top-0 h-screen hidden md:block">
       <AdminSidebar active="videopembelajaran" />
@@ -50,7 +51,7 @@ import '../styles/global.css';
       </section>
     </main>
   </div>
-
+</Layout>
 <script type="module">
   import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
