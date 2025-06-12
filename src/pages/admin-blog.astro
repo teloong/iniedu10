@@ -1,17 +1,15 @@
 ---
-// import Layout dari layout utama di-nonaktifkan untuk halaman admin
+import Layout from '../layouts/Layout.astro';
 import AdminSidebar from '../components/AdminSidebar.astro';
 ---
-<link rel="stylesheet" href="/src/styles/global.css"/>
   <div class="min-h-screen bg-gray-50 flex">
     <div class="sticky top-0 h-screen hidden md:block">
       <AdminSidebar active="blog" />
     </div>
     <main class="flex-1 overflow-x-auto">
       <div class="max-w-4xl mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold mb-8 text-blue-900">Kelola Blog</h1>
+        
         <div class="bg-white rounded-xl shadow p-6 mb-8">
-          <h2 id="form-title" class="text-xl font-semibold mb-4">Tambah Blog Baru</h2>
           <form id="blog-form" class="flex flex-col gap-4">
             <div id="blog-success-alert" class="hidden text-green-600 font-semibold mb-2"></div>
             <input type="text" id="blog-title" class="border rounded p-2" placeholder="Judul Blog" required />

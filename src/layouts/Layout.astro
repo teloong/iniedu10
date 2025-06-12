@@ -2,6 +2,8 @@
 import Header from '../components/Header.astro';
 import FirebaseAuth from "../components/FirebaseAuth.astro";
 import '../styles/global.css';
+// Gunakan import global CSS via tag <link> agar selalu di-load dari public
+
 
 interface Props {
 	title: string;
@@ -40,12 +42,6 @@ const { title = 'IniEdu - Platform Pendidikan Online' } = Astro.props;
 				margin: 0;
 				padding: 0;
 				overflow-x: hidden;
-			}
-			/* Hapus garis pada pojok kiri atas */
-			body::before, body::after,
-			html::before, html::after {
-				display: none !important;
-				content: none !important;
 			}
 		</style>
 	  <link rel="preload" as="image" href="/lcp-3d-kelas-online.webp" imagesrcset="/lcp-3d-kelas-online.webp 370w, /lcp-3d-kelas-online-240.webp 240w" imagesizes="(max-width: 480px) 240px, 370px" />

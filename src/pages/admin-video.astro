@@ -1,53 +1,55 @@
 ---
+import Layout from '../layouts/Layout.astro';
 import AdminSidebar from '../components/AdminSidebar.astro';
 ---
-<link rel="stylesheet" href="/src/styles/global.css"/>
-<div class="min-h-screen bg-gray-50 flex">
-  <div class="sticky top-0 h-screen hidden md:block">
-    <AdminSidebar active="videopembelajaran" />
+  <div class="min-h-screen bg-gray-50 flex">
+    <div class="sticky top-0 h-screen hidden md:block">
+      <AdminSidebar active="videopembelajaran" />
+    </div>
+    <main class="flex-1 overflow-x-auto">
+      <section class="max-w-2xl mx-auto mt-12 bg-white rounded-2xl shadow-lg p-8">
+        
+        <form id="video-form" class="flex flex-col gap-4 mb-8">
+          <input type="text" id="title" required placeholder="Judul Video" class="border rounded p-2" />
+          <select id="kelas" required class="border rounded p-2">
+            <option value="">Pilih Kelas</option>
+            <option value="1">Kelas 1</option>
+            <option value="2">Kelas 2</option>
+            <option value="3">Kelas 3</option>
+            <option value="4">Kelas 4</option>
+            <option value="5">Kelas 5</option>
+            <option value="6">Kelas 6</option>
+          </select>
+          <select id="mapel" required class="border rounded p-2">
+            <option value="">Pilih Mapel</option>
+            <option value="Matematika">Matematika</option>
+            <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+            <option value="PKN">PKN</option>
+            <option value="PAI">PAI</option>
+            <option value="Seni Teater">Seni Teater</option>
+            <option value="Seni Musik">Seni Musik</option>
+            <option value="Seni Tari">Seni Tari</option>
+            <option value="Seni Rupa">Seni Rupa</option>
+            <option value="IPAS">IPAS</option>
+          </select>
+          <input type="url" id="url" placeholder="URL Video (YouTube)" class="border rounded p-2" />
+          <div class="text-xs text-gray-500 mb-2">Masukkan link YouTube (mode privat/unlisted) yang ingin di-embed.</div>
+          <select id="id_kursus" required class="border rounded p-2">
+            <option value="">Pilih Kursus</option>
+            <option value="1">Konten Pembelajaran Digital</option>
+            <option value="2">Simulasi Ujian</option>
+            <option value="3">Kelas Menulis / Workshop</option>
+          </select>
+          <div class="text-xs text-gray-500 mb-2">Pilih kursus yang sesuai untuk video ini.</div>
+          <textarea id="deskripsi" placeholder="Deskripsi (opsional)" class="border rounded p-2"></textarea>
+          <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded">Tambah Video</button>
+          <div id="video-message" class="text-center text-red-500"></div>
+        </form>
+        <!-- Tidak ada lagi list video di dashboard admin -->
+      </section>
+    </main>
   </div>
-  <main class="flex-1 overflow-x-auto">
-    <section class="max-w-2xl mx-auto mt-12 bg-white rounded-2xl shadow-lg p-8">
-    <h1 class="text-2xl font-bold text-center mb-6 text-blue-700">Admin: Kelola Video Pembelajaran</h1>
-    <form id="video-form" class="flex flex-col gap-4 mb-8">
-      <input type="text" id="title" required placeholder="Judul Video" class="border rounded p-2" />
-      <select id="kelas" required class="border rounded p-2">
-        <option value="">Pilih Kelas</option>
-        <option value="1">Kelas 1</option>
-        <option value="2">Kelas 2</option>
-        <option value="3">Kelas 3</option>
-        <option value="4">Kelas 4</option>
-        <option value="5">Kelas 5</option>
-        <option value="6">Kelas 6</option>
-      </select>
-      <select id="mapel" required class="border rounded p-2">
-        <option value="">Pilih Mapel</option>
-        <option value="Matematika">Matematika</option>
-        <option value="Bahasa Indonesia">Bahasa Indonesia</option>
-        <option value="PKN">PKN</option>
-        <option value="PAI">PAI</option>
-        <option value="Seni Teater">Seni Teater</option>
-        <option value="Seni Musik">Seni Musik</option>
-        <option value="Seni Tari">Seni Tari</option>
-        <option value="Seni Rupa">Seni Rupa</option>
-      </select>
-      <input type="url" id="url" placeholder="URL Video (YouTube)" class="border rounded p-2" />
-      <div class="text-xs text-gray-500 mb-2">Masukkan link YouTube (mode privat/unlisted) yang ingin di-embed.</div>
-      <select id="id_kursus" required class="border rounded p-2">
-        <option value="">Pilih Kursus</option>
-        <option value="1">Konten Pembelajaran Digital</option>
-        <option value="2">Simulasi Ujian</option>
-        <option value="3">Kelas Menulis / Workshop</option>
-      </select>
-      <div class="text-xs text-gray-500 mb-2">Pilih kursus yang sesuai untuk video ini.</div>
-      <textarea id="deskripsi" placeholder="Deskripsi (opsional)" class="border rounded p-2"></textarea>
-      <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded">Tambah Video</button>
-      <div id="video-message" class="text-center text-red-500"></div>
-    </form>
-    <!-- Tidak ada lagi list video di dashboard admin -->
-  </section>
-
-
+  
 <script type="module">
   import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 

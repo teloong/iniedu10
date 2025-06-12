@@ -1,5 +1,5 @@
 ---
-// import Layout dari layout utama di-nonaktifkan untuk halaman admin
+import Layout from '../layouts/Layout.astro';
 import AdminSidebar from "../components/AdminSidebar.astro";
 import { supabase } from "../utils/supabase.js";
 
@@ -18,10 +18,8 @@ const { count: kursusCount } = await supabase
   .from("kursus")
   .select("*", { count: "exact", head: true });
 ---
-
-<link rel="stylesheet" href="/src/styles/global.css" />
-<!-- Proteksi tetap ada di atas -->
-<div id="dashboard-root"></div>
+  <!-- Proteksi tetap ada di atas -->
+  <div id="dashboard-root"></div>
 <script type="module">
   import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
   const supabaseUrl = "https://jcfizceoycwdvpqpwhrj.supabase.co";
@@ -125,7 +123,7 @@ const { count: kursusCount } = await supabase
   </div>
   <main class="flex-1 overflow-x-auto">
     <div class="max-w-7xl mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold mb-8 text-blue-900">Dashboard Admin</h1>
+      
       <!-- Statistik Card (rapi satu baris) -->
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-10">
         <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
