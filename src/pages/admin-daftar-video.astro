@@ -30,6 +30,9 @@ import '../styles/global.css';
           class="hidden text-green-600 font-semibold mb-4"
         >
         </div>
+        <div class="mb-4 flex items-center gap-2">
+          <input id="search-input" type="text" placeholder="Cari judul, kelas, mapel..." class="border rounded px-3 py-2 w-full max-w-xs focus:outline-none focus:ring focus:border-blue-300" />
+        </div>
         <div class="bg-white rounded-xl shadow p-6">
           <table class="min-w-full divide-y divide-gray-200">
             <thead>
@@ -60,20 +63,19 @@ import '../styles/global.css';
     }
   })();
 
-  // Render daftar video
-  async function renderVideos() {
-    const { data, error } = await fetchVideos();
+  // Simpan data hasil fetch untuk kebutuhan filter
+  let allVideos = [];
+
+  // Render daftar video (dengan opsional filter)
+  function renderVideos(filtered = null) {
     const tbody = document.getElementById("video-list");
+    const videos = filtered !== null ? filtered : allVideos;
     tbody.innerHTML = "";
-    if (error) {
-      tbody.innerHTML = '<tr><td colspan="6" class="text-center text-red-600">Gagal memuat data video.</td></tr>';
-      return;
-    }
-    if (!data || data.length === 0) {
+    if (!videos || videos.length === 0) {
       tbody.innerHTML = '<tr><td colspan="6" class="text-center">Belum ada video.</td></tr>';
       return;
     }
-    for (const video of data) {
+    for (const video of videos) {
       tbody.innerHTML += `
       <tr>
         <td class="px-4 py-2">${video.title || "-"}</td>
@@ -90,9 +92,50 @@ import '../styles/global.css';
     }
   }
 
+  // Fetch dan render awal
+  async function fetchAndRenderVideos() {
+    const { data, error } = await fetchVideos();
+    const tbody = document.getElementById("video-list");
+    if (error) {
+      tbody.innerHTML = '<tr><td colspan="6" class="text-center text-red-600">Gagal memuat data video.</td></tr>';
+      return;
+    }
+    allVideos = data || [];
+    renderVideos();
+  }
+
   // Subscribe realtime perubahan videos
   subscribeVideos(() => {
-    renderVideos();
+    fetchAndRenderVideos();
+  });
+
+  // Event search
+  document.addEventListener("DOMContentLoaded", async () => {
+    await fetchAndRenderVideos();
+    document.getElementById("video-success-alert").classList.add("hidden");
+    // Event delegation untuk tombol hapus
+    document
+      .getElementById("video-list")
+      .addEventListener("click", function (e) {
+        if (e.target.classList.contains("btn-hapus-video")) {
+          document
+        }
+      });
+    // Fitur search
+    const searchInput = document.getElementById("search-input");
+    searchInput.addEventListener("input", function () {
+      const q = this.value.trim().toLowerCase();
+      if (!q) {
+        renderVideos();
+        return;
+      }
+      const filtered = allVideos.filter(v =>
+        (v.title || "").toLowerCase().includes(q) ||
+        (v.kelas ? String(v.kelas).toLowerCase() : "").includes(q) ||
+        (v.mapel || "").toLowerCase().includes(q)
+      );
+      renderVideos(filtered);
+    });
   });
 
   window.hapusVideo = async function (id) {
