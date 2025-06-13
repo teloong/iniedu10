@@ -27,9 +27,9 @@ import "../styles/global.css";
           />
           <textarea
             id="blog-content"
-            class="border rounded p-2 min-h-[120px]"
+            class="border rounded p-2 min-h-[200px]"
             placeholder="Isi Blog"
-            required></textarea>
+          ></textarea>
           <input
             type="text"
             id="blog-author"
@@ -78,7 +78,37 @@ import "../styles/global.css";
             class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded transition-all"
             >Tambah Blog</button
           >
+          <!-- QuillJS CSS -->
+          <!-- TinyMCE CDN -->
+          <script
+            src="https://cdn.tiny.cloud/1/v9bwvtv7kitkkrsjydby5qu1so5f4p6p0e0mq0odw8e107dl/tinymce/6/tinymce.min.js"
+            referrerpolicy="origin"></script>
         </form>
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            tinymce.init({
+              selector: "#blog-content",
+              height: 300,
+              menubar: "file edit view insert format tools table help",
+              plugins: [
+                "advlist",
+                "autolink",
+                "lists",
+                "link",
+                "image",
+                "charmap",
+                "preview",
+                "anchor",
+                "help",
+                "wordcount"
+              ],
+              toolbar:
+                "undo redo | fontselect fontsizeselect | formatselect | bold italic underline strikethrough forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | link image | code fullscreen",
+              content_style:
+                "body { font-family:Inter,sans-serif; font-size:14px }",
+            });
+          });
+        </script>
       </div>
     </div>
   </main>
@@ -130,6 +160,8 @@ import "../styles/global.css";
     // Submit handler
     document.getElementById("blog-form").onsubmit = async function (e) {
       e.preventDefault();
+      // Sinkronkan isi editor TinyMCE ke textarea
+      if (window.tinymce) tinymce.triggerSave();
       const title = document.getElementById("blog-title").value.trim();
       const content = document.getElementById("blog-content").value.trim();
       const author = document.getElementById("blog-author").value.trim();
@@ -171,16 +203,31 @@ import "../styles/global.css";
             source,
           }
         : { title, content, author, author_role, author_photo, image, source };
-      const res = await fetch(edgeUrl, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify(payload),
-      });
-      const result = await res.json();
-      if (res.ok) {
+      let res, resJson;
+      try {
+        res = await fetch(edgeUrl, {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify(payload),
+        });
+        resJson = await res.json();
+        if (!res.ok) {
+          alertBox.textContent = "Gagal menyimpan blog: " + (resJson && resJson.error ? resJson.error : res.status);
+          alertBox.classList.remove("hidden");
+          alertBox.classList.add("text-red-600");
+          console.error("[Blog Submit] Backend error:", resJson);
+          return;
+        }
+        if (resJson && resJson.error) {
+          alertBox.textContent = "Gagal menyimpan blog: " + resJson.error;
+          alertBox.classList.remove("hidden");
+          alertBox.classList.add("text-red-600");
+          console.error("[Blog Submit] Backend error:", resJson);
+          return;
+        }
         alertBox.textContent = editingId
           ? "Artikel berhasil diubah!"
           : "Artikel berhasil ditambah!";
@@ -188,13 +235,15 @@ import "../styles/global.css";
         alertBox.classList.remove("text-red-600");
         alertBox.classList.add("text-green-600");
         if (!editingId) document.getElementById("blog-form").reset();
-      } else {
-        alertBox.textContent = result.error || "Gagal menyimpan blog";
+      } catch (err) {
+        alertBox.textContent = "Gagal menghubungi server: " + err;
         alertBox.classList.remove("hidden");
-        alertBox.classList.remove("text-green-600");
         alertBox.classList.add("text-red-600");
+        console.error("[Blog Submit] Network/JS error:", err);
+        return;
       }
     };
+
 
     // Sembunyikan alert jika user mulai mengetik lagi
     [
