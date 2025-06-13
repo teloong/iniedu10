@@ -86,6 +86,7 @@ import "../styles/global.css";
         </form>
         <script>
           document.addEventListener("DOMContentLoaded", function () {
+            // @ts-ignore
             tinymce.init({
               selector: "#blog-content",
               height: 300,
@@ -161,6 +162,7 @@ import "../styles/global.css";
     document.getElementById("blog-form").onsubmit = async function (e) {
       e.preventDefault();
       // Sinkronkan isi editor TinyMCE ke textarea
+      // @ts-ignore
       if (window.tinymce) tinymce.triggerSave();
       const title = document.getElementById("blog-title").value.trim();
       const content = document.getElementById("blog-content").value.trim();
