@@ -1,0 +1,92 @@
+---
+import Layout from '../../../../layouts/Layout.astro';
+---
+<Layout title="Video Pembelajaran SMP Kelas 8 - PPKn">
+  <section class="max-w-2xl mx-auto mt-12 bg-white rounded-2xl shadow-lg p-8">
+    <h1 class="text-2xl font-bold text-center mb-6 text-blue-700">
+      Video Pembelajaran SMP Kelas 8 - PPKn
+    </h1>
+    <div id="video-list" class="space-y-8"></div>
+    <div id="video-message" class="text-center text-red-500 mt-6"></div>
+    <script type="module">
+      import {
+        initializeApp,
+        getApps,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import {
+        getAuth,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+      const firebaseConfig = {
+        apiKey: "AIzaSyAlxYWD4bCwpoKEErXDX1_4AZC9wzQTkwA",
+        authDomain: "iniedu.firebaseapp.com",
+        projectId: "iniedu",
+        storageBucket: "iniedu.appspot.com",
+        messagingSenderId: "743403637628",
+        appId: "1:743403637628:web:15b40396e94c8b91ce32f9",
+      };
+      if (!getApps().length) {
+        initializeApp(firebaseConfig);
+      }
+      const auth = getAuth();
+      const videoList = document.getElementById("video-list");
+      const videoMessage = document.getElementById("video-message");
+
+      async function fetchVideosWithToken(token) {
+        videoMessage.textContent = "";
+        videoList.innerHTML = "";
+        try {
+          const kelas = 8;
+          const mapel = "PPKn";
+          const res = await fetch(
+            "https://jcfizceoycwdvpqpwhrj.functions.supabase.co/akses_video",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ token, kelas, mapel }),
+            }
+          );
+          const { videos } = await res.json();
+          if (!Array.isArray(videos) || videos.length === 0) {
+            videoMessage.textContent = "Belum ada video untuk mapel ini.";
+            return;
+          }
+          videos.forEach((video) => {
+            let embed = "";
+            if (video.url) {
+              let videoId = "";
+              const match = video.url.match(
+                /(?:youtu.be\/|youtube.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/
+              );
+              if (match) {
+                videoId = match[1];
+              }
+              if (videoId) {
+                embed = `<iframe src='https://www.youtube.com/embed/${videoId}' class='w-full aspect-video rounded mb-2' frameborder='0' allowfullscreen></iframe>`;
+              }
+            }
+            const div = document.createElement("div");
+            div.className = "p-4 bg-gray-50 rounded shadow";
+            div.innerHTML = `
+              <div class='font-semibold text-lg mb-2'>${video.title || video.judul || "-"} </div>
+              ${embed}
+              <div class='text-sm text-gray-600 mb-1'>${video.description || ""}</div>
+            `;
+            videoList.appendChild(div);
+          });
+        } catch (err) {
+          videoMessage.textContent = "Gagal mengambil data video.";
+        }
+      }
+
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+          videoMessage.textContent = "Silakan login untuk melihat video.";
+          return;
+        }
+        const token = await user.getIdToken();
+        fetchVideosWithToken(token);
+      });
+    </script>
+  </section>
+</Layout>

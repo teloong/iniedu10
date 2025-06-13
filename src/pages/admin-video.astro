@@ -14,29 +14,27 @@ import '../styles/global.css';
         <form id="video-form" class="flex flex-col gap-4 mb-8">
           <input type="text" id="title" required placeholder="Judul Video" class="border rounded p-2" />
           <select id="kelas" required class="border rounded p-2">
-            <option value="">Pilih Kelas</option>
-            <option value="1">Kelas 1</option>
-            <option value="2">Kelas 2</option>
-            <option value="3">Kelas 3</option>
-            <option value="4">Kelas 4</option>
-            <option value="5">Kelas 5</option>
-            <option value="6">Kelas 6</option>
-          </select>
-          <select id="mapel" required class="border rounded p-2">
-            <option value="">Pilih Mapel</option>
-            <option value="Matematika">Matematika</option>
-            <option value="Bahasa Indonesia">Bahasa Indonesia</option>
-            <option value="Bahasa Arab">Bahasa Arab</option>
-            <option value="Bahasa Jawa">Bahasa Jawa</option>
-            <option value="Bahasa Inggris">Bahasa Inggris</option>
-            <option value="PKN">PKN</option>
-            <option value="PAI">PAI</option>
-            <option value="Seni Teater">Seni Teater</option>
-            <option value="Seni Musik">Seni Musik</option>
-            <option value="Seni Tari">Seni Tari</option>
-            <option value="Seni Rupa">Seni Rupa</option>
-            <option value="IPAS">IPAS</option>
-          </select>
+  <option value="">Pilih Kelas</option>
+  <optgroup label="SD">
+    <option value="1">Kelas 1</option>
+    <option value="2">Kelas 2</option>
+    <option value="3">Kelas 3</option>
+    <option value="4">Kelas 4</option>
+    <option value="5">Kelas 5</option>
+    <option value="6">Kelas 6</option>
+  </optgroup>
+  <optgroup label="SMP">
+    <option value="7">Kelas 7</option>
+    <option value="8">Kelas 8</option>
+    <option value="9">Kelas 9</option>
+  </optgroup>
+  <optgroup label="SMA">
+    <option value="10">Kelas 10</option>
+    <option value="11">Kelas 11</option>
+    <option value="12">Kelas 12</option>
+  </optgroup>
+</select>
+          <select id="mapel" required class="border rounded p-2"></select>
           <input type="url" id="url" placeholder="URL Video (YouTube)" class="border rounded p-2" />
           <div class="text-xs text-gray-500 mb-2">Masukkan link YouTube (mode privat/unlisted) yang ingin di-embed.</div>
           <select id="id_kursus" required class="border rounded p-2">
@@ -57,6 +55,55 @@ import '../styles/global.css';
 </Layout>
 <script type="module">
   import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+  // Mapel per jenjang
+  const mapelByJenjang = {
+    SD: [
+      'Matematika', 'Bahasa Indonesia', 'Bahasa Arab', 'Bahasa Jawa', 'Bahasa Inggris',
+      'PKN', 'PAI', 'Seni Teater', 'Seni Musik', 'Seni Tari', 'Seni Rupa', 'IPAS'
+    ],
+    SMP: [
+      'Matematika', 'Bahasa Indonesia', 'Bahasa Arab', 'Bahasa Jawa', 'Bahasa Inggris',
+      'PKN', 'PAI', 'Seni Teater', 'Seni Musik', 'Seni Tari', 'Seni Rupa', 'IPA', 'IPS', 'Informatika', 'PJOK'
+    ],
+    SMA: [
+      'Matematika', 'Bahasa Indonesia', 'Bahasa Arab', 'Bahasa Jawa', 'Bahasa Inggris',
+      'PAI', 'PPKn', 'PJOK', 'Informatika', 'Seni Musik', 'Seni Tari', 'Seni Teater', 'Seni Rupa',
+      'Biologi', 'Kimia', 'Fisika', 'Geografi', 'Ekonomi', 'Sosiologi', 'Sejarah', 'IPA', 'IPS'
+    ]
+  };
+
+  function getJenjangByKelas(kelas) {
+    if (kelas >= 1 && kelas <= 6) return 'SD';
+    if (kelas >= 7 && kelas <= 9) return 'SMP';
+    if (kelas >= 10 && kelas <= 12) return 'SMA';
+    return null;
+  }
+
+  function renderMapelOptions(kelas, selectedMapel = '') {
+    const select = document.getElementById('mapel');
+    select.innerHTML = '';
+    const optionDefault = document.createElement('option');
+    optionDefault.value = '';
+    optionDefault.textContent = 'Pilih Mapel';
+    select.appendChild(optionDefault);
+    const jenjang = getJenjangByKelas(Number(kelas));
+    if (!jenjang) return;
+    mapelByJenjang[jenjang].forEach(mapel => {
+      const opt = document.createElement('option');
+      opt.value = mapel;
+      opt.textContent = mapel;
+      if (mapel === selectedMapel) opt.selected = true;
+      select.appendChild(opt);
+    });
+  }
+
+  // Inisialisasi mapel saat load
+  document.getElementById('kelas').addEventListener('change', (e) => {
+    renderMapelOptions(e.target.value);
+  });
+  // Prefill default kosong saat load awal
+  renderMapelOptions('');
 
   // Inisialisasi Supabase
   const supabaseUrl = 'https://jcfizceoycwdvpqpwhrj.supabase.co';
@@ -96,6 +143,7 @@ import '../styles/global.css';
       }
       document.getElementById('title').value = data.title || '';
       document.getElementById('kelas').value = data.kelas || '';
+      renderMapelOptions(data.kelas, data.mapel || '');
       document.getElementById('mapel').value = data.mapel || '';
       document.getElementById('url').value = data.url || '';
       document.getElementById('id_kursus').value = data.id_kursus || '';
