@@ -81,56 +81,12 @@ import "../styles/global.css";
             class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded transition-all"
             >Tambah Blog</button
           >
-          <!-- QuillJS CSS -->
           <!-- TinyMCE CDN -->
-          <script
-            src="https://cdn.tiny.cloud/1/v9bwvtv7kitkkrsjydby5qu1so5f4p6p0e0mq0odw8e107dl/tinymce/6/tinymce.min.js"
-            referrerpolicy="origin"></script>
-          <script>
-            document.addEventListener("DOMContentLoaded", function () {
-              // Inisialisasi TinyMCE untuk judul blog (toolbar minimal)
-              if (window.tinymce) {
-                tinymce.init({
-                  selector: "#blog-title",
-                  menubar: false,
-                  height: 50,
-                  toolbar: "bold italic underline | removeformat",
-                  placeholder: "Judul Blog",
-                  branding: false,
-                  statusbar: false,
-                  plugins: [],
-                  content_style: "body { font-family:Inter,sans-serif; font-size:20px; font-weight:bold }"
-                });
-              }
-            });
-          </script>
+          <script src="https://cdn.tiny.cloud/1/v9bwvtv7kitkkrsjydby5qu1so5f4p6p0e0mq0odw8e107dl/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+          <script type="module" src="/cloudinary-upload.js"></script>
+          <!-- Script handler eksternal -->
+          <script type="module" src="/admin-blog.js"></script>
         </form>
-        <script>
-          document.addEventListener("DOMContentLoaded", function () {
-            // @ts-ignore
-            tinymce.init({
-              selector: "#blog-content",
-              height: 300,
-              menubar: "file edit view insert format tools table help",
-              plugins: [
-                "advlist",
-                "autolink",
-                "lists",
-                "link",
-                "image",
-                "charmap",
-                "preview",
-                "anchor",
-                "help",
-                "wordcount"
-              ],
-              toolbar:
-                "undo redo | fontselect fontsizeselect | formatselect | bold italic underline strikethrough forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | link image | code fullscreen",
-              content_style:
-                "body { font-family:Inter,sans-serif; font-size:14px }",
-            });
-          });
-        </script>
       </div>
     </div>
   </main>
