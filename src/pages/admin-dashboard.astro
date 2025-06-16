@@ -170,17 +170,27 @@ const { count: kursusCount } = await supabase
         </div>
         <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
           <div class="mb-2 text-purple-600 text-3xl">
-            <svg width="32" height="32" fill="none" viewBox="0 0 24 24"
-              ><circle cx="12" cy="12" r="12" fill="#ede9fe"></circle><path
-                d="M8 12h8M12 8v8"
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="12" fill="#ede9fe"></circle>
+              <path
+                d="M4 7a2 2 0 012-2h6a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V7z"
                 stroke="#7c3aed"
-                stroke-width="2.2"
-                stroke-linecap="round"
-                stroke-linejoin="round"></path></svg
-            >
+                stroke-width="2"
+                fill="#fff"></path>
+              <path
+                d="M20 7a2 2 0 00-2-2h-4v12h4a2 2 0 002-2V7z"
+                stroke="#7c3aed"
+                stroke-width="2"
+                fill="#fff"></path>
+              <path
+                d="M8 7v10"
+                stroke="#7c3aed"
+                stroke-width="1.5"
+                stroke-dasharray="2,2"></path>
+            </svg>
           </div>
-          <div class="text-sm text-gray-500 mb-1">Fitur Lain</div>
-          <div class="text-2xl font-bold">-</div>
+          <div class="text-sm text-gray-500 mb-1">Total Ebook</div>
+          <div class="text-2xl font-bold stat-ebook-count">-</div>
         </div>
       </div>
 
@@ -215,6 +225,12 @@ const { count: kursusCount } = await supabase
             .select("*", { count: "exact", head: true });
           document.querySelector(".stat-blog-count").textContent =
             typeof blogCount === "number" ? blogCount : "-";
+          // Total Ebook
+          const { count: ebookCount } = await supabase
+            .from("ebooks")
+            .select("*", { count: "exact", head: true });
+          document.querySelector(".stat-ebook-count").textContent =
+            typeof ebookCount === "number" ? ebookCount : "-";
         }
         async function fetchPembelianKursusPerKategori() {
           // Ambil semua data pembelian_kursus

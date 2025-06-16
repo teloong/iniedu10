@@ -62,7 +62,12 @@ import '../styles/global.css';
                   <div class="text-sm text-gray-500 mb-1">${buku.penulis}${buku.tahun ? ', ' + buku.tahun : ''}</div>
                   ${buku.penerbit ? `<div class='text-xs text-gray-400 mb-1'>Penerbit: ${buku.penerbit}</div>` : ''}
                   ${buku.deskripsi ? `<div class='text-xs text-gray-500 mb-2 italic'>${buku.deskripsi}</div>` : ''}
-                  <a href="${buku.link}" target="_blank" class="px-4 py-2 bg-blue-500 text-white rounded-full font-semibold mt-auto">Baca Sekarang</a>
+                  <a href="${buku.link}" target="_blank" class="px-4 py-2 bg-blue-500 text-white rounded-full font-semibold">Baca Sekarang</a>
+${buku.link && buku.link.endsWith('.pdf') ? `<iframe src="${buku.link}" width="100%" height="350" class="mt-3 rounded border"></iframe>` : ''}
+<div class="flex gap-2 mt-2">
+  <button class="px-3 py-1 bg-yellow-400 text-white rounded font-bold text-xs" onclick="window.location.href='/admin-edit-ebook?id=${buku.id}'">Edit</button>
+  <button class="px-3 py-1 bg-red-500 text-white rounded font-bold text-xs" onclick="hapusEbook('${buku.id}')">Hapus</button>
+</div>
                 </div>
               `).join('')}
           </div>
@@ -72,5 +77,16 @@ import '../styles/global.css';
     }
 
     fetchCategoriesAndEbooks();
+
+  // Fungsi hapus e-book
+  window.hapusEbook = async function(id) {
+    if (!confirm('Yakin ingin menghapus e-book ini?')) return;
+    const { error } = await supabase.from('ebooks').delete().eq('id', id);
+    if (error) {
+      alert('Gagal menghapus e-book: ' + error.message);
+      return;
+    }
+    fetchCategoriesAndEbooks();
+  }
   </script>
 </Layout>
