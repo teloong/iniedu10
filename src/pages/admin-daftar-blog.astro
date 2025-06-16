@@ -10,7 +10,7 @@ import "../styles/global.css";
       <AdminSidebar active="daftar-blog" />
     </div>
     <main class="flex-1 overflow-x-auto">
-      <div class="max-w-4xl mx-auto px-4 py-8">
+      <div class="max-w-7xl mx-auto px-4 py-8">
         <div
           id="blog-success-alert"
           class="hidden text-red-600 font-semibold mb-4"
@@ -20,7 +20,8 @@ import "../styles/global.css";
           <table class="min-w-full text-sm">
             <thead>
               <tr class="text-left text-gray-500 border-b">
-                <th>Judul</th>
+                <th class="max-w-xs truncate">Judul</th>
+<th class="max-w-xs truncate">Isi</th>
                 <th>Penulis</th>
                 <th>Jabatan Penulis</th>
                 <th>Foto Penulis</th>
@@ -70,7 +71,10 @@ import "../styles/global.css";
       for (const blog of data) {
         tbody.innerHTML += `
           <tr class="border-b">
-            <td class="px-4 py-2">${blog.title || "-"}</td>
+            <td class="px-4 py-2 max-w-xs truncate overflow-hidden whitespace-nowrap" title="${blog.title ? blog.title.replace(/<[^>]+>/g, '') : '-'}">${blog.title ? blog.title.replace(/<[^>]+>/g, '') : '-'}</td>
+<td class="px-4 py-2 max-w-xs truncate overflow-hidden whitespace-nowrap" title="${blog.content ? blog.content.replace(/<[^>]+>/g, '').slice(0, 100) : '-'}">
+  ${blog.content ? blog.content.replace(/<[^>]+>/g, '').slice(0, 50) + (blog.content.replace(/<[^>]+>/g, '').length > 50 ? '...' : '') : '-'}
+</td>
             <td class="px-4 py-2">${blog.author || "-"}</td>
             <td class="px-4 py-2">${blog.author_role || "-"}</td>
             <td class="px-4 py-2">

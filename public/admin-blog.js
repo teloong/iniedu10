@@ -71,8 +71,25 @@ let editingId = null;
       .eq("id", editingId)
       .single();
     if (!error && data) {
-      document.getElementById("blog-title").value = data.title || "";
-      document.getElementById("blog-content").value = data.content || "";
+      // Prefill judul blog (TinyMCE), tunggu hingga editor siap
+      function prefillTitleTinyMCE() {
+        if (window.tinymce && tinymce.get('blog-title')) {
+          tinymce.get('blog-title').setContent(data.title || "");
+        } else {
+          setTimeout(prefillTitleTinyMCE, 100);
+        }
+      }
+      prefillTitleTinyMCE();
+      // Prefill isi blog (TinyMCE), tunggu hingga editor siap
+      function prefillContentTinyMCE() {
+        if (window.tinymce && tinymce.get('blog-content')) {
+          tinymce.get('blog-content').setContent(data.content || "");
+        } else {
+          setTimeout(prefillContentTinyMCE, 100);
+        }
+      }
+      prefillContentTinyMCE();
+      // Prefill field lain
       document.getElementById("blog-author").value = data.author || "";
       document.getElementById("blog-author-role").value = data.author_role || "";
       document.getElementById("blog-author-photo").value = data.author_photo || "";
@@ -85,11 +102,20 @@ let editingId = null;
   // Submit handler
   document.getElementById("blog-form").onsubmit = async function (e) {
     e.preventDefault();
-    // Sinkronkan isi editor TinyMCE ke textarea
-    // @ts-ignore
-    if (window.tinymce) tinymce.triggerSave();
-    const title = document.getElementById("blog-title").value.trim();
-    const content = document.getElementById("blog-content").value.trim();
+    // Ambil judul blog tanpa HTML dari TinyMCE judul
+    let title = "";
+    if (window.tinymce && tinymce.get('blog-title')) {
+      title = tinymce.get('blog-title').getContent({ format: 'text' }).trim();
+    } else {
+      title = document.getElementById("blog-title").value.trim();
+    }
+    // Ambil isi blog (boleh HTML) dari TinyMCE isi
+    let content = "";
+    if (window.tinymce && tinymce.get('blog-content')) {
+      content = tinymce.get('blog-content').getContent();
+    } else {
+      content = document.getElementById("blog-content").value.trim();
+    }
     const author = document.getElementById("blog-author").value.trim();
     const author_role = document
       .getElementById("blog-author-role")
@@ -161,6 +187,17 @@ let editingId = null;
         : "Artikel berhasil ditambah!";
       alertBox.classList.remove("hidden");
       alertBox.classList.remove("text-red-600");
+      // Reset judul blog (TinyMCE)
+      if (window.tinymce && tinymce.get('blog-title')) {
+        tinymce.get('blog-title').setContent('');
+        // Trigger event supaya UI TinyMCE update
+        tinymce.get('blog-title').fire('change');
+        tinymce.get('blog-title').fire('blur');
+      }
+      // Reset isi blog (TinyMCE)
+      if (window.tinymce && tinymce.get('blog-content')) {
+        tinymce.get('blog-content').setContent('');
+      }
       alertBox.classList.add("text-green-600");
       if (!editingId) document.getElementById("blog-form").reset();
     } catch (err) {
