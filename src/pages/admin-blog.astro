@@ -77,10 +77,10 @@ import "../styles/global.css";
             placeholder="Sumber (opsional, misal: Kompas.com)"
           />
           <button
+            id="blog-submit-btn"
             type="submit"
             class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded transition-all"
-            >Tambah Blog</button
-          >
+          >Tambah Blog</button>
           <!-- TinyMCE CDN -->
           <script src="https://cdn.tiny.cloud/1/v9bwvtv7kitkkrsjydby5qu1so5f4p6p0e0mq0odw8e107dl/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
           <script type="module" src="/cloudinary-upload.js"></script>
@@ -101,7 +101,11 @@ import "../styles/global.css";
   const edgeUrl =
     "https://jcfizceoycwdvpqpwhrj.functions.supabase.co/insert_blog"; // Ganti jika endpoint berubah
 
-  let editingId = null;
+  function getEditingId() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("edit");
+  }
+  let editingId = getEditingId();
 
   (async () => {
     const {
@@ -113,8 +117,8 @@ import "../styles/global.css";
     }
 
     // Prefill form jika mode edit
-    const params = new URLSearchParams(window.location.search);
-    editingId = params.get("edit");
+    editingId = getEditingId();
+    const submitBtn = document.getElementById("blog-submit-btn");
     if (editingId) {
       const { data, error } = await supabase
         .from("blog")
@@ -131,8 +135,12 @@ import "../styles/global.css";
           data.author_photo || "";
         document.getElementById("blog-image").value = data.image || "";
         document.getElementById("blog-source").value = data.source || "";
-        document.getElementById("form-title").textContent = "Edit Blog";
+        // Ubah label tombol submit menjadi 'Update Blog'
+        if (submitBtn) submitBtn.textContent = "Update Blog";
       }
+    } else {
+      // Jika bukan mode edit, pastikan label tombol submit kembali ke 'Tambah Blog'
+      if (submitBtn) submitBtn.textContent = "Tambah Blog";
     }
 
     // Submit handler
@@ -169,6 +177,8 @@ import "../styles/global.css";
         alertBox.classList.add("text-red-600");
         return;
       }
+      // Selalu update editingId sebelum submit (antisipasi reload atau navigasi)
+      editingId = getEditingId();
       let method = editingId ? "PUT" : "POST";
       let payload = editingId
         ? {
@@ -182,6 +192,12 @@ import "../styles/global.css";
             source,
           }
         : { title, content, author, author_role, author_photo, image, source };
+
+      // DEBUG: log id, payload, dan method
+      ('[Blog Submit] editingId:', editingId);
+      ('[Blog Submit] method:', method);
+      ('[Blog Submit] payload:', payload);
+
       let res, resJson;
       try {
         res = await fetch(edgeUrl, {
@@ -197,14 +213,14 @@ import "../styles/global.css";
           alertBox.textContent = "Gagal menyimpan blog: " + (resJson && resJson.error ? resJson.error : res.status);
           alertBox.classList.remove("hidden");
           alertBox.classList.add("text-red-600");
-          console.error("[Blog Submit] Backend error:", resJson);
+          ("[Blog Submit] Backend error:", resJson);
           return;
         }
         if (resJson && resJson.error) {
           alertBox.textContent = "Gagal menyimpan blog: " + resJson.error;
           alertBox.classList.remove("hidden");
           alertBox.classList.add("text-red-600");
-          console.error("[Blog Submit] Backend error:", resJson);
+          ("[Blog Submit] Backend error:", resJson);
           return;
         }
         alertBox.textContent = editingId
@@ -213,12 +229,19 @@ import "../styles/global.css";
         alertBox.classList.remove("hidden");
         alertBox.classList.remove("text-red-600");
         alertBox.classList.add("text-green-600");
-        if (!editingId) document.getElementById("blog-form").reset();
+        if (editingId) {
+          // Redirect ke daftar blog setelah update sukses (tunggu 1.5 detik)
+          setTimeout(() => {
+            window.location.href = "/admin-daftar-blog";
+          }, 1500);
+        } else {
+          document.getElementById("blog-form").reset();
+        }
       } catch (err) {
         alertBox.textContent = "Gagal menghubungi server: " + err;
         alertBox.classList.remove("hidden");
         alertBox.classList.add("text-red-600");
-        console.error("[Blog Submit] Network/JS error:", err);
+        ("[Blog Submit] Network/JS error:", err);
         return;
       }
     };

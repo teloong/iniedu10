@@ -12,6 +12,9 @@ import AdminSidebar from '../components/AdminSidebar.astro';
         <h1 class="text-2xl font-bold text-blue-700 mb-6">Manajemen E-Book Perpustakaan</h1>
         <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
           <form id="ebook-form" class="flex flex-col gap-4">
+            <select id="kategori_id" class="border rounded p-2" required>
+              <option value="">Pilih Kategori</option>
+            </select>
             <input type="text" id="judul" class="border rounded p-2" placeholder="Judul Buku" required />
             <input type="text" id="penulis" class="border rounded p-2" placeholder="Penulis" required />
             <input type="number" id="tahun" class="border rounded p-2" placeholder="Tahun" min="1900" max="2100" />
@@ -26,25 +29,24 @@ import AdminSidebar from '../components/AdminSidebar.astro';
             <div id="ebook-message" class="text-center text-red-500"></div>
           </form>
         </div>
-        <div class="grid md:grid-cols-3 gap-6" id="ebook-list">
-          <!-- Daftar e-book akan dirender di sini -->
-        </div>
+        <!-- Daftar kategori dan e-book sudah dipindah ke halaman admin-daftar-ebook.astro -->
       </div>
     </main>
   </div>
   <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+    const supabase = createClient('https://jcfizceoycwdvpqpwhrj.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA');
+
     // ====== Script Upload Cover ke Cloudinary ======
-    const CLOUDINARY_CLOUD_NAME = "dr8gr1uy1"; // Ganti dengan cloud_name Anda jika perlu
-    const CLOUDINARY_UNSIGNED_PRESET = "foto-penulis"; // Ganti dengan upload preset unsigned Anda
+    const CLOUDINARY_CLOUD_NAME = "dr8gr1uy1";
+    const CLOUDINARY_UNSIGNED_PRESET = "foto-penulis";
     const coverFileInput = document.getElementById('cover-file');
     const coverInput = document.getElementById('cover');
     const coverPreview = document.getElementById('cover-preview');
     coverFileInput.addEventListener('change', async (e) => {
       const file = e.target.files[0];
       if (!file) return;
-      // Preview lokal dulu
       coverPreview.innerHTML = `<img src="${URL.createObjectURL(file)}" class="w-32 h-44 object-cover rounded shadow" />`;
-      // Upload ke Cloudinary
       const formData = new FormData();
       formData.append('file', file);
       formData.append('upload_preset', CLOUDINARY_UNSIGNED_PRESET);
@@ -69,32 +71,68 @@ import AdminSidebar from '../components/AdminSidebar.astro';
       }
       coverInput.disabled = false;
     });
-    // Dummy data awal
-    const ebookList = document.getElementById('ebook-list');
-    function renderEbooks() {
-      ebookList.innerHTML = '';
-      if (ebooks.length === 0) {
-        ebookList.innerHTML = '<div class="col-span-3 text-center text-gray-400">Belum ada buku.</div>';
+
+    // ====== Fetch Kategori dan Buku dari Supabase ======
+    let categories = [];
+    let ebooks = [];
+    const kategoriSelect = document.getElementById('kategori_id');
+    const kategoriList = document.getElementById('kategori-list');
+
+    async function fetchCategoriesAndEbooks() {
+      const { data: cats, error: catErr } = await supabase.from('ebook_categories').select('*').order('nama', { ascending: true });
+      if (catErr) {
+        kategoriList.innerHTML = '<div class="text-center text-red-500">Gagal memuat kategori.</div>';
         return;
       }
-      ebooks.forEach((buku, idx) => {
-        const div = document.createElement('div');
-        div.className = 'bg-white rounded-xl shadow p-4 flex flex-col items-center';
-        div.innerHTML = `
-          <img src="${buku.cover || '/default-cover.png'}" alt="Cover Buku" class="w-32 h-44 object-cover rounded mb-2" />
-          <div class="font-bold mt-2 text-center">${buku.judul}</div>
-          <div class="text-sm text-gray-500 mb-1">${buku.penulis}${buku.tahun ? ', ' + buku.tahun : ''}</div>
-          ${buku.penerbit ? `<div class='text-xs text-gray-400 mb-1'>Penerbit: ${buku.penerbit}</div>` : ''}
-          ${buku.deskripsi ? `<div class='text-xs text-gray-500 mb-2 italic'>${buku.deskripsi}</div>` : ''}
-          <a href="${buku.link}" target="_blank" class="px-4 py-2 bg-blue-500 text-white rounded-full font-semibold mt-auto">Baca Sekarang</a>
+      categories = cats;
+      kategoriSelect.innerHTML = '<option value="">Pilih Kategori</option>' +
+        categories.map(cat => `<option value="${cat.id}">${cat.nama}</option>`).join('');
+      // Fetch semua buku
+      const { data: books, error: bookErr } = await supabase.from('ebooks').select('*');
+      if (bookErr) {
+        kategoriList.innerHTML = '<div class="text-center text-red-500">Gagal memuat buku.</div>';
+        return;
+      }
+      ebooks = books;
+      renderCategoriesAndEbooks();
+    }
+
+    function renderCategoriesAndEbooks() {
+      kategoriList.innerHTML = '';
+      if (categories.length === 0) {
+        kategoriList.innerHTML = '<div class="text-center text-gray-400">Belum ada kategori.</div>';
+        return;
+      }
+      categories.forEach(cat => {
+        const section = document.createElement('section');
+        section.className = 'mb-12';
+        section.innerHTML = `
+          <h2 class="text-xl font-bold mb-4">${cat.nama}</h2>
+          <div class="grid md:grid-cols-3 gap-6">
+            ${ebooks.filter(b => b.kategori_id === cat.id).length === 0
+              ? '<div class="col-span-3 text-center text-gray-400">Belum ada buku.</div>'
+              : ebooks.filter(b => b.kategori_id === cat.id).map(buku => `
+                <div class="bg-white rounded-xl shadow p-4 flex flex-col items-center" key="${buku.id}">
+                  <img src="${buku.cover || '/default-cover.png'}" alt="Cover Buku" class="w-32 h-44 object-cover rounded mb-2" />
+                  <div class="font-bold mt-2 text-center">${buku.judul}</div>
+                  <div class="text-sm text-gray-500 mb-1">${buku.penulis}${buku.tahun ? ', ' + buku.tahun : ''}</div>
+                  ${buku.penerbit ? `<div class='text-xs text-gray-400 mb-1'>Penerbit: ${buku.penerbit}</div>` : ''}
+                  ${buku.deskripsi ? `<div class='text-xs text-gray-500 mb-2 italic'>${buku.deskripsi}</div>` : ''}
+                  <a href="${buku.link}" target="_blank" class="px-4 py-2 bg-blue-500 text-white rounded-full font-semibold mt-auto">Baca Sekarang</a>
+                </div>
+              `).join('')}
+          </div>
         `;
-        ebookList.appendChild(div);
+        kategoriList.appendChild(section);
       });
     }
-    renderEbooks();
-    // Form handler
-    document.getElementById('ebook-form').addEventListener('submit', function(e) {
+
+    fetchCategoriesAndEbooks();
+
+    // ====== Handler Form Tambah Buku ======
+    document.getElementById('ebook-form').addEventListener('submit', async function(e) {
       e.preventDefault();
+      const kategori_id = kategoriSelect.value;
       const judul = document.getElementById('judul').value.trim();
       const penulis = document.getElementById('penulis').value.trim();
       const tahun = document.getElementById('tahun').value;
@@ -102,14 +140,21 @@ import AdminSidebar from '../components/AdminSidebar.astro';
       const link = document.getElementById('link').value.trim();
       const penerbit = document.getElementById('penerbit').value.trim();
       const deskripsi = document.getElementById('deskripsi').value.trim();
-      if (!judul || !penulis || !link) {
-        document.getElementById('ebook-message').textContent = 'Judul, penulis, dan link buku wajib diisi!';
+      if (!kategori_id || !judul || !penulis || !link) {
+        document.getElementById('ebook-message').textContent = 'Kategori, judul, penulis, dan link buku wajib diisi!';
         return;
       }
-      ebooks.push({ judul, penulis, tahun, penerbit, deskripsi, cover, link });
-      renderEbooks();
-      this.reset();
+      const { error } = await supabase.from('ebooks').insert([
+        { kategori_id, judul, penulis, tahun: tahun ? parseInt(tahun) : null, penerbit, deskripsi, cover, link }
+      ]);
+      if (error) {
+        document.getElementById('ebook-message').textContent = 'Gagal menambah buku: ' + error.message;
+        return;
+      }
       document.getElementById('ebook-message').textContent = '';
+      this.reset();
+      coverPreview.innerHTML = '';
+      await fetchCategoriesAndEbooks();
     });
   </script>
 </Layout>

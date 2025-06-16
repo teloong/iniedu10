@@ -11,46 +11,66 @@ import '../styles/global.css';
     <main class="flex-1 overflow-x-auto">
       <div class="max-w-4xl mx-auto px-4 py-8">
         <h1 class="text-2xl font-bold text-blue-700 mb-6">Daftar E-Book Perpustakaan</h1>
-        <div class="grid md:grid-cols-3 gap-6" id="ebook-list">
-          <!-- Daftar e-book akan dirender di sini -->
+        <div id="kategori-list">
+          <!-- Daftar kategori dan e-book akan dirender di sini -->
         </div>
       </div>
     </main>
   </div>
   <script type="module">
-    // Dummy data awal (bisa diganti dengan fetch ke backend/Supabase)
-    let ebooks = [
-      {
-        judul: "Contoh Buku Digital",
-        penulis: "Admin Iniedu",
-        tahun: 2024,
-        penerbit: "Iniedu Press",
-        deskripsi: "Contoh buku digital untuk demo.",
-        cover: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=400&q=80",
-        link: "https://example.com/contoh-buku.pdf"
-      }
-    ];
-    const ebookList = document.getElementById('ebook-list');
-    function renderEbooks() {
-      ebookList.innerHTML = '';
-      if (ebooks.length === 0) {
-        ebookList.innerHTML = '<div class="col-span-3 text-center text-gray-400">Belum ada buku.</div>';
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+    const supabase = createClient('https://jcfizceoycwdvpqpwhrj.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA');
+    let categories = [];
+    let ebooks = [];
+    const kategoriList = document.getElementById('kategori-list');
+
+    async function fetchCategoriesAndEbooks() {
+      const { data: cats, error: catErr } = await supabase.from('ebook_categories').select('*').order('nama', { ascending: true });
+      if (catErr) {
+        kategoriList.innerHTML = '<div class="text-center text-red-500">Gagal memuat kategori.</div>';
         return;
       }
-      ebooks.forEach((buku, idx) => {
-        const div = document.createElement('div');
-        div.className = 'bg-white rounded-xl shadow p-4 flex flex-col items-center';
-        div.innerHTML = `
-          <img src="${buku.cover || '/default-cover.png'}" alt="Cover Buku" class="w-32 h-44 object-cover rounded mb-2" />
-          <div class="font-bold mt-2 text-center">${buku.judul}</div>
-          <div class="text-sm text-gray-500 mb-1">${buku.penulis}${buku.tahun ? ', ' + buku.tahun : ''}</div>
-          ${buku.penerbit ? `<div class='text-xs text-gray-400 mb-1'>Penerbit: ${buku.penerbit}</div>` : ''}
-          ${buku.deskripsi ? `<div class='text-xs text-gray-500 mb-2 italic'>${buku.deskripsi}</div>` : ''}
-          <a href="${buku.link}" target="_blank" class="px-4 py-2 bg-blue-500 text-white rounded-full font-semibold mt-auto">Baca Sekarang</a>
+      categories = cats;
+      // Fetch semua buku
+      const { data: books, error: bookErr } = await supabase.from('ebooks').select('*');
+      if (bookErr) {
+        kategoriList.innerHTML = '<div class="text-center text-red-500">Gagal memuat buku.</div>';
+        return;
+      }
+      ebooks = books;
+      renderCategoriesAndEbooks();
+    }
+
+    function renderCategoriesAndEbooks() {
+      kategoriList.innerHTML = '';
+      if (categories.length === 0) {
+        kategoriList.innerHTML = '<div class="text-center text-gray-400">Belum ada kategori.</div>';
+        return;
+      }
+      categories.forEach(cat => {
+        const section = document.createElement('section');
+        section.className = 'mb-12';
+        section.innerHTML = `
+          <h2 class="text-xl font-bold mb-4">${cat.nama}</h2>
+          <div class="grid md:grid-cols-3 gap-6">
+            ${ebooks.filter(b => b.kategori_id === cat.id).length === 0
+              ? '<div class="col-span-3 text-center text-gray-400">Belum ada buku.</div>'
+              : ebooks.filter(b => b.kategori_id === cat.id).map(buku => `
+                <div class="bg-white rounded-xl shadow p-4 flex flex-col items-center" key="${buku.id}">
+                  <img src="${buku.cover || '/default-cover.png'}" alt="Cover Buku" class="w-32 h-44 object-cover rounded mb-2" />
+                  <div class="font-bold mt-2 text-center">${buku.judul}</div>
+                  <div class="text-sm text-gray-500 mb-1">${buku.penulis}${buku.tahun ? ', ' + buku.tahun : ''}</div>
+                  ${buku.penerbit ? `<div class='text-xs text-gray-400 mb-1'>Penerbit: ${buku.penerbit}</div>` : ''}
+                  ${buku.deskripsi ? `<div class='text-xs text-gray-500 mb-2 italic'>${buku.deskripsi}</div>` : ''}
+                  <a href="${buku.link}" target="_blank" class="px-4 py-2 bg-blue-500 text-white rounded-full font-semibold mt-auto">Baca Sekarang</a>
+                </div>
+              `).join('')}
+          </div>
         `;
-        ebookList.appendChild(div);
+        kategoriList.appendChild(section);
       });
     }
-    renderEbooks();
+
+    fetchCategoriesAndEbooks();
   </script>
 </Layout>

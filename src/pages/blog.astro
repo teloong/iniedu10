@@ -96,18 +96,60 @@ title: "Blog"
       for (const blog of data) {
         const card = document.createElement('article');
         card.className = 'bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all flex flex-col';
-        card.innerHTML = `
-          ${blog.image ? `<img src="${blog.image}" alt="${blog.title}" class="w-full h-48 object-cover" />` : ''}
-          <div class="p-6 flex flex-col flex-1">
-            <h2 class="text-xl font-bold mb-2 text-blue-700 max-w-xs truncate overflow-hidden whitespace-nowrap" title="${blog.title ? blog.title.replace(/<[^>]+>/g, '') : ''}">${blog.title ? blog.title.replace(/<[^>]+>/g, '') : ''}</h2>
-            <p class="text-gray-600 flex-1">${blog.content.length > 120 ? blog.content.slice(0,120)+'...' : blog.content}</p>
-            <a href="/blog-detail?id=${blog.id}" class="mt-4 inline-block text-blue-600 font-semibold hover:underline">Baca Selengkapnya</a>
-          </div>
-          <div class="border-t border-gray-200 px-6 py-3 text-xs text-gray-500 flex justify-between items-center">
-            <span>${blog.created_at ? new Date(blog.created_at).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric'}) : '-'}</span>
-            ${blog.source ? `<span class='italic text-gray-400'>${blog.source}</span>` : ''}
-          </div>
-        `;
+
+        // Gambar
+        if (blog.image) {
+          const img = document.createElement('img');
+          img.src = blog.image;
+          img.alt = blog.title ? blog.title.replace(/<[^>]+>/g, '') : '';
+          img.className = 'w-full h-48 object-cover';
+          card.appendChild(img);
+        }
+
+        // Wrapper konten
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'p-6 flex flex-col flex-1';
+
+        // Judul
+        const h2 = document.createElement('h2');
+        h2.className = 'text-xl font-bold mb-2 text-blue-700 max-w-xs truncate overflow-hidden whitespace-nowrap';
+        h2.title = blog.title ? blog.title.replace(/<[^>]+>/g, '') : '';
+        h2.textContent = blog.title ? blog.title.replace(/<[^>]+>/g, '') : '';
+        contentDiv.appendChild(h2);
+
+        // Deskripsi (tanpa tag HTML)
+        const p = document.createElement('p');
+        p.className = 'text-gray-600 flex-1';
+        // Hilangkan tag HTML dari blog.content
+        const plainContent = blog.content.replace(/<[^>]+>/g, '');
+        p.textContent = plainContent.length > 120 ? plainContent.slice(0,120)+'...' : plainContent;
+        contentDiv.appendChild(p);
+
+        // Tombol Baca Selengkapnya
+        if (blog.id) {
+          const a = document.createElement('a');
+          a.href = `/blog-detail?id=${blog.id}`;
+          a.className = 'mt-4 inline-block text-blue-600 font-semibold hover:underline cursor-pointer';
+          a.textContent = 'Baca Selengkapnya';
+          contentDiv.appendChild(a);
+        }
+
+        card.appendChild(contentDiv);
+
+        // Footer
+        const footer = document.createElement('div');
+        footer.className = 'border-t border-gray-200 px-6 py-3 text-xs text-gray-500 flex justify-between items-center';
+        const spanDate = document.createElement('span');
+        spanDate.textContent = blog.created_at ? new Date(blog.created_at).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric'}) : '-';
+        footer.appendChild(spanDate);
+        if (blog.source) {
+          const spanSource = document.createElement('span');
+          spanSource.className = 'italic text-gray-400';
+          spanSource.textContent = blog.source;
+          footer.appendChild(spanSource);
+        }
+        card.appendChild(footer);
+
         list.appendChild(card);
       }
     }

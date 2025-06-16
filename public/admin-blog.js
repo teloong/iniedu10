@@ -95,7 +95,6 @@ let editingId = null;
       document.getElementById("blog-author-photo").value = data.author_photo || "";
       document.getElementById("blog-image").value = data.image || "";
       document.getElementById("blog-source").value = data.source || "";
-      document.getElementById("form-title").textContent = "Edit Blog";
     }
   }
 
@@ -107,13 +106,14 @@ let editingId = null;
     if (window.tinymce && tinymce.get('blog-title')) {
       title = tinymce.get('blog-title').getContent({ format: 'text' }).trim();
     } else {
-      title = document.getElementById("blog-title").value.trim();
+      title = "";
     }
     // Ambil isi blog (boleh HTML) dari TinyMCE isi
     let content = "";
     if (window.tinymce && tinymce.get('blog-content')) {
       content = tinymce.get('blog-content').getContent();
     } else {
+      content = "";
       content = document.getElementById("blog-content").value.trim();
     }
     const author = document.getElementById("blog-author").value.trim();
@@ -172,14 +172,14 @@ let editingId = null;
           (resJson && resJson.error ? resJson.error : res.status);
         alertBox.classList.remove("hidden");
         alertBox.classList.add("text-red-600");
-        console.error("[Blog Submit] Backend error:", resJson);
+        ("[Blog Submit] Backend error:", resJson);
         return;
       }
       if (resJson && resJson.error) {
         alertBox.textContent = "Gagal menyimpan blog: " + resJson.error;
         alertBox.classList.remove("hidden");
         alertBox.classList.add("text-red-600");
-        console.error("[Blog Submit] Backend error:", resJson);
+       ("[Blog Submit] Backend error:", resJson);
         return;
       }
       alertBox.textContent = editingId
@@ -204,7 +204,7 @@ let editingId = null;
       alertBox.textContent = "Gagal menghubungi server: " + err;
       alertBox.classList.remove("hidden");
       alertBox.classList.add("text-red-600");
-      console.error("[Blog Submit] Network/JS error:", err);
+      ("[Blog Submit] Network/JS error:", err);
       return;
     }
   };
