@@ -8,7 +8,11 @@ const menu = [
       { label: "Daftar Video", href: "/admin-daftar-video" }
     ]
   },
-  { label: "Perpustakaan", href: "/perpustakaan", icon: `<svg class='w-5 h-5' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'><rect x='4' y='4' width='16' height='16' rx='2'/><path d='M8 4v16M16 4v16' stroke-linecap='round' stroke-linejoin='round'/></svg>` },
+  { label: "Perpustakaan", href: "/admin-perpus", icon: `<svg class='w-5 h-5' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'><rect x='4' y='4' width='16' height='16' rx='2'/><path d='M8 4v16M16 4v16' stroke-linecap='round' stroke-linejoin='round'/></svg>`,
+    submenu: [
+      { label: "Daftar E-Book", href: "/admin-daftar-ebook" }
+    ]
+  },
   { label: "Blog", href: "/admin-blog", icon: `<svg class='w-5 h-5' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'><rect x='4' y='4' width='16' height='16' rx='2'/><path d='M8 8h8M8 12h8M8 16h4' stroke-linecap='round' stroke-linejoin='round'/></svg>`,
     submenu: [
       { label: "Daftar Blog", href: "/admin-daftar-blog" }
@@ -32,21 +36,27 @@ const menu = [
           {item.label}
         </a>
         {item.submenu && (
-          ((active === 'blog' || active.startsWith('daftar-blog')) && item.label === 'Blog') ||
-          ((active === 'videopembelajaran' || active.startsWith('daftar-video')) && item.label === 'Video Pembelajaran')
-        ) && (
-          <div class="ml-8 flex flex-col gap-1">
-            {item.submenu.map(sub => (
-              <a href={sub.href} class={["block px-4 py-2 rounded-lg text-base transition-all",
-                (active === 'daftar-blog' && item.label === 'Blog' && sub.label === 'Daftar Blog') ||
-                (active === 'daftar-video' && item.label === 'Video Pembelajaran' && sub.label === 'Daftar Video')
-                  ? "bg-white/10 text-white font-semibold"
-                  : "text-blue-100 hover:bg-white/5 hover:text-white"
-              ].join(' ')}>
-                {sub.label}
-              </a>
-            ))}
-          </div>
+          (
+            // Tampilkan submenu jika menu Blog, Video Pembelajaran, atau Perpustakaan aktif
+            ((active === 'blog' || active.startsWith('daftar-blog')) && item.label === 'Blog') ||
+            ((active === 'videopembelajaran' || active.startsWith('daftar-video')) && item.label === 'Video Pembelajaran') ||
+            ((active === 'perpustakaan' || active.startsWith('daftar-ebook')) && item.label === 'Perpustakaan')
+          ) && (
+            <div class="ml-8 flex flex-col gap-1">
+              {item.submenu.map(sub => (
+                <a href={sub.href} class={["block px-4 py-2 rounded-lg text-base transition-all",
+                  // Highlight submenu aktif
+                   ((active === 'daftar-blog' && item.label === 'Blog' && sub.label === 'Daftar Blog') ||
+                   (active === 'daftar-video' && item.label === 'Video Pembelajaran' && sub.label === 'Daftar Video') ||
+                   (active === 'daftar-ebook' && item.label === 'Perpustakaan' && sub.label === 'Daftar E-Book'))
+                    ? "bg-white/10 text-white font-semibold"
+                    : "text-blue-100 hover:bg-white/5 hover:text-white"
+                ].join(' ')}>
+                  {sub.label}
+                </a>
+              ))}
+            </div>
+          )
         )}
       </>
     ))}
