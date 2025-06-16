@@ -1,5 +1,6 @@
 ---
-// Halaman detail artikel blog dummy
+import "../styles/global.css";
+import "../styles/blog-detail-link.css";
 ---
 
 <html lang="id">
@@ -116,7 +117,19 @@
               <span>${formatWIBDate(Date.now())}</span> <!-- Tampilkan waktu real time WIB -->
             </div>
             <div class="flex items-center gap-4 mb-6">
-              <img src="${data.author_photo || "https://ui-avatars.com/api/?name=" + encodeURIComponent(data.author || "A") + "&background=2563eb&color=fff"}" alt="Penulis" class="w-16 h-16 rounded-full object-cover shadow" />
+              <img
+  src="${
+    data.author_photo && data.author_photo.includes("cloudinary.com")
+      ? data.author_photo.replace(
+          "/upload/",
+          "/upload/w_200,h_200,c_fill,q_auto,f_auto/"
+        )
+      : `https://ui-avatars.com/api/?name=${encodeURIComponent(data.author || "A")}&background=2563eb&color=fff&size=256`
+  }"
+  alt="Penulis"
+  class="w-20 h-20 rounded-full object-cover shadow"
+/>
+
               <div>
                 <div class="font-bold text-blue-800">${data.author || "-"}</div>
                 <div class="text-xs text-gray-500">${data.author_role || "Penulis Blog IniEdu"}</div>
@@ -127,7 +140,7 @@
               ${data.image ? `<img src="${data.image}" alt="Sampul Artikel" class="w-full rounded-xl shadow mb-1" />` : ""}
               <div class="text-xs text-gray-400 break-all">${data.source ? "Sumber: " + data.source : ""}</div>
             </div>
-            <article class="max-w-2xl mx-auto mb-8 text-gray-800 whitespace-pre-line break-words text-base leading-relaxed">${data.content.replace(/\n/g, "<br/>")}</article>
+            <article class="max-w-2xl mx-auto mb-8 text-gray-800 whitespace-pre-line break-words text-base leading-relaxed blog-detail-content">${data.content.replace(/\n/g, "<br/>")}</article>
           `;
           loadComments();
         }

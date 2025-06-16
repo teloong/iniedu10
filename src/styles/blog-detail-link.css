@@ -1,0 +1,11 @@
+.blog-detail-content a {
+  color: #2563eb;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+.blog-detail-content a:visited {
+  color: #7c3aed;
+}
+.blog-detail-content a:hover {
+  color: #1d4ed8;
+}
