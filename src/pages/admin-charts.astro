@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import AdminSidebar from "../components/AdminSidebar.astro";
-import '../styles/global.css';
+import "../styles/global.css";
 ---
 
 <Layout title="Statistik Grafik Kursus">
@@ -11,15 +11,31 @@ import '../styles/global.css';
     </div>
     <main class="flex-1 overflow-x-auto">
       <div class="w-full px-2 py-8">
-        <h1 class="text-2xl font-bold mb-6 text-blue-800">Statistik Grafik Kursus</h1>
+        <h1 class="text-2xl font-bold mb-6 text-blue-800">
+          Statistik Grafik Kursus
+        </h1>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-          <div class="bg-white rounded-xl shadow p-12 flex flex-col items-center justify-center min-w-[320px] md:min-w-[520px] lg:min-w-[700px] xl:min-w-[860px] max-w-full">
+          <div
+            class="bg-white rounded-xl shadow p-12 flex flex-col items-center justify-center min-w-[320px] md:min-w-[520px] lg:min-w-[700px] xl:min-w-[860px] max-w-full"
+          >
             <div class="text-base text-gray-500 mb-2">Total Uang Masuk</div>
-            <div class="text-4xl font-bold text-green-600 mb-4" id="total-uang">-</div>
-            <canvas id="chart-uang" width="560" height="320" style="filter: drop-shadow(0 8px 32px #10b98133);"></canvas>
+            <div class="text-4xl font-bold text-green-600 mb-4" id="total-uang">
+              -
+            </div>
+            <canvas
+              id="chart-uang"
+              width="560"
+              height="320"
+              style="filter: drop-shadow(0 8px 32px #10b98133);"></canvas>
           </div>
-          <div class="bg-white rounded-xl shadow p-12 flex flex-col items-center min-w-[320px] md:min-w-[520px] lg:min-w-[700px] xl:min-w-[860px] max-w-full">
-            <canvas id="chart-kategori" width="560" height="560" style="filter: drop-shadow(0 8px 32px #2563eb33);"></canvas>
+          <div
+            class="bg-white rounded-xl shadow p-12 flex flex-col items-center min-w-[320px] md:min-w-[520px] lg:min-w-[700px] xl:min-w-[860px] max-w-full"
+          >
+            <canvas
+              id="chart-kategori"
+              width="560"
+              height="560"
+              style="filter: drop-shadow(0 8px 32px #2563eb33);"></canvas>
           </div>
         </div>
         <div class="bg-white rounded-xl shadow p-6 mt-4">
@@ -29,277 +45,306 @@ import '../styles/global.css';
       </div>
     </main>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
-  <script type="module">
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-    const supabaseUrl = "https://jcfizceoycwdvpqpwhrj.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA";
-    const supabase = createClient(supabaseUrl, supabaseKey);
-    window.fetchChartData = async function() {
-      const { data, error } = await supabase
-        .from('pembelian_kursus')
-        .select('nama_kursus, harga, created_at')
-        .eq('status_pembayaran', 'PAID');
-      window.chartData = { data, error };
-    };
-    document.addEventListener('DOMContentLoaded', window.fetchChartData);
-  </script>
-
-  <script>
-    /**
-     * Render chart total uang masuk
-     * @param {string[]} labels
-     * @param {number[]} values
-     */
+  <script
+    src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"
+    is:inline></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"
+    is:inline></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"
+    is:inline></script>
+  <script is:inline>
+    function waitDepsReady(cb) {
+      if (window.Chart && window.ChartDataLabels && window.supabase) {
+        cb();
+      } else {
+        setTimeout(() => waitDepsReady(cb), 100);
+      }
+    }
+    function fetchChartData() {
+      const supabaseUrl = "https://jcfizceoycwdvpqpwhrj.supabase.co";
+      const supabaseKey =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA";
+      const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+      supabase
+        .from("pembelian_kursus")
+        .select("nama_kursus, harga, waktu_pembelian")
+        .eq("status_pembayaran", "PAID")
+        .then(({ data, error }) => {
+          window.chartData = { data, error };
+          renderCharts();
+        });
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+      waitDepsReady(function () {
+        if (window.Chart && window.ChartDataLabels) {
+          if (!window.Chart.registry.plugins.get("datalabels")) {
+            window.Chart.register(window.ChartDataLabels);
+          }
+        }
+        fetchChartData();
+      });
+    });
+    function clearCanvas(id) {
+      const canvas = document.getElementById(id);
+      if (canvas) {
+        const ctx = canvas.getContext("2d");
+        ctx && ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
     function renderUangChart(labels, values) {
-      /** @type {HTMLCanvasElement|null} */
-      const canvas = document.getElementById('chart-uang');
+      clearCanvas("chart-uang");
+      const canvas = document.getElementById("chart-uang");
       if (!canvas) return;
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext("2d");
       if (!ctx) return;
       const gradient = ctx.createLinearGradient(0, 0, 0, 320);
-      gradient.addColorStop(0, 'rgba(16,185,129,0.5)');
-      gradient.addColorStop(1, 'rgba(16,185,129,0.05)');
-      // @ts-ignore
+      gradient.addColorStop(0, "rgba(16,185,129,0.5)");
+      gradient.addColorStop(1, "rgba(16,185,129,0.05)");
       new window.Chart(ctx, {
-        type: 'line',
+        type: "line",
         data: {
           labels,
-          datasets: [{
-            label: 'Total Uang Masuk',
-            data: values,
-            borderColor: '#10b981',
-            backgroundColor: gradient,
-            borderWidth: 4,
-            tension: 0.4,
-            pointRadius: 7,
-            pointHoverRadius: 12,
-            pointBackgroundColor: '#10b981',
-            pointBorderColor: '#fff',
-            pointBorderWidth: 3,
-            fill: true,
-          }]
+          datasets: [
+            {
+              label: "Total Uang Masuk",
+              data: values,
+              borderColor: "#10b981",
+              backgroundColor: gradient,
+              borderWidth: 4,
+              tension: 0.4,
+              pointRadius: 7,
+              pointHoverRadius: 12,
+              pointBackgroundColor: "#10b981",
+              pointBorderColor: "#fff",
+              pointBorderWidth: 3,
+              fill: true,
+            },
+          ],
         },
         options: {
           responsive: true,
-          animation: { duration: 1200, easing: 'easeOutQuart' },
+          animation: { duration: 1200, easing: "easeOutQuart" },
           plugins: {
             legend: { display: false },
             datalabels: {
-              anchor: 'end', align: 'top', color: '#10b981', font: { weight: 'bold', size: 15 },
-              backgroundColor: '#fff', borderRadius: 5, padding: 4,
-              formatter: function(value) { return 'Rp' + value.toLocaleString('id-ID'); }
+              anchor: "end",
+              align: "top",
+              color: "#10b981",
+              font: { weight: "bold", size: 15 },
+              backgroundColor: "#fff",
+              borderRadius: 5,
+              padding: 4,
+              formatter: function (value) {
+                return "Rp" + value.toLocaleString("id-ID");
+              },
             },
             tooltip: {
               callbacks: {
-                label: function(context) {
-                  return 'Rp' + context.yLabel.toLocaleString('id-ID');
-                }
-              }
-            }
+                label: function (context) {
+                  return "Rp" + context.parsed.y.toLocaleString("id-ID");
+                },
+              },
+            },
           },
           layout: { padding: 16 },
           scales: {
-            xAxes: [{
-              ticks: { fontColor: '#222', fontSize: 14, fontStyle: 'bold' },
-              gridLines: { color: 'rgba(16,185,129,0.08)' }
-            }],
-            yAxes: [{
-              ticks: { beginAtZero: true, fontColor: '#222', fontSize: 14, fontStyle: 'bold', callback: function(v){return 'Rp'+v.toLocaleString('id-ID')} },
-              gridLines: { color: 'rgba(16,185,129,0.08)' }
-            }]
-          }
-        }
+            x: {
+              ticks: { color: "#222", font: { size: 14, weight: "bold" } },
+              grid: { color: "rgba(16,185,129,0.08)" },
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                color: "#222",
+                font: { size: 14, weight: "bold" },
+                callback: function (v) {
+                  return "Rp" + v.toLocaleString("id-ID");
+                },
+              },
+              grid: { color: "rgba(16,185,129,0.08)" },
+            },
+          },
+        },
       });
     }
-
-    /**
-     * Render chart dummy jika gagal fetch
-     */
     function renderUangChartDummy() {
       const now = new Date();
-      const labels = Array.from({length: 7}, (_,i) => {
-        const d = new Date(now); d.setDate(now.getDate() - (6-i));
-        return d.toLocaleDateString('id-ID');
+      const labels = Array.from({ length: 7 }, (_, i) => {
+        const d = new Date(now);
+        d.setDate(now.getDate() - (6 - i));
+        return d.toLocaleDateString("id-ID");
       });
       const values = [100000, 120000, 115000, 130000, 140000, 135000, 150000];
       renderUangChart(labels, values);
-      const totalUangDiv = document.getElementById('total-uang');
-      if (totalUangDiv) totalUangDiv.textContent = 'Rp' + values[values.length-1].toLocaleString('id-ID');
+      const totalUangDiv = document.getElementById("total-uang");
+      if (totalUangDiv)
+        totalUangDiv.textContent =
+          "Rp" + values[values.length - 1].toLocaleString("id-ID");
     }
-
-    /**
-     * Render semua chart dari data Supabase
-     */
     function renderCharts() {
-      // @ts-ignore
-      if (!window.chartData || window.chartData.error || !window.chartData.data) {
+      if (
+        !window.chartData ||
+        window.chartData.error ||
+        !window.chartData.data
+      ) {
         renderUangChartDummy();
         renderKategoriChartDummy();
         renderKategoriListDummy();
+        const totalUangDiv = document.getElementById("total-uang");
+        if (totalUangDiv) totalUangDiv.textContent = "Gagal memuat data";
+        const list = document.getElementById("list-kategori");
+        if (list)
+          list.innerHTML =
+            '<li class="text-red-500">Gagal memuat data statistik.</li>';
         return;
       }
-      // @ts-ignore
-      const data = window.chartData.data;
-      /** @type {Record<string, number>} */
+      const now = new Date();
+      const satuBulanLalu = new Date(now);
+      satuBulanLalu.setDate(now.getDate() - 29);
+      const data = window.chartData.data.filter((row) => {
+        if (!row.waktu_pembelian) return false;
+        const tgl = new Date(row.waktu_pembelian);
+        return tgl >= satuBulanLalu && tgl <= now;
+      });
       const uangPerTanggal = {};
-      data.forEach(/** @param {any} row */ row => {
-        if (!row.created_at) return;
-        const tgl = new Date(row.created_at).toLocaleDateString('id-ID');
+      data.forEach((row) => {
+        if (!row.waktu_pembelian) return;
+        const tgl = new Date(row.waktu_pembelian).toLocaleDateString("id-ID");
         uangPerTanggal[tgl] = (uangPerTanggal[tgl] || 0) + (row.harga || 0);
       });
-      const labels = Object.keys(uangPerTanggal).sort((a,b) => new Date(a) - new Date(b));
+      const labels = Object.keys(uangPerTanggal).sort(
+        (a, b) => new Date(a) - new Date(b)
+      );
       let running = 0;
-      const values = labels.map(tgl => (running += uangPerTanggal[tgl]));
+      const values = labels.map((tgl) => (running += uangPerTanggal[tgl]));
       renderUangChart(labels, values);
-      let totalUang = values.length ? values[values.length-1] : 0;
-      const totalUangDiv = document.getElementById('total-uang');
-      if (totalUangDiv) totalUangDiv.textContent = 'Rp' + totalUang.toLocaleString('id-ID');
-      // Chart kategori
-      const kategoriMap = {
-        'Konten Pembelajaran Digital': 0,
-        'Simulasi Ujian': 0,
-        'Kelas Menulis / Workshop': 0
-      };
-      data.forEach((/** @type {any} */ row) => {
-        if (typeof row.nama_kursus === 'string' && kategoriMap[row.nama_kursus] !== undefined) {
-          kategoriMap[row.nama_kursus]++;
+      let totalUang = values.length ? values[values.length - 1] : 0;
+      const totalUangDiv = document.getElementById("total-uang");
+      if (totalUangDiv)
+        totalUangDiv.textContent = "Rp" + totalUang.toLocaleString("id-ID");
+      const kategoriMap = {};
+      data.forEach((row) => {
+        if (typeof row.nama_kursus === "string") {
+          let nama = row.nama_kursus.trim();
+          if (!kategoriMap[nama]) kategoriMap[nama] = 0;
+          kategoriMap[nama]++;
         }
       });
       renderKategoriChart(kategoriMap);
       renderKategoriList(kategoriMap);
     }
-
-    /**
-     * Render chart kategori
-     * @param {Record<string, number>} kategoriMap
-     */
     function renderKategoriChart(kategoriMap) {
-      /** @type {HTMLCanvasElement|null} */
-      const canvas = document.getElementById('chart-kategori');
+      clearCanvas("chart-kategori");
+      const canvas = document.getElementById("chart-kategori");
       if (!canvas) return;
-      const ctx = canvas.getContext('2d');
+      // Atur tinggi canvas agar proporsional
+      canvas.height = 340;
+      const ctx = canvas.getContext("2d");
       if (!ctx) return;
-      const gradient = ctx.createLinearGradient(0, 0, 0, 340);
-      gradient.addColorStop(0, 'rgba(37,99,235,0.55)');
-      gradient.addColorStop(1, 'rgba(37,99,235,0.05)');
-      // @ts-ignore
+      // gradient bar
+      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      gradient.addColorStop(0, "rgba(37,99,235,0.55)");
+      gradient.addColorStop(1, "rgba(37,99,235,0.05)");
       new window.Chart(ctx, {
-        type: 'line',
+        type: "bar",
         data: {
           labels: Object.keys(kategoriMap),
           datasets: [
             {
-              label: 'Pembelian Kursus',
+              label: "Pembelian Kursus",
               data: Object.values(kategoriMap),
-              borderColor: 'rgba(37,99,235,1)',
               backgroundColor: gradient,
-              borderWidth: 4,
-              tension: 0.45,
-              pointRadius: 8,
-              pointHoverRadius: 12,
-              pointBackgroundColor: 'rgba(37,99,235,1)',
-              pointBorderColor: '#fff',
-              pointBorderWidth: 3,
-              fill: true,
-            }
-          ]
+              borderColor: "rgba(37,99,235,1)",
+              borderWidth: 2,
+              borderRadius: 8,
+              maxBarThickness: 48,
+            },
+          ],
         },
         options: {
           responsive: true,
           animation: {
             duration: 1200,
-            easing: 'easeOutQuart'
+            easing: "easeOutQuart",
           },
           plugins: {
             legend: {
-              display: false
+              display: false,
             },
             datalabels: {
-              anchor: 'end',
-              align: 'top',
-              color: '#fff',
-              backgroundColor: '#232b4d',
+              anchor: "end",
+              align: "top",
+              color: "#fff",
+              backgroundColor: "#232b4d",
               borderRadius: 6,
               padding: 6,
               font: {
-                weight: 'bold',
-                size: 16
+                weight: "bold",
+                size: 14,
               },
-              formatter: function(value) { return value; }
+              formatter: function (value) {
+                return value;
+              },
+              clamp: true,
+              clip: false,
             },
-            tooltip: {
-              callbacks: {
-                label: function(context) {
-                  // Chart.js v2.x: context.yLabel, v3+: context.parsed.y
-                  return `${context.label}: ${context.yLabel || (context.parsed && context.parsed.y) || 0} pembelian`;
-                }
-              }
-            }
           },
           layout: {
-            padding: 16
+            padding: { top: 40, right: 16, bottom: 16, left: 16 },
           },
           scales: {
-            xAxes: [{
-              ticks: { fontColor: '#fff', fontSize: 16, fontStyle: 'bold' },
-              gridLines: { color: 'rgba(255,255,255,0.12)' }
-            }],
-            yAxes: [{
-              ticks: { beginAtZero: true, fontColor: '#fff', fontSize: 16, fontStyle: 'bold' },
-              gridLines: { color: 'rgba(255,255,255,0.12)' }
-            }]
-          }
-        }
+            x: {
+              ticks: {
+                color: "#222",
+                font: { size: 12, weight: "bold" },
+                maxRotation: 30,
+                minRotation: 0,
+                autoSkip: false,
+              },
+              grid: { color: "rgba(37,99,235,0.08)" },
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                color: "#222",
+                font: { size: 13, weight: "bold" },
+                stepSize: 1,
+                callback: function(v){return Number.isInteger(v) ? v : null;}
+              },
+              grid: { color: "rgba(37,99,235,0.08)" },
+            },
+          },
+        },
       });
-      // Ubah background chart jadi gelap
       if (canvas.parentElement) {
-        canvas.parentElement.style.background = '#232b4d';
-        canvas.parentElement.style.borderRadius = '1rem';
+        canvas.parentElement.style.borderRadius = "1rem";
       }
     }
-
-    /**
-     * Render list kategori
-     * @param {Record<string, number>} kategoriMap
-     */
     function renderKategoriList(kategoriMap) {
-      const list = document.getElementById('list-kategori');
+      const list = document.getElementById("list-kategori");
       if (!list) return;
-      list.innerHTML = '';
+      list.innerHTML = "";
       Object.entries(kategoriMap).forEach(([kategori, jumlah]) => {
         list.innerHTML += `<li><b>${kategori}:</b> ${jumlah} pembelian</li>`;
       });
     }
-
-    /**
-     * Render chart kategori dummy jika gagal fetch
-     */
     function renderKategoriChartDummy() {
       const dummyMap = {
-        'Konten Pembelajaran Digital': 3,
-        'Simulasi Ujian': 2,
-        'Kelas Menulis / Workshop': 1
+        "Konten Pembelajaran Digital": 3,
+        "Simulasi Ujian": 2,
+        "Kelas Menulis / Workshop": 1,
       };
       renderKategoriChart(dummyMap);
     }
-
-    /**
-     * Render list kategori dummy jika gagal fetch
-     */
     function renderKategoriListDummy() {
       const dummyMap = {
-        'Konten Pembelajaran Digital': 3,
-        'Simulasi Ujian': 2,
-        'Kelas Menulis / Workshop': 1
+        "Konten Pembelajaran Digital": 3,
+        "Simulasi Ujian": 2,
+        "Kelas Menulis / Workshop": 1,
       };
       renderKategoriList(dummyMap);
     }
-
-    // Jalankan renderCharts setelah data di-fetch
-    document.addEventListener('DOMContentLoaded', function() {
-      setTimeout(renderCharts, 1000);
-    });
   </script>
 </Layout>

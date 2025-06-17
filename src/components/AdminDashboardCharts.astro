@@ -13,36 +13,37 @@ const { userCount = 0, videoCount = 0 } = Astro.props;
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script is:inline>
   document.addEventListener('DOMContentLoaded', function() {
-    // User Chart
-    const ctxUser = document.getElementById('userChart').getContext('2d');
-    new window.Chart(ctxUser, {
-      type: 'doughnut',
-      data: {
-        labels: ['User Terdaftar'],
-        datasets: [{
-          label: 'User',
-          data: [Astro.props.userCount || 0],
-          backgroundColor: ['#3b82f6'],
-        }],
-      },
-      options: {responsive: true, plugins: {legend: {position: 'bottom'}}}
-    });
-    // Video Chart
-    const ctxVideo = document.getElementById('videoChart').getContext('2d');
-    new window.Chart(ctxVideo, {
-      type: 'doughnut',
-      data: {
-        labels: ['Video Pembelajaran'],
-        datasets: [{
-          label: 'Video',
-          data: [Astro.props.videoCount || 0],
-          backgroundColor: ['#facc15'],
-        }],
-      },
-      options: {responsive: true, plugins: {legend: {position: 'bottom'}}}
-    });
+    if (window.Chart) {
+      // User Chart
+      const ctxUser = document.getElementById('userChart').getContext('2d');
+      new window.Chart(ctxUser, {
+        type: 'doughnut',
+        data: {
+          labels: ['User Terdaftar'],
+          datasets: [{
+            label: 'User',
+            data: [Astro.props.userCount || 0],
+            backgroundColor: ['#3b82f6'],
+          }],
+        },
+        options: {responsive: true, plugins: {legend: {position: 'bottom'}}}
+      });
+      // Video Chart
+      const ctxVideo = document.getElementById('videoChart').getContext('2d');
+      new window.Chart(ctxVideo, {
+        type: 'doughnut',
+        data: {
+          labels: ['Video Pembelajaran'],
+          datasets: [{
+            label: 'Video',
+            data: [Astro.props.videoCount || 0],
+            backgroundColor: ['#facc15'],
+          }],
+        },
+        options: {responsive: true, plugins: {legend: {position: 'bottom'}}}
+      });
+    }
   });
 </script>
