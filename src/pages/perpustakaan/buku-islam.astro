@@ -6,9 +6,52 @@ import Layout from '../../layouts/Layout.astro';
   <section class="max-w-5xl mx-auto py-12 px-4">
     <h1 class="text-3xl md:text-4xl font-extrabold text-green-700 mb-4 text-center">Koleksi Buku Referensi Islam Digital</h1>
     <p class="text-lg text-gray-700 mb-10 text-center max-w-2xl mx-auto">Kumpulan kitab, tafsir, dan buku-buku keislaman digital untuk pembelajaran, inspirasi, dan penguatan karakter Islami. Semua koleksi dapat diakses gratis dan legal.</p>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="ebook-islam-list">
       <!-- Buku akan tampil di sini secara dinamis dari Supabase -->
     </div>
+    <script type="module">
+      import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+      const supabase = createClient('https://jcfizceoycwdvpqpwhrj.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA');
+      const grid = document.getElementById('ebook-islam-list');
+      async function fetchAndRenderIslamBooks() {
+        // Ambil kategori "islam"
+        const { data: cats, error: catErr } = await supabase.from('ebook_categories').select('*');
+        if (catErr || !cats) {
+          grid.innerHTML = '<div class="col-span-3 text-center text-red-500">Gagal memuat kategori.</div>';
+          return;
+        }
+        const cat = cats.find(c => c.nama.toLowerCase().includes('islam'));
+        if (!cat) {
+          grid.innerHTML = '<div class="col-span-3 text-center text-gray-400">Kategori buku islam belum tersedia.</div>';
+          return;
+        }
+        // Ambil semua buku kategori ini
+        const { data: books, error: bookErr } = await supabase.from('ebooks').select('*').eq('kategori_id', cat.id);
+        if (bookErr) {
+          grid.innerHTML = '<div class="col-span-3 text-center text-red-500">Gagal memuat buku.</div>';
+          return;
+        }
+        if (!books || books.length === 0) {
+          grid.innerHTML = '<div class="col-span-3 text-center text-gray-400">Belum ada buku.</div>';
+          return;
+        }
+        grid.innerHTML = '';
+        books.forEach(buku => {
+          const div = document.createElement('div');
+          div.className = 'bg-white rounded-xl shadow p-4 flex flex-col items-center';
+          div.innerHTML = `
+            <img src="${buku.cover || '/default-cover.png'}" alt="Cover Buku" class="w-32 h-44 object-cover rounded mb-2" />
+            <div class="font-bold mt-2 text-center">${buku.judul}</div>
+            <div class="text-sm text-gray-500 mb-1">${buku.penulis}${buku.tahun ? ', ' + buku.tahun : ''}</div>
+            ${buku.penerbit ? `<div class='text-xs text-gray-400 mb-1'>Penerbit: ${buku.penerbit}</div>` : ''}
+            ${buku.deskripsi ? `<div class='text-xs text-gray-500 mb-2 italic'>${buku.deskripsi}</div>` : ''}
+            <a href="${buku.link}" target="_blank" class="px-4 py-2 bg-green-600 text-white rounded-full font-semibold mt-auto">Baca Sekarang</a>
+          `;
+          grid.appendChild(div);
+        });
+      }
+      fetchAndRenderIslamBooks();
+    </script>
     <div class="text-center text-sm text-gray-500 mt-10">* Semua buku diambil dari sumber legal dan dapat diakses secara gratis.</div>
   </section>
 </Layout>
