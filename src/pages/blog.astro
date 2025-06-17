@@ -93,6 +93,13 @@ title: "Blog"
         return;
       }
       list.innerHTML = '';
+      // Fungsi untuk decode HTML entities
+      function decodeHtmlEntities(str) {
+        const txt = document.createElement('textarea');
+        txt.innerHTML = str;
+        return txt.value;
+      }
+
       for (const blog of data) {
         const card = document.createElement('article');
         card.className = 'bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all flex flex-col';
@@ -101,7 +108,7 @@ title: "Blog"
         if (blog.image) {
           const img = document.createElement('img');
           img.src = blog.image;
-          img.alt = blog.title ? blog.title.replace(/<[^>]+>/g, '') : '';
+          img.alt = blog.title ? decodeHtmlEntities(blog.title.replace(/<[^>]+>/g, '')) : '';
           img.className = 'w-full h-48 object-cover';
           card.appendChild(img);
         }
@@ -113,8 +120,8 @@ title: "Blog"
         // Judul
         const h2 = document.createElement('h2');
         h2.className = 'text-xl font-bold mb-2 text-blue-700 max-w-xs truncate overflow-hidden whitespace-nowrap';
-        h2.title = blog.title ? blog.title.replace(/<[^>]+>/g, '') : '';
-        h2.textContent = blog.title ? blog.title.replace(/<[^>]+>/g, '') : '';
+        h2.title = blog.title ? decodeHtmlEntities(blog.title.replace(/<[^>]+>/g, '')) : '';
+        h2.textContent = blog.title ? decodeHtmlEntities(blog.title.replace(/<[^>]+>/g, '')) : '';
         contentDiv.appendChild(h2);
 
         // Deskripsi (tanpa tag HTML)
@@ -122,7 +129,7 @@ title: "Blog"
         p.className = 'text-gray-600 flex-1';
         // Hilangkan tag HTML dari blog.content
         const plainContent = blog.content.replace(/<[^>]+>/g, '');
-        p.textContent = plainContent.length > 120 ? plainContent.slice(0,120)+'...' : plainContent;
+        p.textContent = decodeHtmlEntities(plainContent.length > 120 ? plainContent.slice(0,120)+'...' : plainContent);
         contentDiv.appendChild(p);
 
         // Tombol Baca Selengkapnya
