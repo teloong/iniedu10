@@ -42,10 +42,8 @@ title: "Blog"
 
   {/* ================= Daftar Postingan Blog ================= */}
   <main class="flex-1 container mx-auto px-4 pb-16">
-    <div id="blog-list" class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-      <div class="col-span-full text-center text-gray-400" id="blog-loading">Loading...</div>
-    </div>
-  </main>
+  <div id="blog-list-wrapper"></div>
+</main>
 
   {/* ================= Script Slideshow Wallpaper ================= */}
   <script>
@@ -80,19 +78,25 @@ title: "Blog"
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA'
     );
     async function loadBlogs() {
-      const list = document.getElementById('blog-list');
-      const loading = document.getElementById('blog-loading');
+      const wrapper = document.getElementById('blog-list-wrapper');
+      wrapper.innerHTML = '';
+      // Loading
+      const loading = document.createElement('div');
+      loading.className = 'col-span-full text-center text-gray-400';
+      loading.textContent = 'Loading...';
+      wrapper.appendChild(loading);
+
       const { data, error } = await supabase.from('blog').select('*').order('created_at', { ascending: false });
-      if (loading) loading.remove();
+      loading.remove();
       if (error) {
-        list.innerHTML = `<div class='col-span-full text-center text-red-600'>Gagal load blog: ${error.message}</div>`;
+        wrapper.innerHTML = `<div class='col-span-full text-center text-red-600'>Gagal load blog: ${error.message}</div>`;
         return;
       }
       if (!data || data.length === 0) {
-        list.innerHTML = `<div class='col-span-full text-center text-gray-400'>Belum ada artikel blog.</div>`;
+        wrapper.innerHTML = `<div class='col-span-full text-center text-gray-400'>Belum ada artikel blog.</div>`;
         return;
       }
-      list.innerHTML = '';
+
       // Fungsi untuk decode HTML entities
       function decodeHtmlEntities(str) {
         const txt = document.createElement('textarea');
@@ -100,66 +104,82 @@ title: "Blog"
         return txt.value;
       }
 
-      for (const blog of data) {
-        const card = document.createElement('article');
-        card.className = 'bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all flex flex-col';
+      // Bagi data per 3 (chunk)
+      const chunkSize = 3;
+      for (let i = 0; i < data.length; i += chunkSize) {
+        const group = data.slice(i, i + chunkSize);
+        const section = document.createElement('section');
+        section.setAttribute('data-aos', 'fade-up');
+        section.setAttribute('data-aos-delay', (i/3*200).toString());
+        section.className = 'grid gap-8 md:grid-cols-2 lg:grid-cols-3 mb-8';
 
-        // Gambar
-        if (blog.image) {
-          const img = document.createElement('img');
-          img.src = blog.image;
-          img.alt = blog.title ? decodeHtmlEntities(blog.title.replace(/<[^>]+>/g, '')) : '';
-          img.className = 'w-full h-48 object-cover';
-          card.appendChild(img);
+        for (const blog of group) {
+          const card = document.createElement('article');
+          card.className = 'bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all flex flex-col';
+
+          // Gambar
+          if (blog.image) {
+            const img = document.createElement('img');
+            img.src = blog.image;
+            img.alt = blog.title ? decodeHtmlEntities(blog.title.replace(/<[^>]+>/g, '')) : '';
+            img.className = 'w-full h-48 object-cover';
+            card.appendChild(img);
+          }
+
+          // Wrapper konten
+          const contentDiv = document.createElement('div');
+          contentDiv.className = 'p-6 flex flex-col flex-1';
+
+          // Judul
+          const h2 = document.createElement('h2');
+          h2.className = 'text-xl font-bold mb-2 text-blue-700 max-w-xs truncate overflow-hidden whitespace-nowrap';
+          h2.title = blog.title ? decodeHtmlEntities(blog.title.replace(/<[^>]+>/g, '')) : '';
+          h2.textContent = blog.title ? decodeHtmlEntities(blog.title.replace(/<[^>]+>/g, '')) : '';
+          contentDiv.appendChild(h2);
+
+          // Deskripsi (tanpa tag HTML)
+          const p = document.createElement('p');
+          p.className = 'text-gray-600 flex-1';
+          // Hilangkan tag HTML dari blog.content
+          const plainContent = blog.content.replace(/<[^>]+>/g, '');
+          p.textContent = decodeHtmlEntities(plainContent.length > 120 ? plainContent.slice(0,120)+'...' : plainContent);
+          contentDiv.appendChild(p);
+
+          // Tombol Baca Selengkapnya
+          if (blog.id) {
+            const a = document.createElement('a');
+            a.href = `/blog-detail?id=${blog.id}`;
+            a.className = 'mt-4 inline-block text-blue-600 font-semibold hover:underline cursor-pointer';
+            a.textContent = 'Baca Selengkapnya';
+            contentDiv.appendChild(a);
+          }
+
+          card.appendChild(contentDiv);
+
+          // Footer tanggal & sumber
+          const footer = document.createElement('div');
+          footer.className = 'flex items-center justify-between text-xs text-gray-400 px-6 pb-4 pt-2';
+          const spanDate = document.createElement('span');
+          spanDate.textContent = blog.created_at ? new Date(blog.created_at).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric'}) : '-';
+          footer.appendChild(spanDate);
+          if (blog.source) {
+            const spanSource = document.createElement('span');
+            spanSource.className = 'italic text-gray-400';
+            spanSource.textContent = blog.source;
+            footer.appendChild(spanSource);
+          }
+          card.appendChild(footer);
+
+          section.appendChild(card);
         }
-
-        // Wrapper konten
-        const contentDiv = document.createElement('div');
-        contentDiv.className = 'p-6 flex flex-col flex-1';
-
-        // Judul
-        const h2 = document.createElement('h2');
-        h2.className = 'text-xl font-bold mb-2 text-blue-700 max-w-xs truncate overflow-hidden whitespace-nowrap';
-        h2.title = blog.title ? decodeHtmlEntities(blog.title.replace(/<[^>]+>/g, '')) : '';
-        h2.textContent = blog.title ? decodeHtmlEntities(blog.title.replace(/<[^>]+>/g, '')) : '';
-        contentDiv.appendChild(h2);
-
-        // Deskripsi (tanpa tag HTML)
-        const p = document.createElement('p');
-        p.className = 'text-gray-600 flex-1';
-        // Hilangkan tag HTML dari blog.content
-        const plainContent = blog.content.replace(/<[^>]+>/g, '');
-        p.textContent = decodeHtmlEntities(plainContent.length > 120 ? plainContent.slice(0,120)+'...' : plainContent);
-        contentDiv.appendChild(p);
-
-        // Tombol Baca Selengkapnya
-        if (blog.id) {
-          const a = document.createElement('a');
-          a.href = `/blog-detail?id=${blog.id}`;
-          a.className = 'mt-4 inline-block text-blue-600 font-semibold hover:underline cursor-pointer';
-          a.textContent = 'Baca Selengkapnya';
-          contentDiv.appendChild(a);
-        }
-
-        card.appendChild(contentDiv);
-
-        // Footer
-        const footer = document.createElement('div');
-        footer.className = 'border-t border-gray-200 px-6 py-3 text-xs text-gray-500 flex justify-between items-center';
-        const spanDate = document.createElement('span');
-        spanDate.textContent = blog.created_at ? new Date(blog.created_at).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric'}) : '-';
-        footer.appendChild(spanDate);
-        if (blog.source) {
-          const spanSource = document.createElement('span');
-          spanSource.className = 'italic text-gray-400';
-          spanSource.textContent = blog.source;
-          footer.appendChild(spanSource);
-        }
-        card.appendChild(footer);
-
-        list.appendChild(card);
+        wrapper.appendChild(section);
       }
     }
-    document.addEventListener('DOMContentLoaded', loadBlogs);
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadBlogs();
+      if (window.AOS && typeof window.AOS.refresh === 'function') {
+        window.AOS.refresh();
+      }
+    });
   </script>
 </Layout>
