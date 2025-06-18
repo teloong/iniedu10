@@ -1,17 +1,16 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import AdminSidebar from "../components/AdminSidebar.astro";
-import '../styles/global.css';
+import "../styles/global.css";
 ---
-
-<Layout title="Statistik & Transaksi Kursus">
+<Layout title="Statistik & Laporan">
   <div class="min-h-screen bg-gray-50 flex">
     <div class="sticky top-0 h-screen hidden md:block">
-      <AdminSidebar active="admin-statistik" />
+      <AdminSidebar active="statistik&laporan" />
     </div>
     <main class="flex-1 overflow-x-auto">
       <div class="max-w-7xl mx-auto px-4 py-8">
-        <h1 class="text-2xl font-bold mb-6 text-blue-800">Statistik & Transaksi Kursus</h1>
+        <h1 class="text-2xl font-bold mb-6 text-blue-800">Statistik & Laporan</h1>
         <div class="bg-white rounded-xl shadow p-6 mt-6">
           <h3 class="text-lg font-bold mb-4">Transaksi Pembelian Kursus Terbaru</h3>
           <div class="overflow-x-auto">

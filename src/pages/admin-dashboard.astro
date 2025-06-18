@@ -18,6 +18,20 @@ const { count: videoCount } = await supabase
 const { count: kursusCount } = await supabase
   .from("kursus")
   .select("*", { count: "exact", head: true });
+
+// Ambil total klik perpustakaan per kategori
+const { count: countBukuSekolah } = await supabase
+  .from("perpustakaan_clicks")
+  .select("*", { count: "exact", head: true })
+  .eq("kategori", "buku_sekolah");
+const { count: countBukuIslam } = await supabase
+  .from("perpustakaan_clicks")
+  .select("*", { count: "exact", head: true })
+  .eq("kategori", "buku_islam");
+const { count: countBukuAnak } = await supabase
+  .from("perpustakaan_clicks")
+  .select("*", { count: "exact", head: true })
+  .eq("kategori", "buku_anak");
 ---
 
 <Layout title="Dashboard Admin">
@@ -128,7 +142,7 @@ const { count: kursusCount } = await supabase
   <main class="flex-1 overflow-x-auto">
     <div class="max-w-7xl mx-auto px-4 py-8">
       <!-- Statistik Card (rapi satu baris) -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-10">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6 mb-10">
         <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
           <div class="mb-2 text-blue-600 text-3xl">
             <svg width="32" height="32" fill="none" viewBox="0 0 24 24"
@@ -192,6 +206,27 @@ const { count: kursusCount } = await supabase
           <div class="text-sm text-gray-500 mb-1">Total Ebook</div>
           <div class="text-2xl font-bold stat-ebook-count">-</div>
         </div>
+        <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
+          <div class="mb-2 text-blue-600 text-3xl">
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#dbeafe"></circle><rect x="7" y="7" width="10" height="10" rx="2" fill="#2563eb"/></svg>
+          </div>
+          <div class="text-sm text-gray-500 mb-1">Buku Sekolah</div>
+          <div class="text-2xl font-bold stat-buku-sekolah">{countBukuSekolah ?? '-'}</div>
+        </div>
+        <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
+          <div class="mb-2 text-green-600 text-3xl">
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#dcfce7"></circle><rect x="7" y="7" width="10" height="10" rx="2" fill="#16a34a"/></svg>
+          </div>
+          <div class="text-sm text-gray-500 mb-1">Buku Islam</div>
+          <div class="text-2xl font-bold stat-buku-islam">{countBukuIslam ?? '-'}</div>
+        </div>
+        <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
+          <div class="mb-2 text-pink-600 text-3xl">
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#fce7f3"></circle><rect x="7" y="7" width="10" height="10" rx="2" fill="#e040fb"/></svg>
+          </div>
+          <div class="text-sm text-gray-500 mb-1">Buku Anak</div>
+          <div class="text-2xl font-bold stat-buku-anak">{countBukuAnak ?? '-'}</div>
+        </div>
       </div>
 
       <!-- Statistik Pembelian Kursus per Kategori -->
@@ -202,10 +237,36 @@ const { count: kursusCount } = await supabase
       </div>
       <script type="module">
         import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-        const supabaseUrl = "https://jcfizceoycwdvpqpwhrj.supabase.co";
-        const supabaseKey =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA";
-        const supabase = createClient(supabaseUrl, supabaseKey);
+        const supabase = createClient("https://jcfizceoycwdvpqpwhrj.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA");
+        // Semua fungsi di bawah ini WAJIB pakai instance supabase yang sama!
+        async function updatePerpusClickStats() {
+          const { count: countBukuSekolah } = await supabase
+            .from("perpustakaan_clicks")
+            .select("*", { count: "exact", head: true })
+            .eq("kategori", "buku_sekolah");
+          const { count: countBukuIslam } = await supabase
+            .from("perpustakaan_clicks")
+            .select("*", { count: "exact", head: true })
+            .eq("kategori", "buku_islam");
+          const { count: countBukuAnak } = await supabase
+            .from("perpustakaan_clicks")
+            .select("*", { count: "exact", head: true })
+            .eq("kategori", "buku_anak");
+          document.querySelector(".stat-buku-sekolah").textContent = typeof countBukuSekolah === "number" ? countBukuSekolah : "-";
+          document.querySelector(".stat-buku-islam").textContent = typeof countBukuIslam === "number" ? countBukuIslam : "-";
+          document.querySelector(".stat-buku-anak").textContent = typeof countBukuAnak === "number" ? countBukuAnak : "-";
+        }
+        // Jalankan sekali saat load
+        updatePerpusClickStats();
+        // Realtime subscription
+        supabase
+          .channel('perpustakaan_clicks')
+          .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'perpustakaan_clicks' }, payload => {
+            updatePerpusClickStats();
+          })
+          .subscribe();
+
+        // HAPUS DUPLIKASI INISIALISASI SUPABASE DI SINI!
         async function fetchDashboardStats() {
           // Total Video
           const { count: videoCount } = await supabase

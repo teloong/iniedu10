@@ -45,7 +45,7 @@ const menu = [
             ((active === 'blog' || active.startsWith('daftar-blog')) && item.label === 'Blog') ||
             ((active === 'videopembelajaran' || active.startsWith('daftar-video')) && item.label === 'Video Pembelajaran') ||
             ((active === 'perpustakaan' || active.startsWith('daftar-ebook')) && item.label === 'Perpustakaan') ||
-            ((active === 'admin-statistik' || active === 'admin-charts') && item.label === 'Statistik & Laporan')
+            ((active === 'statistik&laporan' || active === 'admin-charts') && item.label === 'Statistik & Laporan')
           ) && (
             <div class="ml-8 flex flex-col gap-1">
               {item.submenu.map(sub => (
