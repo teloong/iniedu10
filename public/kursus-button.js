@@ -40,7 +40,7 @@ function setButtonAkses(btn, id) {
   btn.classList.remove("from-green-500", "to-emerald-400");
   btn.classList.add("bg-gradient-to-r", "from-blue-500", "to-cyan-400");
   // Routing ke materi sesuai id kursus
-  let materiPath = "/materi-digital";
+  let materiPath = "/kursus/materi-digital";
   if (id == "2") materiPath = "/kursus/simulasi-ujian";
   if (id == "3") materiPath = "/kursus/kelas-menulis";
   btn.onclick = () => window.location.href = materiPath;
