@@ -75,123 +75,60 @@ import Layout from "../layouts/Layout.astro";
     </div>
   </section>
 
-  <!-- Visi Misi Card Section -->
-  <section
-    class="max-w-4xl mx-auto mt-12 grid md:grid-cols-2 gap-8 px-4"
-    data-aos="fade-up"
-  >
-    <div
-      class="bg-white rounded-2xl shadow-xl p-8 border-l-4 border-blue-400 flex flex-col items-start group hover:shadow-[0_32px_96px_rgba(0,89,255,0.40)] hover:scale-110 hover:-translate-y-4 hover:ring-8 hover:ring-blue-400 hover:ring-offset-2 hover:border-blue-600 border border-transparent hover:animate-glow transition-all duration-500"
-      data-aos="fade-right"
-    >
-      <h2 class="text-2xl font-bold mb-2 text-blue-600">Visi</h2>
-      <p class="text-gray-700">
-        Menjadi pelopor pendidikan digital yang inklusif, adaptif, dan berdaya
-        saing global untuk seluruh masyarakat Indonesia.
-      </p>
+  <!-- Section Modern: Visi, Misi, dan Value Card -->
+  <section class="relative pt-20 pb-10 bg-gradient-to-br from-blue-50 via-white to-blue-100 overflow-hidden">
+    <!-- SVG Wave Background Atas -->
+    <div class="absolute top-0 left-0 w-full h-32 pointer-events-none select-none z-0">
+      <svg viewBox="0 0 1440 150" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full"><path fill="#7f5cff22" d="M0 80C250 160 500 0 720 40C940 80 1190 0 1440 80V150H0V80Z"/></svg>
     </div>
-    <div
-      class="bg-white rounded-2xl shadow-xl p-8 border-l-4 border-cyan-400 flex flex-col items-start group hover:shadow-[0_32px_96px_rgba(0,89,255,0.40)] hover:scale-110 hover:-translate-y-4 hover:ring-8 hover:ring-blue-400 hover:ring-offset-2 hover:border-blue-600 border border-transparent hover:animate-glow transition-all duration-500"
-      data-aos="fade-left"
-    >
-      <h2 class="text-2xl font-bold mb-2 text-cyan-600">Misi</h2>
-      <ul class="list-disc ml-6 text-gray-700 space-y-2">
-        <li>Menyediakan materi dan pembelajaran berkualitas tinggi.</li>
-        <li>Mengembangkan fitur interaktif dan inovatif berbasis teknologi.</li>
-        <li>Mendorong pemerataan akses pendidikan di seluruh Indonesia.</li>
-        <li>Memberikan sertifikasi resmi yang diakui industri.</li>
-      </ul>
+    <div class="relative z-10 max-w-6xl mx-auto flex flex-col items-center">
+      <div class="grid md:grid-cols-2 gap-8 w-full px-4">
+        <div class="bg-white rounded-2xl shadow-xl p-8 border-l-4 border-blue-400 flex flex-col items-start group hover:shadow-[0_32px_96px_rgba(0,89,255,0.40)] hover:scale-105 hover:-translate-y-2 hover:ring-8 hover:ring-blue-400 hover:ring-offset-2 hover:border-blue-600 border border-transparent transition-all duration-500">
+          <div class="flex items-center gap-2 mb-2">
+            <svg width="32" height="32" fill="none" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#38bdf822"/><path d="M16 12a4 4 0 1 1 0 8a4 4 0 0 1 0-8zm0 0c4.418 0 8 3.582 8 4s-3.582 4-8 4-8-3.582-8-4 3.582-4 8-4z" stroke="#009fff" stroke-width="2" fill="none"/></svg>
+            <h2 class="text-2xl font-bold text-blue-600">Visi</h2>
+          </div>
+          <p class="text-gray-700">
+            Menjadi pelopor pendidikan digital yang inklusif, adaptif, dan berdaya saing global untuk seluruh masyarakat Indonesia.
+          </p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-xl p-8 border-l-4 border-cyan-400 flex flex-col items-start group hover:shadow-[0_32px_96px_rgba(0,89,255,0.40)] hover:scale-105 hover:-translate-y-2 hover:ring-8 hover:ring-cyan-400 hover:ring-offset-2 hover:border-cyan-600 border border-transparent transition-all duration-500">
+          <div class="flex items-center gap-2 mb-2">
+            <svg width="32" height="32" fill="none" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#00ffe722"/><path d="M10 16h12M16 10v12" stroke="#00bcd4" stroke-width="2" stroke-linecap="round"/></svg>
+            <h2 class="text-2xl font-bold text-cyan-600">Misi</h2>
+          </div>
+          <ul class="list-disc ml-6 text-gray-700 space-y-2">
+            <li>Menyediakan materi dan pembelajaran berkualitas tinggi.</li>
+            <li>Mengembangkan fitur interaktif dan inovatif berbasis teknologi.</li>
+            <li>Mendorong pemerataan akses pendidikan di seluruh Indonesia.</li>
+            <li>Memberikan sertifikasi resmi yang diakui industri.</li>
+          </ul>
+        </div>
+      </div>
+      <!-- Value Cards -->
+      <div class="relative w-full flex justify-center mt-8 z-20">
+        <div class="grid md:grid-cols-3 gap-8 w-full max-w-5xl px-4">
+          <div class="bg-gradient-to-br from-blue-100 to-blue-50 rounded-2xl p-8 flex flex-col items-center shadow-xl border border-blue-100 hover:shadow-2xl hover:scale-105 transition-all duration-500">
+            <svg width="48" height="48" fill="none" viewBox="0 0 48 48" class="mb-2"><circle cx="24" cy="24" r="24" fill="#009fff22"/><path d="M16 32V18a8 8 0 1 1 16 0v14" stroke="#009fff" stroke-width="2" stroke-linecap="round"/><rect x="14" y="32" width="20" height="5" rx="2.5" fill="#009fff"/></svg>
+            <div class="font-bold text-lg mt-2 mb-1 text-blue-700">Materi Berkualitas</div>
+            <div class="text-gray-600 text-center">Konten terkurasi oleh pengajar profesional dan praktisi industri.</div>
+          </div>
+          <div class="bg-gradient-to-br from-yellow-100 to-yellow-50 rounded-2xl p-8 flex flex-col items-center shadow-xl border border-yellow-100 hover:shadow-2xl hover:scale-105 transition-all duration-500">
+            <svg width="48" height="48" fill="none" viewBox="0 0 48 48" class="mb-2"><circle cx="24" cy="24" r="24" fill="#ffb30022"/><path d="M24 16v12" stroke="#ffb300" stroke-width="2" stroke-linecap="round"/><circle cx="24" cy="32" r="2" fill="#ffb300"/></svg>
+            <div class="font-bold text-lg mt-2 mb-1 text-yellow-700">Sertifikat Resmi</div>
+            <div class="text-gray-600 text-center">Setiap kursus dilengkapi sertifikat digital yang diakui industri.</div>
+          </div>
+          <div class="bg-gradient-to-br from-pink-100 to-purple-50 rounded-2xl p-8 flex flex-col items-center shadow-xl border border-pink-100 hover:shadow-2xl hover:scale-105 transition-all duration-500">
+            <svg width="48" height="48" fill="none" viewBox="0 0 48 48" class="mb-2"><circle cx="24" cy="24" r="24" fill="#e040fb22"/><path d="M18 28l6-6 6 6" stroke="#e040fb" stroke-width="2" stroke-linecap="round"/></svg>
+            <div class="font-bold text-lg mt-2 mb-1 text-pink-700">Interaktif & Kolaboratif</div>
+            <div class="text-gray-600 text-center">Belajar lebih seru dengan fitur diskusi, tugas, dan komunitas.</div>
+          </div>
+        </div>
+      </div>
     </div>
-  </section>
-
-  <!-- Value/Highlight Section -->
-  <section class="max-w-5xl mx-auto mt-16 px-4 mb-12">
-    <div class="grid md:grid-cols-3 gap-8">
-      <div
-        class="bg-gradient-to-br from-blue-100 to-blue-50 rounded-xl p-6 flex flex-col items-center shadow group hover:shadow-[0_32px_96px_rgba(0,89,255,0.40)] hover:scale-110 hover:-translate-y-4 hover:ring-8 hover:ring-blue-400 hover:ring-offset-2 hover:border-blue-600 border border-transparent hover:animate-glow transition-all duration-500"
-        data-aos="zoom-in"
-        data-aos-delay="100"
-      >
-        <svg
-          width="38"
-          height="38"
-          fill="none"
-          viewBox="0 0 38 38"
-          class="group-hover:animate-pulse drop-shadow-[0_0_8px_rgba(0,89,255,0.7)] transition-all duration-500"
-          ><circle cx="19" cy="19" r="19" fill="#009fff" opacity=".12"
-          ></circle><path
-            d="M13 26V14.5a6 6 0 1 1 12 0V26"
-            stroke="#009fff"
-            stroke-width="2"
-            stroke-linecap="round"></path><rect
-            x="11"
-            y="26"
-            width="16"
-            height="4"
-            rx="2"
-            fill="#009fff"></rect></svg
-        >
-        <div class="font-bold text-lg mt-3 mb-1 text-blue-700">
-          Materi Berkualitas
-        </div>
-        <div class="text-gray-600 text-center">
-          Konten terkurasi oleh pengajar profesional dan praktisi industri.
-        </div>
-      </div>
-      <div
-        class="bg-gradient-to-br from-yellow-100 to-yellow-50 rounded-xl p-6 flex flex-col items-center shadow group hover:shadow-[0_32px_96px_rgba(0,89,255,0.40)] hover:scale-110 hover:-translate-y-4 hover:ring-8 hover:ring-blue-400 hover:ring-offset-2 hover:border-blue-600 border border-transparent hover:animate-glow transition-all duration-500"
-        data-aos="zoom-in"
-        data-aos-delay="200"
-      >
-        <svg
-          width="38"
-          height="38"
-          fill="none"
-          viewBox="0 0 38 38"
-          class="group-hover:animate-pulse drop-shadow-[0_0_8px_rgba(0,89,255,0.7)] transition-all duration-500"
-          ><circle cx="19" cy="19" r="19" fill="#ffb300" opacity=".12"
-          ></circle><path
-            d="M19 13v8"
-            stroke="#ffb300"
-            stroke-width="2"
-            stroke-linecap="round"></path><circle
-            cx="19"
-            cy="25"
-            r="1.5"
-            fill="#ffb300"></circle></svg
-        >
-        <div class="font-bold text-lg mt-3 mb-1 text-yellow-700">
-          Sertifikat Resmi
-        </div>
-        <div class="text-gray-600 text-center">
-          Setiap kursus dilengkapi sertifikat digital yang diakui industri.
-        </div>
-      </div>
-      <div
-        class="bg-gradient-to-br from-pink-100 to-purple-50 rounded-xl p-6 flex flex-col items-center shadow group hover:shadow-[0_32px_96px_rgba(0,89,255,0.40)] hover:scale-110 hover:-translate-y-4 hover:ring-8 hover:ring-blue-400 hover:ring-offset-2 hover:border-blue-600 border border-transparent hover:animate-glow transition-all duration-500"
-        data-aos="zoom-in"
-        data-aos-delay="300"
-      >
-        <svg
-          width="38"
-          height="38"
-          fill="none"
-          viewBox="0 0 38 38"
-          class="group-hover:animate-pulse drop-shadow-[0_0_8px_rgba(0,89,255,0.7)] transition-all duration-500"
-          ><circle cx="19" cy="19" r="19" fill="#e040fb" opacity=".12"
-          ></circle><path
-            d="M12 22l7-7 7 7"
-            stroke="#e040fb"
-            stroke-width="2"
-            stroke-linecap="round"></path></svg
-        >
-        <div class="font-bold text-lg mt-3 mb-1 text-pink-700">
-          Interaktif & Kolaboratif
-        </div>
-        <div class="text-gray-600 text-center">
-          Belajar lebih seru dengan fitur diskusi, tugas, dan komunitas.
-        </div>
-      </div>
+    <!-- SVG Wave Background Bawah -->
+    <div class="absolute bottom-0 left-0 w-full h-20 pointer-events-none select-none z-0">
+      <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full"><path fill="#7f5cff22" d="M0 40C300 100 600 0 900 40C1200 80 1440 0 1440 40V80H0V40Z"/></svg>
     </div>
   </section>
   <script>
