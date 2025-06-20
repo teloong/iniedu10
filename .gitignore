@@ -25,3 +25,9 @@ pnpm-debug.log*
 
 # firebase
 serviceAccountKey.json
+
+# Cascade AI memory & plugin internal files
+.cascade/
+
+# VSCode settings (opsional, jika tidak ingin share workspace config)
+.vscode/
