@@ -1,12 +1,16 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { Icon } from 'astro-icon/components';
+import Layout from "../layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
 const mapelList = [
   { nama: "Bahasa Indonesia", slug: "bahasa-indonesia", icon: "mdi:book" },
   { nama: "Matematika", slug: "matematika", icon: "mdi:calculator" },
   { nama: "IPA", slug: "ipa", icon: "mdi:flask" },
   { nama: "IPAS", slug: "ipas", icon: "mdi:leaf" },
-  { nama: "Bahasa Inggris", slug: "bahasa-inggris", icon: "mdi:alphabet-latin" },
+  {
+    nama: "Bahasa Inggris",
+    slug: "bahasa-inggris",
+    icon: "mdi:alphabet-latin",
+  },
   { nama: "Bahasa Arab", slug: "bahasa-arab", icon: "mdi:islam" },
   { nama: "Bahasa Jawa", slug: "bahasa-jawa", icon: "mdi:alphabet-tengwar" },
   { nama: "PAI", slug: "pai", icon: "mdi:mosque" },
@@ -14,7 +18,7 @@ const mapelList = [
   { nama: "Seni Musik", slug: "seni-musik", icon: "mdi:music" },
   { nama: "Seni Tari", slug: "seni-tari", icon: "mdi:human-female-dance" },
   { nama: "Seni Rupa", slug: "seni-rupa", icon: "mdi:palette" },
-  { nama: "Seni Teater", slug: "seni-teater", icon: "mdi:drama-masks" }
+  { nama: "Seni Teater", slug: "seni-teater", icon: "mdi:drama-masks" },
 ];
 
 const mapelListSMP = [
@@ -23,7 +27,11 @@ const mapelListSMP = [
   { nama: "Matematika", slug: "matematika", icon: "mdi:calculator" },
   { nama: "IPA", slug: "ipa", icon: "mdi:flask" },
   { nama: "IPS", slug: "ips", icon: "mdi:account-group" },
-  { nama: "Bahasa Inggris", slug: "bahasa-inggris", icon: "mdi:alphabet-latin" },
+  {
+    nama: "Bahasa Inggris",
+    slug: "bahasa-inggris",
+    icon: "mdi:alphabet-latin",
+  },
   { nama: "PPKn", slug: "ppkn", icon: "mdi:account-group" },
   { nama: "PJOK", slug: "pjok", icon: "mdi:run" },
   { nama: "Informatika", slug: "informatika", icon: "mdi:laptop" },
@@ -32,54 +40,135 @@ const mapelListSMP = [
   { nama: "Seni Teater", slug: "seni-teater", icon: "mdi:drama-masks" },
   { nama: "Seni Rupa", slug: "seni-rupa", icon: "mdi:palette" },
   { nama: "Bahasa Arab", slug: "bahasa-arab", icon: "mdi:islam" },
-  { nama: "Bahasa Jawa", slug: "bahasa-jawa", icon: "mdi:alphabet-tengwar" }
+  { nama: "Bahasa Jawa", slug: "bahasa-jawa", icon: "mdi:alphabet-tengwar" },
+];
+
+const mapelListSMA = [
+  { nama: "Bahasa Arab", slug: "bahasa-arab", icon: "mdi:islam" },
+  { nama: "Bahasa Indonesia", slug: "bahasa-indonesia", icon: "mdi:book" },
+  {
+    nama: "Bahasa Inggris",
+    slug: "bahasa-inggris",
+    icon: "mdi:alphabet-latin",
+  },
+  { nama: "Bahasa Jawa", slug: "bahasa-jawa", icon: "mdi:alphabet-tengwar" },
+  { nama: "Biologi", slug: "biologi", icon: "mdi:leaf" },
+  { nama: "Ekonomi", slug: "ekonomi", icon: "mdi:cash" },
+  { nama: "Fisika", slug: "fisika", icon: "mdi:atom-variant" },
+  { nama: "Geografi", slug: "geografi", icon: "mdi:earth" },
+  { nama: "Informatika", slug: "informatika", icon: "mdi:laptop" },
+  { nama: "IPA", slug: "ipa", icon: "mdi:flask" },
+  { nama: "IPS", slug: "ips", icon: "mdi:account-group" },
+  { nama: "Kimia", slug: "kimia", icon: "mdi:test-tube" },
+  { nama: "Matematika", slug: "matematika", icon: "mdi:calculator" },
+  { nama: "PAI", slug: "pai", icon: "mdi:mosque" },
+  { nama: "PJOK", slug: "pjok", icon: "mdi:run" },
+  { nama: "PPKn", slug: "ppkn", icon: "mdi:account-group" },
+  { nama: "Sejarah", slug: "sejarah", icon: "mdi:history" },
+  { nama: "Seni Musik", slug: "seni-musik", icon: "mdi:music" },
+  { nama: "Seni Rupa", slug: "seni-rupa", icon: "mdi:palette" },
+  { nama: "Seni Tari", slug: "seni-tari", icon: "mdi:human-female-dance" },
+  { nama: "Seni Teater", slug: "seni-teater", icon: "mdi:drama-masks" },
+  { nama: "Sosiologi", slug: "sosiologi", icon: "mdi:account-group" },
 ];
 ---
 
 <Layout title="Pilih Jenjang Video Pembelajaran">
-  <section class="max-w-5xl mx-auto mt-12 bg-white rounded-2xl shadow-lg p-8 flex flex-col md:flex-row gap-8 items-start">
+  <section
+    class="max-w-5xl mx-auto mt-12 bg-white rounded-2xl shadow-lg p-8 flex flex-col md:flex-row gap-8 items-start"
+  >
     <!-- Card Pilih Jenjang -->
     <div class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-6">
-  <!-- Card SD (gabung dengan mapel) -->
-  <div class="rounded-2xl bg-gradient-to-br from-blue-100 to-blue-50 p-6 flex flex-col items-center shadow md:row-span-2">
-    <div class="text-4xl mb-2"><Icon name="mdi:book-open-variant" class="w-12 h-12 text-blue-500" /></div>
-    <div class="font-bold text-xl text-blue-700 mb-1">SD</div>
-    <div class="text-gray-600 text-center mb-4">Video pembelajaran untuk jenjang Sekolah Dasar.</div>
-    <div class="w-full">
-      <h2 class="text-lg font-bold text-blue-700 mb-2 text-center">Pilih Mata Pelajaran SD</h2>
-      <div class="grid grid-cols-1 gap-2">
-        {mapelList.map(mapel => (
-          <a href={`/video-pembelajaran/sd/${mapel.slug}/`} class="flex items-center gap-3 rounded-xl py-2 px-3 bg-gradient-to-br from-blue-100 to-cyan-100 font-semibold text-blue-800 shadow hover:scale-105 transition">
-            <Icon name={mapel.icon} class="w-6 h-6 mr-2" />
-            <span>{mapel.nama}</span>
-          </a>
-        ))}
+      <!-- Card SD (gabung dengan mapel) -->
+      <div
+        class="rounded-2xl bg-gradient-to-br from-blue-100 to-blue-50 p-6 flex flex-col items-center shadow md:row-span-2"
+      >
+        <div class="text-4xl mb-2">
+          <Icon name="mdi:book-open-variant" class="w-12 h-12 text-blue-500" />
+        </div>
+        <div class="font-bold text-xl text-blue-700 mb-1">SD</div>
+        <div class="text-gray-600 text-center mb-4">
+          Video pembelajaran untuk jenjang Sekolah Dasar.
+        </div>
+        <div class="w-full">
+          <h2 class="text-lg font-bold text-blue-700 mb-2 text-center">
+            Pilih Mata Pelajaran SD
+          </h2>
+          <div class="grid grid-cols-1 gap-2">
+            {
+              mapelList.map((mapel) => (
+                <a
+                  href={`/video-pembelajaran/sd/${mapel.slug}/`}
+                  class="flex items-center gap-3 rounded-xl py-2 px-3 bg-gradient-to-br from-blue-100 to-cyan-100 font-semibold text-blue-800 shadow hover:scale-105 transition"
+                >
+                  <Icon name={mapel.icon} class="w-6 h-6 mr-2" />
+                  <span>{mapel.nama}</span>
+                </a>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+      <!-- Card SMP -->
+      <div
+        class="rounded-2xl bg-gradient-to-br from-yellow-100 to-yellow-50 p-6 flex flex-col items-center shadow md:row-span-2"
+      >
+        <div class="text-4xl mb-2">
+          <Icon name="mdi:school" class="w-12 h-12 text-yellow-500" />
+        </div>
+        <div class="font-bold text-xl text-yellow-700 mb-1">SMP</div>
+        <div class="text-gray-600 text-center mb-4">
+          Video pembelajaran untuk jenjang Sekolah Menengah Pertama.
+        </div>
+        <div class="w-full">
+          <h2 class="text-lg font-bold text-yellow-700 mb-2 text-center">
+            Pilih Mata Pelajaran SMP
+          </h2>
+          <div class="grid grid-cols-1 gap-2">
+            {
+              mapelListSMP.map((mapel) => (
+                <a
+                  href={`/video-pembelajaran/smp/${mapel.slug}/`}
+                  class="flex items-center gap-3 rounded-xl py-2 px-3 bg-gradient-to-br from-yellow-100 to-yellow-50 font-semibold text-yellow-800 shadow hover:scale-105 transition"
+                >
+                  <Icon name={mapel.icon} class="w-6 h-6 mr-2" />
+                  <span>{mapel.nama}</span>
+                </a>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+      <!-- Card SMA -->
+      <div
+        class="rounded-2xl bg-gradient-to-br from-pink-100 to-pink-50 p-6 flex flex-col items-center shadow md:row-span-2"
+      >
+        <div class="text-4xl mb-2">
+          <Icon name="mdi:school-outline" class="w-12 h-12 text-pink-500" />
+        </div>
+        <div class="font-bold text-xl text-pink-700 mb-1">SMA</div>
+        <div class="text-gray-600 text-center mb-4">
+          Video pembelajaran untuk jenjang Sekolah Menengah Atas.
+        </div>
+        <div class="w-full">
+          <h2 class="text-lg font-bold text-pink-700 mb-2 text-center">
+            Pilih Mata Pelajaran SMA
+          </h2>
+          <div class="grid grid-cols-1 gap-2">
+            {
+              mapelListSMA.map((mapel) => (
+                <a
+                  href={`/video-pembelajaran/sma/${mapel.slug}/`}
+                  class="flex items-center gap-3 rounded-xl py-2 px-3 bg-gradient-to-br from-pink-100 to-pink-50 font-semibold text-pink-800 shadow hover:scale-105 transition"
+                >
+                  <Icon name={mapel.icon} class="w-6 h-6 mr-2" />
+                  <span>{mapel.nama}</span>
+                </a>
+              ))
+            }
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  <!-- Card SMP -->
-  <div class="rounded-2xl bg-gradient-to-br from-yellow-100 to-yellow-50 p-6 flex flex-col items-center shadow md:row-span-2">
-    <div class="text-4xl mb-2"><Icon name="mdi:school" class="w-12 h-12 text-yellow-500" /></div>
-    <div class="font-bold text-xl text-yellow-700 mb-1">SMP</div>
-    <div class="text-gray-600 text-center mb-4">Video pembelajaran untuk jenjang Sekolah Menengah Pertama.</div>
-    <div class="w-full">
-      <h2 class="text-lg font-bold text-yellow-700 mb-2 text-center">Pilih Mata Pelajaran SMP</h2>
-      <div class="grid grid-cols-1 gap-2">
-        {mapelListSMP.map(mapel => (
-          <a href={`/video-pembelajaran/smp/${mapel.slug}/`} class="flex items-center gap-3 rounded-xl py-2 px-3 bg-gradient-to-br from-yellow-100 to-yellow-50 font-semibold text-yellow-800 shadow hover:scale-105 transition">
-            <Icon name={mapel.icon} class="w-6 h-6 mr-2" />
-            <span>{mapel.nama}</span>
-          </a>
-        ))}
-      </div>
-    </div>
-  </div>
-  <!-- Card SMA -->
-  <a href="/video-pembelajaran/sma" class="rounded-2xl bg-gradient-to-br from-pink-100 to-pink-50 p-6 flex flex-col items-center shadow group hover:shadow-2xl hover:scale-105 hover:ring-4 hover:ring-pink-300 transition-all duration-300">
-    <div class="text-4xl mb-2"><Icon name="mdi:school-outline" class="w-12 h-12 text-pink-500" /></div>
-    <div class="font-bold text-xl text-pink-700 mb-1">SMA</div>
-    <div class="text-gray-600 text-center">Video pembelajaran untuk jenjang Sekolah Menengah Atas.</div>
-  </a>
-</div>
   </section>
 </Layout>

@@ -1,0 +1,28 @@
+---
+import Layout from "../../../../layouts/Layout.astro";
+const kelasList = [
+  { nama: "Kelas 10", slug: "kelas-10" },
+  { nama: "Kelas 11", slug: "kelas-11" },
+  { nama: "Kelas 12", slug: "kelas-12" },
+];
+---
+
+<Layout title="Bahasa Jawa SMA">
+  <section class="max-w-xl mx-auto mt-10 bg-white rounded-2xl shadow-lg p-8">
+    <h1 class="text-2xl font-bold text-center mb-6 text-pink-700">
+      Bahasa Jawa SMA
+    </h1>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+  {
+    kelasList.map((kelas) => (
+      <a
+        href={`/video-pembelajaran/sma/bahasa-jawa/${kelas.slug}`}
+        class="block rounded-xl p-4 bg-gradient-to-br from-pink-100 to-pink-50 text-pink-800 font-semibold shadow hover:scale-105 transition text-center"
+      >
+        {kelas.nama}
+      </a>
+    ))
+  }
+</div>
+  </section>
+</Layout>
