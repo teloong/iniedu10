@@ -17,6 +17,8 @@
     "tailwindcss": "^3.4.17"
   },
   "devDependencies": {
-    "astro": "^5.9.3"
+    "@iconify-json/mdi": "^1.2.3",
+    "astro": "^5.9.3",
+    "astro-icon": "^1.1.5"
   }
 }
