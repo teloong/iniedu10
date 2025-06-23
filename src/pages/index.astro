@@ -1,16 +1,16 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import "../styles/glass-iphone.css";
+import "../styles/glass-droplet.css";
 ---
 
 <Layout title="Beranda | Iniedu">
   <section
-    class="relative min-h-[60vh] flex flex-col md:flex-row items-center justify-center py-16 px-4 bg-gradient-to-br from-blue-50 via-white to-blue-100 overflow-hidden"
+    class="relative flex flex-col items-center justify-center py-16 px-4 bg-gradient-to-br from-blue-50 via-white to-blue-100 overflow-hidden w-screen min-w-0"
   >
-    <div
-      class="flex-1 z-10 flex flex-col items-start justify-center max-w-xl pl-52"
-    >
+    <div class="z-10 flex flex-col items-center justify-center w-full">
       <h1
-        class="text-4xl md:text-5xl font-extrabold mb-4 text-[#232b4d] drop-shadow-lg"
+        class="text-4xl md:text-5xl font-extrabold mb-4 text-[#232b4d] drop-shadow-lg text-center"
         data-aos="fade-right"
       >
         Tentang <span
@@ -19,7 +19,7 @@ import Layout from "../layouts/Layout.astro";
         >
       </h1>
       <p
-        class="mb-4 text-lg md:text-xl text-gray-700"
+        class="mb-8 text-lg md:text-xl text-gray-700 text-center"
         data-aos="fade-right"
         data-aos-delay="100"
       >
@@ -38,89 +38,12 @@ import Layout from "../layouts/Layout.astro";
           >akses belajar berkualitas tinggi</b
         > dari mana saja, kapan saja, dan untuk siapa saja.
       </p>
-      <div class="flex flex-wrap gap-4 mt-4">
-        <span
-          class="px-4 py-2 rounded-full bg-gradient-to-r from-blue-400 to-cyan-400 text-white font-semibold shadow-lg group transition-all duration-300 cursor-pointer"
-          data-aos="zoom-in"
-          data-aos-delay="200">#Futuristik</span
-        >
-        <span
-          class="px-4 py-2 rounded-full bg-gradient-to-r from-yellow-400 to-orange-400 text-white font-semibold shadow-lg group transition-all duration-300 cursor-pointer"
-          data-aos="zoom-in"
-          data-aos-delay="300">#Inovatif</span
-        >
-        <span
-          class="px-4 py-2 rounded-full bg-gradient-to-r from-pink-400 to-purple-400 text-white font-semibold shadow-lg group transition-all duration-300 cursor-pointer"
-          data-aos="zoom-in"
-          data-aos-delay="400">#AksesPendidikan</span
-        >
-      </div>
-    </div>
-    <div class="flex-1 flex justify-center z-10 ml-64" data-aos="zoom-in">
-      <img
-        src="/lcp-3d-kelas-online.webp"
-        srcset="/lcp-3d-kelas-online.webp 370w, /lcp-3d-kelas-online-240.webp 240w"
-        sizes="(max-width: 480px) 240px, 370px"
-        alt="Ilustrasi 3D Kelas Online"
-        width="370"
-        height="740"
-        fetchpriority="high"
-        class="max-w-xs md:max-w-md rounded-2xl shadow-2xl border-8 border-blue-400 transition-all duration-300 hover:shadow-[0_8px_40px_rgba(0,89,255,0.25)] hover:border-blue-500 hover:scale-105 cursor-pointer"
-      />
-    </div>
-    <div
-      class="absolute top-0 left-0 w-full h-full pointer-events-none select-none opacity-40"
-      style="background: radial-gradient(ellipse at 80% 20%, #7f5cff33 0%, transparent 70%), radial-gradient(ellipse at 20% 80%, #00ffe722 0%, transparent 70%);"
-    >
-    </div>
-  </section>
-
-  <!-- Section Modern: Visi, Misi, dan Value Card -->
-  <section
-    class="relative pt-20 pb-10 bg-gradient-to-br from-blue-50 via-white to-blue-100 overflow-hidden"
-  >
-    <!-- Motif SVG gelombang kontras -->
-    <svg
-      class="absolute left-0 top-0 w-full h-full opacity-80 z-10 pointer-events-none hidden md:block"
-      width="100%"
-      height="100%"
-      viewBox="0 0 1440 320"
-      xmlns="http://www.w3.org/2000/svg"
-      preserveAspectRatio="none"
-    >
-      <path
-        fill="#312e81"
-        fill-opacity="0.9"
-        d="M0,224L48,213.3C96,203,192,181,288,165.3C384,149,480,139,576,154.7C672,171,768,213,864,218.7C960,224,1056,192,1152,181.3C1248,171,1344,181,1392,186.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-      ></path>
-      <path
-        fill="#7c3aed"
-        fill-opacity="0.7"
-        d="M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,250.7C960,267,1056,245,1152,240C1248,235,1344,245,1392,250.7L1440,256L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-      ></path>
-    </svg>
-    <!-- End motif SVG gelombang kontras -->
-    >
-    <!-- SVG Wave Background Atas -->
-    <div
-      class="absolute top-0 left-0 w-full h-32 pointer-events-none select-none z-0"
-    >
-      <svg
-        viewBox="0 0 1440 150"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        class="w-full h-full"
-        ><path
-          fill="#7f5cff22"
-          d="M0 80C250 160 500 0 720 40C940 80 1190 0 1440 80V150H0V80Z"
-        ></path></svg
-      >
-    </div>
-    <div class="relative z-10 max-w-6xl mx-auto flex flex-col items-center">
-      <div class="grid md:grid-cols-2 gap-8 w-full px-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-3xl mb-4">
         <div
-          class="bg-white rounded-2xl shadow-xl p-8 border-l-4 border-blue-400 flex flex-col items-start group hover:shadow-[0_32px_96px_rgba(0,89,255,0.40)] hover:scale-105 hover:-translate-y-2 hover:ring-8 hover:ring-blue-400 hover:ring-offset-2 hover:border-blue-600 border border-transparent transition-all duration-500"
+          class="glass-iphone rounded-2xl shadow-lg p-8 border-l-4 border-blue-400 flex flex-col items-start group hover:shadow-[0_12px_32px_rgba(56,189,248,0.15)] hover:scale-105 hover:-translate-y-2 hover:ring-8 hover:ring-blue-400 hover:ring-offset-2 hover:border-blue-600 border border-transparent transition-all duration-500 min-h-[150px]"
         >
+          <span class="droplet"></span>
+          <span class="droplet"></span>
           <div class="flex items-center gap-2 mb-2">
             <svg width="32" height="32" fill="none" viewBox="0 0 32 32"
               ><circle cx="16" cy="16" r="16" fill="#38bdf822"></circle><path
@@ -131,14 +54,15 @@ import Layout from "../layouts/Layout.astro";
             >
             <h2 class="text-2xl font-bold text-blue-600">Visi</h2>
           </div>
-          <p class="text-gray-700">
-            Menjadi pelopor pendidikan digital yang inklusif, adaptif, dan
-            berdaya saing global untuk seluruh masyarakat Indonesia.
+          <p class="text-gray-700 font-bold">
+            Menjadi pelopor pendidikan digital yang inklusif, adaptif, dan berdaya
+            saing global untuk seluruh masyarakat Indonesia.
           </p>
         </div>
         <div
-          class="bg-white rounded-2xl shadow-xl p-8 border-l-4 border-cyan-400 flex flex-col items-start group hover:shadow-[0_32px_96px_rgba(0,89,255,0.40)] hover:scale-105 hover:-translate-y-2 hover:ring-8 hover:ring-cyan-400 hover:ring-offset-2 hover:border-cyan-600 border border-transparent transition-all duration-500"
+          class="glass-iphone rounded-2xl shadow-lg p-8 border-l-4 border-cyan-400 flex flex-col items-start group hover:shadow-[0_12px_32px_rgba(6,182,212,0.15)] hover:scale-105 hover:-translate-y-2 hover:ring-8 hover:ring-cyan-400 hover:ring-offset-2 hover:border-cyan-600 border border-transparent transition-all duration-500 min-h-[150px]"
         >
+          <span class="droplet"></span>
           <div class="flex items-center gap-2 mb-2">
             <svg width="32" height="32" fill="none" viewBox="0 0 32 32"
               ><circle cx="16" cy="16" r="16" fill="#00ffe722"></circle><path
@@ -150,185 +74,200 @@ import Layout from "../layouts/Layout.astro";
             <h2 class="text-2xl font-bold text-cyan-600">Misi</h2>
           </div>
           <ul class="list-disc ml-6 text-gray-700 space-y-2">
-            <li>Menyediakan materi dan pembelajaran berkualitas tinggi.</li>
-            <li>
+            <li class="font-bold">
+              Menyediakan materi dan pembelajaran berkualitas tinggi.
+            </li>
+            <li class="font-bold">
               Mengembangkan fitur interaktif dan inovatif berbasis teknologi.
             </li>
-            <li>Mendorong pemerataan akses pendidikan di seluruh Indonesia.</li>
-            <li>Memberikan sertifikasi resmi yang diakui industri.</li>
+            <li class="font-bold">
+              Mendorong pemerataan akses pendidikan di seluruh Indonesia.
+            </li>
+            <li class="font-bold">
+              Memberikan sertifikasi resmi yang diakui industri.
+            </li>
           </ul>
         </div>
       </div>
-      <!-- Value Cards -->
-      <div class="relative w-full flex justify-center mt-8 z-20">
-        <div class="grid md:grid-cols-3 gap-8 w-full max-w-5xl px-4">
-          <div
-            class="bg-gradient-to-br from-blue-100 to-blue-50 rounded-2xl p-8 flex flex-col items-center shadow-xl border border-blue-100 hover:shadow-2xl hover:scale-105 transition-all duration-500"
-          >
-            <svg
-              width="48"
-              height="48"
-              fill="none"
-              viewBox="0 0 48 48"
-              class="mb-2"
-              ><circle cx="24" cy="24" r="24" fill="#009fff22"></circle><path
-                d="M16 32V18a8 8 0 1 1 16 0v14"
-                stroke="#009fff"
-                stroke-width="2"
-                stroke-linecap="round"></path><rect
-                x="14"
-                y="32"
-                width="20"
-                height="5"
-                rx="2.5"
-                fill="#009fff"></rect></svg
-            >
-            <div class="font-bold text-lg mt-2 mb-1 text-blue-700">
-              Materi Berkualitas
-            </div>
-            <div class="text-gray-600 text-center">
-              Konten terkurasi oleh pengajar profesional dan praktisi industri.
-            </div>
-          </div>
-          <div
-            class="bg-gradient-to-br from-yellow-100 to-yellow-50 rounded-2xl p-8 flex flex-col items-center shadow-xl border border-yellow-100 hover:shadow-2xl hover:scale-105 transition-all duration-500"
-          >
-            <svg
-              width="48"
-              height="48"
-              fill="none"
-              viewBox="0 0 48 48"
-              class="mb-2"
-              ><circle cx="24" cy="24" r="24" fill="#ffb30022"></circle><path
-                d="M24 16v12"
-                stroke="#ffb300"
-                stroke-width="2"
-                stroke-linecap="round"></path><circle
-                cx="24"
-                cy="32"
-                r="2"
-                fill="#ffb300"></circle></svg
-            >
-            <div class="font-bold text-lg mt-2 mb-1 text-yellow-700">
-              Sertifikat Resmi
-            </div>
-            <div class="text-gray-600 text-center">
-              Setiap kursus dilengkapi sertifikat digital yang diakui industri.
-            </div>
-          </div>
-          <div
-            class="bg-gradient-to-br from-pink-100 to-purple-50 rounded-2xl p-8 flex flex-col items-center shadow-xl border border-pink-100 hover:shadow-2xl hover:scale-105 transition-all duration-500"
-          >
-            <svg
-              width="48"
-              height="48"
-              fill="none"
-              viewBox="0 0 48 48"
-              class="mb-2"
-              ><circle cx="24" cy="24" r="24" fill="#e040fb22"></circle><path
-                d="M18 28l6-6 6 6"
-                stroke="#e040fb"
-                stroke-width="2"
-                stroke-linecap="round"></path></svg
-            >
-            <div class="font-bold text-lg mt-2 mb-1 text-pink-700">
-              Interaktif & Kolaboratif
-            </div>
-            <div class="text-gray-600 text-center">
-              Belajar lebih seru dengan fitur diskusi, tugas, dan komunitas.
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-    <!-- SVG Wave Background Bawah -->
-    <div
-      class="absolute bottom-0 left-0 w-full h-20 pointer-events-none select-none z-0"
-    >
-      <svg
-        viewBox="0 0 1440 80"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        class="w-full h-full"
-        ><path
-          fill="#7f5cff22"
-          d="M0 40C300 100 600 0 900 40C1200 80 1440 0 1440 40V80H0V40Z"
-        ></path></svg
-      >
-    </div>
+    {/* Particle dots dekorasi */}
+    <span class="particle-dot animate-dot-move" style="top:20%;left:10%;"></span>
+    <span class="particle-dot animate-dot-move2" style="top:60%;left:80%;"></span>
+    <span class="particle-dot animate-dot-move3" style="top:75%;left:25%;"></span>
+    <span class="particle-dot animate-dot-move4" style="top:40%;left:60%;"></span>
   </section>
-  <script>
-    // Efek 3D tilt interaktif pada semua card dengan class group (fix TypeScript lint)
-    const cards = document.querySelectorAll(".group");
-    cards.forEach((cardEl) => {
-      const card = cardEl as HTMLElement;
-      card.style.perspective = "800px";
-      card.addEventListener("mousemove", (e) => {
-        const event = e as MouseEvent;
-        const rect = card.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const rotateX = ((y - centerY) / centerY) * 10;
-        const rotateY = ((x - centerX) / centerX) * 10;
-        card.style.transform = `scale(1.08) translateY(-12px) rotateX(${-rotateX}deg) rotateY(${rotateY}deg)`;
-        card.style.transition = "transform 0.1s";
-        card.style.boxShadow = "0 0 48px 8px #38bdf8, 0 0 24px 4px #6366f1";
-      });
-      card.addEventListener("mouseleave", (e) => {
-        const event = e as MouseEvent;
-        card.style.transform = "";
-        card.style.transition = "transform 0.6s";
-        card.style.boxShadow = "";
-      });
-    });
-    // Efek 3D tilt interaktif pada badge hashtag
-    const badges = document.querySelectorAll(
-      ".flex.flex-wrap.gap-4 span.group"
-    );
-    badges.forEach((badgeEl) => {
-      const badge = badgeEl as HTMLElement;
-      badge.style.perspective = "600px";
-      badge.addEventListener("mousemove", (e) => {
-        const event = e as MouseEvent;
-        const rect = badge.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const rotateX = ((y - centerY) / centerY) * 10;
-        const rotateY = ((x - centerX) / centerX) * 10;
-        badge.style.transform = `scale(1.08) translateY(-4px) rotateX(${-rotateX}deg) rotateY(${rotateY}deg)`;
-        badge.style.transition = "transform 0.1s";
-        badge.style.boxShadow = "0 0 24px 4px #38bdf8, 0 0 12px 2px #f472b6";
-      });
-      badge.addEventListener("mouseleave", () => {
-        badge.style.transform = "";
-        badge.style.transition = "transform 0.6s";
-        badge.style.boxShadow = "";
-      });
-    });
-  </script>
-  <style>
-    @media (max-width: 640px) {
-      .ml-64.justify-center {
-        justify-content: flex-start !important;
-        margin-left: 0 !important;
-        padding-left: 18px !important;
-      }
-      .pl-52.items-start {
-        padding-left: 0 !important;
-      }
-      /* Tambahkan jarak bawah pada badge terakhir di mobile */
-      .flex-wrap.gap-4.mt-4 > span:last-child {
-        margin-bottom: 16px !important;
-      }
-    }
-  </style>
-  <!-- Hero image sudah dioptimasi untuk LCP -->
-  <!-- Ilustrasi 3D vector dari Storyset (https://storyset.com/education) -->
+
 </Layout>
+
+<style>
+  /* Glassmorphism motif bubble & dot (tanpa animasi) */
+  .particle-dot {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #bae6fd 60%, #38bdf8 100%);
+    opacity: 0.38;
+    filter: blur(1.5px);
+  }
+</style>
+
+<script>
+  // Efek 3D tilt interaktif pada semua card dengan class group (fix TypeScript lint)
+  const cards = document.querySelectorAll(".group");
+  cards.forEach((cardEl) => {
+    const card = cardEl as HTMLElement;
+    card.style.perspective = "800px";
+    card.addEventListener("mousemove", (e) => {
+      const event = e as MouseEvent;
+      const rect = card.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = ((y - centerY) / centerY) * 10;
+      const rotateY = ((x - centerX) / centerX) * 10;
+      card.style.transform = `scale(1.08) translateY(-12px) rotateX(${-rotateX}deg) rotateY(${rotateY}deg)`;
+      card.style.transition = "transform 0.1s";
+      card.style.boxShadow = "0 0 48px 8px #38bdf8, 0 0 24px 4px #6366f1";
+    });
+    card.addEventListener("mouseleave", (e) => {
+      const event = e as MouseEvent;
+      card.style.transform = "";
+      card.style.transition = "transform 0.6s";
+      card.style.boxShadow = "";
+    });
+  });
+  // Efek 3D tilt interaktif pada badge hashtag
+  const badges = document.querySelectorAll(".flex.flex-wrap.gap-4 span.group");
+  badges.forEach((badgeEl) => {
+    const badge = badgeEl as HTMLElement;
+    badge.style.perspective = "600px";
+    badge.addEventListener("mousemove", (e) => {
+      const event = e as MouseEvent;
+      const rect = badge.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = ((y - centerY) / centerY) * 10;
+      const rotateY = ((x - centerX) / centerX) * 10;
+      badge.style.transform = `scale(1.08) translateY(-4px) rotateX(${-rotateX}deg) rotateY(${rotateY}deg)`;
+      badge.style.transition = "transform 0.1s";
+      badge.style.boxShadow = "0 0 24px 4px #38bdf8, 0 0 12px 2px #f472b6";
+    });
+    badge.addEventListener("mouseleave", () => {
+      badge.style.transform = "";
+      badge.style.transition = "transform 0.6s";
+      badge.style.boxShadow = "";
+    });
+  });
+</script>
+<style>
+  @media (max-width: 640px) {
+    .ml-64.justify-center {
+      justify-content: flex-start !important;
+      margin-left: 0 !important;
+      padding-left: 18px !important;
+    }
+    .pl-52.items-start {
+      padding-left: 0 !important;
+    }
+    /* Tambahkan jarak bawah pada badge terakhir di mobile */
+    .flex-wrap.gap-4.mt-4 > span:last-child {
+      margin-bottom: 16px !important;
+    }
+  }
+  /* Animasi Bubble Glassmorphism & Dot Floating (INLINE) */
+  .animate-bubble-float-slow {
+    animation: bubbleFloatSlow 18s ease-in-out infinite alternate;
+  }
+  .animate-bubble-float-medium {
+    animation: bubbleFloatMedium 13s ease-in-out infinite alternate;
+  }
+  .animate-bubble-float-fast {
+    animation: bubbleFloatFast 9s ease-in-out infinite alternate;
+  }
+  @keyframes bubbleFloatSlow {
+    0% {
+      transform: translateY(0) scale(1);
+    }
+    100% {
+      transform: translateY(-32px) scale(1.04);
+    }
+  }
+  @keyframes bubbleFloatMedium {
+    0% {
+      transform: translateY(0) scale(1);
+    }
+    100% {
+      transform: translateY(-24px) scale(1.03);
+    }
+  }
+  @keyframes bubbleFloatFast {
+    0% {
+      transform: translateY(0) scale(1);
+    }
+    100% {
+      transform: translateY(-16px) scale(1.01);
+    }
+  }
+  .particle-dot {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #bae6fd 60%, #38bdf8 100%);
+    opacity: 0.38;
+    filter: blur(1.5px);
+  }
+  .animate-dot-move {
+    animation: dotMove 12s linear infinite alternate;
+  }
+  .animate-dot-move2 {
+    animation: dotMove2 15s linear infinite alternate;
+  }
+  .animate-dot-move3 {
+    animation: dotMove3 18s linear infinite alternate;
+  }
+  .animate-dot-move4 {
+    animation: dotMove4 21s linear infinite alternate;
+  }
+  @keyframes dotMove {
+    0% {
+      transform: translateY(0) scale(1);
+    }
+    100% {
+      transform: translateY(-40px) scale(1.12);
+    }
+  }
+  @keyframes dotMove2 {
+    0% {
+      transform: translateY(0) scale(1);
+    }
+    100% {
+      transform: translateY(28px) scale(0.93);
+    }
+  }
+  @keyframes dotMove3 {
+    0% {
+      transform: translateX(0) scale(1);
+    }
+    100% {
+      transform: translateX(-36px) scale(1.09);
+    }
+  }
+  @keyframes dotMove4 {
+    0% {
+      transform: translateX(0) scale(1);
+    }
+    100% {
+      transform: translateX(30px) scale(0.97);
+    }
+  }
+</style>
+<!-- Hero image sudah dioptimasi untuk LCP -->
+<!-- Ilustrasi 3D vector dari Storyset (https://storyset.com/education) -->
 
 <!-- Alpine.js CDN untuk interaktivitas accordion -->
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer
@@ -1161,6 +1100,8 @@ import Layout from "../layouts/Layout.astro";
       cursor: pointer;
     }
     .sosmed-btn:hover {
+      -webkit-backdrop-filter: blur(44px) saturate(2.6);
+      backdrop-filter: blur(44px) saturate(2.6);
       transform: translateY(-3px) scale(1.07);
       filter: brightness(1.08) drop-shadow(0 4px 16px #0002);
       box-shadow: 0 4px 18px #0002;
