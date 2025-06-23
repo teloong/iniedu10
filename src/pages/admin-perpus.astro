@@ -14,8 +14,11 @@ import AdminSidebar from '../components/AdminSidebar.astro';
         <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
           <form id="ebook-form" class="flex flex-col gap-4">
             <select id="kategori_id" class="border rounded p-2" required>
-              <option value="">Pilih Kategori</option>
-            </select>
+  <option value="">Pilih Kategori</option>
+</select>
+<select id="tema_id" class="border rounded p-2" required>
+  <option value="">Pilih Tema</option>
+</select>
             <input type="text" id="judul" class="border rounded p-2" placeholder="Judul Buku" required />
             <input type="text" id="penulis" class="border rounded p-2" placeholder="Penulis" required />
             <input type="number" id="tahun" class="border rounded p-2" placeholder="Tahun" min="1900" max="2100" />
@@ -73,13 +76,17 @@ import AdminSidebar from '../components/AdminSidebar.astro';
       coverInput.disabled = false;
     });
 
-    // ====== Fetch Kategori dan Buku dari Supabase ======
+    // ====== Fetch Kategori, Tema, dan Buku dari Supabase ======
     let categories = [];
     let ebooks = [];
+    let temaList = [];
     const kategoriSelect = document.getElementById('kategori_id');
+    const temaSelect = document.getElementById('tema_id');
     const kategoriList = document.getElementById('kategori-list');
 
     async function fetchCategoriesAndEbooks() {
+      temaSelect.innerHTML = '<option value="">Pilih Tema</option>';
+    
       const { data: cats, error: catErr } = await supabase.from('ebook_categories').select('*').order('nama', { ascending: true });
       if (catErr) {
         kategoriList.innerHTML = '<div class="text-center text-red-500">Gagal memuat kategori.</div>';
@@ -88,6 +95,8 @@ import AdminSidebar from '../components/AdminSidebar.astro';
       categories = cats;
       kategoriSelect.innerHTML = '<option value="">Pilih Kategori</option>' +
         categories.map(cat => `<option value="${cat.id}">${cat.nama}</option>`).join('');
+      // Fetch semua tema (default: kosong, akan diisi saat kategori dipilih)
+      temaList = [];
       // Fetch semua buku
       const { data: books, error: bookErr } = await supabase.from('ebooks').select('*');
       if (bookErr) {
@@ -130,10 +139,27 @@ import AdminSidebar from '../components/AdminSidebar.astro';
 
     fetchCategoriesAndEbooks();
 
+    // Fetch tema sesuai kategori
+    async function fetchTemaByKategori(kategoriId) {
+      if (!kategoriId) {
+        temaSelect.innerHTML = '<option value="">Pilih Tema</option>';
+        temaList = [];
+        return;
+      }
+      const { data, error } = await supabase.from('ebook_themes').select('id, name').eq('category_id', kategoriId);
+      temaList = data || [];
+      temaSelect.innerHTML = '<option value="">Pilih Tema</option>' +
+        temaList.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+    }
+    kategoriSelect.addEventListener('change', e => {
+      fetchTemaByKategori(e.target.value);
+    });
+
     // ====== Handler Form Tambah Buku ======
     document.getElementById('ebook-form').addEventListener('submit', async function(e) {
       e.preventDefault();
       const kategori_id = kategoriSelect.value;
+      const tema_id = temaSelect.value;
       const judul = document.getElementById('judul').value.trim();
       const penulis = document.getElementById('penulis').value.trim();
       const tahun = document.getElementById('tahun').value;
@@ -141,12 +167,12 @@ import AdminSidebar from '../components/AdminSidebar.astro';
       const link = document.getElementById('link').value.trim();
       const penerbit = document.getElementById('penerbit').value.trim();
       const deskripsi = document.getElementById('deskripsi').value.trim();
-      if (!kategori_id || !judul || !penulis || !link) {
-        document.getElementById('ebook-message').textContent = 'Kategori, judul, penulis, dan link buku wajib diisi!';
+      if (!kategori_id || !tema_id || !judul || !penulis || !link) {
+        document.getElementById('ebook-message').textContent = 'Kategori, tema, judul, penulis, dan link buku wajib diisi!';
         return;
       }
       const { error } = await supabase.from('ebooks').insert([
-        { kategori_id, judul, penulis, tahun: tahun ? parseInt(tahun) : null, penerbit, deskripsi, cover, link }
+        { kategori_id, tema_id, judul, penulis, tahun: tahun ? parseInt(tahun) : null, penerbit, deskripsi, cover, link }
       ]);
       if (error) {
         document.getElementById('ebook-message').textContent = 'Gagal menambah buku: ' + error.message;
@@ -157,6 +183,7 @@ import AdminSidebar from '../components/AdminSidebar.astro';
       this.reset();
       coverPreview.innerHTML = '';
       await fetchCategoriesAndEbooks();
+      temaSelect.innerHTML = '<option value="">Pilih Tema</option>';
     });
   </script>
 </Layout>

@@ -6,6 +6,7 @@ import Layout from '../../layouts/Layout.astro';
   <section class="max-w-7xl mx-auto py-12 px-6">
     <h1 class="text-3xl md:text-4xl font-extrabold text-blue-700 mb-4 text-center">Koleksi Buku Sekolah Digital</h1>
     <p class="text-lg text-gray-700 mb-10 text-center max-w-2xl mx-auto">Berikut adalah kumpulan buku pelajaran digital SD, SMP, dan SMA yang dapat diakses secara gratis untuk menunjang pembelajaran formal di sekolah.</p>
+    <div id="theme-filter" class="flex flex-wrap justify-center mb-8"></div>
     <input id="ebook-search" type="text" placeholder="Cari e-book..." class="block w-full max-w-md mx-auto mb-8 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400" />
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10" id="ebook-sekolah-list">
       <!-- Buku akan tampil di sini secara dinamis dari Supabase -->
@@ -14,7 +15,9 @@ import Layout from '../../layouts/Layout.astro';
       import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
       const supabase = createClient('https://jcfizceoycwdvpqpwhrj.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA');
       const grid = document.getElementById('ebook-sekolah-list');
+      const themeFilter = document.getElementById('theme-filter');
       let allBooks = [];
+      let selectedTheme = null;
       async function fetchAndRenderSekolahBooks() {
         // Ambil kategori "sekolah"
         const { data: cats, error: catErr } = await supabase.from('ebook_categories').select('*');
@@ -26,6 +29,14 @@ import Layout from '../../layouts/Layout.astro';
         if (!cat) {
           grid.innerHTML = '<div class="col-span-3 text-center text-gray-400">Kategori buku sekolah belum tersedia.</div>';
           return;
+        }
+        // Ambil tema dari ebook_themes
+        const { data: themes, error: themeErr } = await supabase.from('ebook_themes').select('*').eq('category_id', cat.id);
+        if (themeErr) {
+          console.error('Gagal memuat tema:', themeErr);
+        } else {
+          renderThemeFilter(themes);
+          window.allThemes = themes;
         }
         // Ambil semua buku kategori ini
         const { data: books, error: bookErr } = await supabase.from('ebooks').select('*').eq('kategori_id', cat.id);
@@ -40,6 +51,26 @@ import Layout from '../../layouts/Layout.astro';
         allBooks = books;
         renderBooks(books);
       }
+      function renderThemeFilter(themes) {
+        themeFilter.innerHTML = '';
+        if (!themes || themes.length === 0) return;
+        themeFilter.innerHTML = themes.map(
+          t => `<button data-id="${t.id}" class="tema-btn px-4 py-2 rounded-full border border-blue-400 bg-white text-blue-700 font-semibold shadow hover:bg-blue-50 transition ${selectedTheme===t.id?'ring-2 ring-blue-400':''}">${t.name}</button>`
+        ).join('');
+      }
+      themeFilter.addEventListener('click', e => {
+        if (e.target.classList.contains('tema-btn')) {
+          const id = e.target.getAttribute('data-id');
+          selectedTheme = (selectedTheme === id) ? null : id;
+          renderThemeFilter(window.allThemes);
+          if (selectedTheme) {
+            const filtered = allBooks.filter(buku => buku.tema_id === selectedTheme);
+            renderBooks(filtered);
+          } else {
+            renderBooks(allBooks);
+          }
+        }
+      });
       function renderBooks(books) {
         grid.innerHTML = '';
         books.forEach(buku => {
@@ -62,7 +93,11 @@ import Layout from '../../layouts/Layout.astro';
       if (searchInput) {
         searchInput.addEventListener('input', () => {
           const q = searchInput.value.trim().toLowerCase();
-          const filtered = allBooks.filter(buku =>
+          let filtered = allBooks;
+          if (selectedTheme) {
+            filtered = filtered.filter(buku => buku.tema_id === selectedTheme);
+          }
+          filtered = filtered.filter(buku =>
             (buku.judul && buku.judul.toLowerCase().includes(q)) ||
             (buku.penulis && buku.penulis.toLowerCase().includes(q)) ||
             (buku.penerbit && buku.penerbit.toLowerCase().includes(q)) ||

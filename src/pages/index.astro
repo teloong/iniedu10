@@ -18,29 +18,87 @@ import "../styles/glass-droplet.css";
           >IniEdu</span
         >
       </h1>
-      <p
-        class="mb-8 text-lg md:text-xl text-gray-700 text-center"
-        data-aos="fade-right"
-        data-aos-delay="100"
-      >
-        <b
-          class="text-black font-extrabold drop-shadow-[0_2px_6px_rgba(0,0,0,0.15)]"
-          >Platform pendidikan masa depan yang memadukan teknologi, kreativitas,
-          dan nilai kemanusiaan untuk generasi Indonesia yang unggul.</b
-        > Kami hadir untuk seluruh kalangan sebagai solusi mewujudkan pendidikan
-        yang <b
-          class="text-black font-extrabold drop-shadow-[0_2px_6px_rgba(0,0,0,0.15)]"
-          >inklusif, adaptif, dan berbasis teknologi</b
-        > adalah kunci untuk membentuk masyarakat Indonesia yang siap bersaing secara
-        global. Melalui kursus online, pelatihan profesional, dan eBook edukatif,
-        IniEdu berkomitmen menyediakan <b
-          class="text-black font-extrabold drop-shadow-[0_2px_6px_rgba(0,0,0,0.15)]"
-          >akses belajar berkualitas tinggi</b
-        > dari mana saja, kapan saja, dan untuk siapa saja.
-      </p>
+      <div class="w-full mb-8">
+        <span id="typewriter-text" class="block text-lg md:text-xl text-gray-700 text-center min-h-[3.5rem]"></span>
+      </div>
+      <script>
+        // Typewriter utama
+        const typewriterRaw = `<b class="text-black font-extrabold drop-shadow-[0_2px_6px_rgba(0,0,0,0.15)]">Platform pendidikan masa depan yang memadukan teknologi, kreativitas, dan nilai kemanusiaan untuk generasi Indonesia yang unggul.</b> Kami hadir untuk seluruh kalangan sebagai solusi mewujudkan pendidikan yang <b class="text-black font-extrabold drop-shadow-[0_2px_6px_rgba(0,0,0,0.15)]">inklusif, adaptif, dan berbasis teknologi</b> adalah kunci untuk membentuk masyarakat Indonesia yang siap bersaing secara global. Melalui kursus online, pelatihan profesional, dan eBook edukatif, IniEdu berkomitmen menyediakan <b class="text-black font-extrabold drop-shadow-[0_2px_6px_rgba(0,0,0,0.15)]">akses belajar berkualitas tinggi</b> dari mana saja, kapan saja, dan untuk siapa saja.`;
+        let el = document.getElementById('typewriter-text');
+        let i = 0;
+        let isTag = false, tagBuffer = '';
+        function typeWriter() {
+          if (!el) el = document.getElementById('typewriter-text');
+          if (!el) return;
+          if (i < typewriterRaw.length) {
+            let char = typewriterRaw[i];
+            if (char === '<') {
+              isTag = true;
+              tagBuffer = '<';
+            } else if (char === '>' && isTag) {
+              tagBuffer += '>';
+              el.innerHTML += tagBuffer;
+              isTag = false;
+              tagBuffer = '';
+              i++;
+              setTimeout(typeWriter, 15);
+              return;
+            }
+            if (isTag && char !== '<') {
+              tagBuffer += char;
+            }
+            if (!isTag && char !== '<') {
+              el.innerHTML += char;
+            }
+            i++;
+            setTimeout(typeWriter, 15);
+          }
+        }
+        typeWriter();
+        // Typewriter Visi
+        const visiText = 'Menjadi pelopor pendidikan digital yang inklusif, adaptif, dan berdaya saing global untuk seluruh masyarakat Indonesia.';
+        let visiEl = document.getElementById('typewriter-visi');
+        let visiI = 0;
+        function typeWriterVisi() {
+          if (!visiEl) visiEl = document.getElementById('typewriter-visi');
+          if (!visiEl) return;
+          if (visiI < visiText.length) {
+            visiEl.innerHTML += visiText[visiI];
+            visiI++;
+            setTimeout(typeWriterVisi, 13);
+          }
+        }
+        typeWriterVisi();
+        // Typewriter Misi (list)
+        const misiList = [
+          'Menyediakan materi dan pembelajaran berkualitas tinggi.',
+          'Mengembangkan fitur interaktif dan inovatif berbasis teknologi.',
+          'Mendorong pemerataan akses pendidikan di seluruh Indonesia.',
+          'Memberikan sertifikasi resmi yang diakui industri.'
+        ];
+                function typeWriterMisi(idx: number) {
+          let misiEl = document.getElementById('typewriter-misi'+(idx+1));
+          let misiStr = misiList[idx];
+          let misiI = 0;
+          function step() {
+            if (!misiEl) misiEl = document.getElementById('typewriter-misi'+(idx+1));
+            if (!misiEl) return;
+            if (misiI < misiStr.length) {
+              misiEl.innerHTML += misiStr[misiI];
+              misiI++;
+              setTimeout(step, 13);
+            } else if (idx+1 < misiList.length) {
+              setTimeout(()=>typeWriterMisi(idx+1), 250);
+            }
+          }
+          step();
+        }
+        typeWriterMisi(0);
+      </script>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-3xl mb-4">
         <div
           class="glass-iphone rounded-2xl shadow-lg p-8 border-l-4 border-blue-400 flex flex-col items-start group hover:shadow-[0_12px_32px_rgba(56,189,248,0.15)] hover:scale-105 hover:-translate-y-2 hover:ring-8 hover:ring-blue-400 hover:ring-offset-2 hover:border-blue-600 border border-transparent transition-all duration-500 min-h-[150px]"
+          data-aos="fade-up" data-aos-delay="0"
         >
           <span class="droplet"></span>
           <span class="droplet"></span>
@@ -54,13 +112,13 @@ import "../styles/glass-droplet.css";
             >
             <h2 class="text-2xl font-bold text-blue-600">Visi</h2>
           </div>
-          <p class="text-gray-700 font-bold">
-            Menjadi pelopor pendidikan digital yang inklusif, adaptif, dan berdaya
-            saing global untuk seluruh masyarakat Indonesia.
+          <p class="text-gray-700 font-bold min-h-[3.5rem]">
+            <span id="typewriter-visi"></span>
           </p>
         </div>
         <div
           class="glass-iphone rounded-2xl shadow-lg p-8 border-l-4 border-cyan-400 flex flex-col items-start group hover:shadow-[0_12px_32px_rgba(6,182,212,0.15)] hover:scale-105 hover:-translate-y-2 hover:ring-8 hover:ring-cyan-400 hover:ring-offset-2 hover:border-cyan-600 border border-transparent transition-all duration-500 min-h-[150px]"
+          data-aos="fade-up" data-aos-delay="100"
         >
           <span class="droplet"></span>
           <div class="flex items-center gap-2 mb-2">
@@ -74,18 +132,10 @@ import "../styles/glass-droplet.css";
             <h2 class="text-2xl font-bold text-cyan-600">Misi</h2>
           </div>
           <ul class="list-disc ml-6 text-gray-700 space-y-2">
-            <li class="font-bold">
-              Menyediakan materi dan pembelajaran berkualitas tinggi.
-            </li>
-            <li class="font-bold">
-              Mengembangkan fitur interaktif dan inovatif berbasis teknologi.
-            </li>
-            <li class="font-bold">
-              Mendorong pemerataan akses pendidikan di seluruh Indonesia.
-            </li>
-            <li class="font-bold">
-              Memberikan sertifikasi resmi yang diakui industri.
-            </li>
+            <li class="font-bold min-h-[1.8rem]"><span id="typewriter-misi1"></span></li>
+            <li class="font-bold min-h-[1.8rem]"><span id="typewriter-misi2"></span></li>
+            <li class="font-bold min-h-[1.8rem]"><span id="typewriter-misi3"></span></li>
+            <li class="font-bold min-h-[1.8rem]"><span id="typewriter-misi4"></span></li>
           </ul>
         </div>
       </div>
@@ -276,121 +326,7 @@ import "../styles/glass-droplet.css";
   class="relative min-h-screen py-20 flex items-center justify-center bg-gradient-to-br from-cyan-400 to-green-100 overflow-hidden"
   data-aos="fade-up"
 >
-  <!-- Motif SVG awan kartun pojok kiri-atas -->
-  <svg
-    class="absolute left-0 top-0 w-1/3 max-w-xs h-auto opacity-80 z-10 pointer-events-none hidden md:block"
-    width="220"
-    height="120"
-    viewBox="0 0 220 120"
-    xmlns="http://www.w3.org/2000/svg"
-    preserveAspectRatio="none"
-    data-aos="fade-down-left"
-  >
-    <!-- Awan kiri atas (tipis dan memanjang, layer tumpuk) -->
-    <path
-      d="M10 80 q-5 -20 20 -30 q5 -25 40 -20 q5 -10 20 -5 q15 -15 30 10 q20 -2 25 15 q18 0 18 25 q-5 10 -35 10 H10 q-5 0 -5 -5z"
-      fill="#fff"
-      fill-opacity="0.85"></path>
-    <ellipse cx="60" cy="90" rx="25" ry="10" fill="#bae6fd" fill-opacity="0.7"
-    ></ellipse>
-  </svg>
-  <!-- Motif SVG awan kartun pojok kanan-atas -->
-  <svg
-    class="absolute right-0 top-0 w-1/3 max-w-xs h-auto opacity-80 z-10 pointer-events-none hidden md:block"
-    width="220"
-    height="120"
-    viewBox="0 0 220 120"
-    xmlns="http://www.w3.org/2000/svg"
-    preserveAspectRatio="none"
-    data-aos="fade-down-right"
-  >
-    <!-- Awan kanan atas (layer dan "menggumpal" naik) -->
-    <path
-      d="M210 90 q5 -20 -20 -30 q-5 -25 -40 -20 q-5 -10 -20 -5 q-15 -15 -30 10 q-20 -2 -25 15 q-18 0 -18 25 q5 10 35 10 h110 q5 0 5 -5z"
-      fill="#fff"
-      fill-opacity="0.85"></path>
-    <ellipse cx="160" cy="100" rx="25" ry="10" fill="#bae6fd" fill-opacity="0.7"
-    ></ellipse>
-  </svg>
-  <!-- Motif SVG awan kartun realistis utama (background tengah) -->
-  <svg
-    class="absolute left-0 top-0 w-full h-full opacity-75 z-10 pointer-events-none hidden md:block"
-    width="100%"
-    height="100%"
-    viewBox="0 0 1440 320"
-    xmlns="http://www.w3.org/2000/svg"
-    preserveAspectRatio="none"
-    data-aos="fade-in"
-  >
-    <!-- Awan besar kiri -->
-    <path
-      d="M220 260 q-40 -60 40 -80 q20 -60 100 -40 q20 -40 70 -20 q60 -50 120 30 q80 -10 100 40 q60 0 60 70 q-20 30 -100 30 H220 q-40 0 -40 -30z"
-      fill="#fff"
-      fill-opacity="0.85"></path>
-    <!-- Awan kecil kiri -->
-    <path
-      d="M400 200 q-10 -20 20 -30 q10 -30 40 -20 q10 -10 30 -5 q25 -20 50 10 q30 -5 40 20 q20 0 20 30 q-10 15 -40 15 h-110 q-20 0 -20 -15z"
-      fill="#bae6fd"
-      fill-opacity="0.7"></path>
-    <!-- Awan besar kanan -->
-    <path
-      d="M1050 250 q-30 -50 40 -70 q15 -50 90 -35 q15 -30 60 -15 q50 -40 100 25 q65 -8 80 35 q50 0 50 60 q-15 25 -80 25 h-340 q-30 0 -30 -25z"
-      fill="#fff"
-      fill-opacity="0.82"></path>
-    <!-- Awan kecil kanan -->
-    <path
-      d="M1200 200 q-8 -16 16 -24 q8 -24 32 -16 q8 -8 24 -4 q20 -16 40 8 q24 -4 32 16 q16 0 16 24 q-8 12 -32 12 h-88 q-16 0 -16 -12z"
-      fill="#bae6fd"
-      fill-opacity="0.7"></path>
-    <!-- Awan kecil tengah -->
-    <path
-      d="M700 270 q-15 -25 25 -35 q10 -25 45 -15 q10 -10 25 -5 q20 -15 40 10 q25 -5 30 15 q15 0 15 25 q-8 10 -30 10 h-120 q-15 0 -15 -10z"
-      fill="#fff"
-      fill-opacity="0.8"></path>
-  </svg>
-  <!-- Motif SVG awan kartun unik kiri -->
-  <svg
-    class="absolute left-0 bottom-0 w-2/5 max-w-lg h-auto opacity-80 z-10 pointer-events-none hidden md:block"
-    width="440"
-    height="220"
-    viewBox="0 0 440 220"
-    xmlns="http://www.w3.org/2000/svg"
-    preserveAspectRatio="none"
-    data-aos="fade-up-left"
-  >
-    <!-- Awan unik kiri (layered, lebih "menggelembung") -->
-    <path
-      d="M40 180 q-15 -40 30 -60 q10 -40 60 -30 q10 -20 40 -10 q30 -35 60 15 q40 -5 50 25 q35 0 35 45 q-10 20 -55 20 H40 q-15 0 -15 -15z"
-      fill="#fff"
-      fill-opacity="0.9"></path>
-    <ellipse cx="120" cy="170" rx="40" ry="20" fill="#bae6fd" fill-opacity="0.7"
-    ></ellipse>
-    <ellipse cx="60" cy="160" rx="25" ry="12" fill="#bae6fd" fill-opacity="0.5"
-    ></ellipse>
-  </svg>
-  <!-- Motif SVG awan kartun unik kanan -->
-  <svg
-    class="absolute right-0 bottom-0 w-2/5 max-w-lg h-auto opacity-80 z-10 pointer-events-none hidden md:block"
-    width="440"
-    height="220"
-    viewBox="0 0 440 220"
-    xmlns="http://www.w3.org/2000/svg"
-    preserveAspectRatio="none"
-    data-aos="fade-up-right"
-  >
-    <!-- Awan unik kanan (layered, "cloudy mountain") -->
-    <path
-      d="M400 180 q15 -40 -30 -60 q-10 -40 -60 -30 q-10 -20 -40 -10 q-30 -35 -60 15 q-40 -5 -50 25 q-35 0 -35 45 q10 20 55 20 h230 q15 0 15 -15z"
-      fill="#fff"
-      fill-opacity="0.9"></path>
-    <ellipse cx="320" cy="170" rx="40" ry="20" fill="#bae6fd" fill-opacity="0.7"
-    ></ellipse>
-    <ellipse cx="380" cy="160" rx="25" ry="12" fill="#bae6fd" fill-opacity="0.5"
-    ></ellipse>
-  </svg>
-  <!-- End motif SVG awan kartun realistis dan unik -->
   <!-- Motif SVG background besar, responsif -->
-
   <div class="w-full max-w-3xl mx-auto px-2 z-10 relative" x-data="{ open: 0 }">
     <h2
       class="text-2xl md:text-3xl font-extrabold text-center mb-8 text-white drop-shadow-lg flex items-center gap-2"
@@ -609,50 +545,15 @@ import "../styles/glass-droplet.css";
   class="py-20 bg-gradient-to-br from-blue-100 via-cyan-100 to-blue-200 relative overflow-hidden"
   data-aos="fade-up"
 >
-  <!-- Motif SVG awan dekoratif pojok kiri atas -->
-  <svg
-    class="absolute left-0 top-0 w-48 h-32 opacity-60 z-0 hidden md:block"
-    viewBox="0 0 200 90"
-    fill="none"
-    ><ellipse cx="60" cy="40" rx="60" ry="40" fill="#e0f2fe"></ellipse><ellipse
-      cx="140"
-      cy="50"
-      rx="50"
-      ry="30"
-      fill="#bae6fd"></ellipse><ellipse
-      cx="100"
-      cy="60"
-      rx="80"
-      ry="25"
-      fill="#7dd3fc"></ellipse></svg
-  >
-  <!-- Motif SVG awan dekoratif pojok kanan bawah -->
-  <svg
-    class="absolute right-0 bottom-0 w-56 h-40 opacity-60 z-0 hidden md:block"
-    viewBox="0 0 220 100"
-    fill="none"
-    ><ellipse cx="120" cy="60" rx="80" ry="30" fill="#e0f2fe"></ellipse><ellipse
-      cx="180"
-      cy="40"
-      rx="40"
-      ry="25"
-      fill="#bae6fd"></ellipse><ellipse
-      cx="60"
-      cy="80"
-      rx="60"
-      ry="20"
-      fill="#7dd3fc"></ellipse></svg
-  >
+
   <div class="max-w-3xl mx-auto px-4 relative z-10">
     <div
-      class="bg-white/90 rounded-3xl shadow-2xl border-4 border-blue-200 p-10 md:p-14 flex flex-col items-center aos-init aos-animate"
-      data-aos="zoom-in"
-      data-aos-delay="100"
+      class="glass-iphone p-10 md:p-14 flex flex-col items-center aos-init aos-animate relative overflow-hidden"
     >
       <img
         src="/profil.jpg"
         alt="Foto CEO Iniedu"
-        class="w-36 h-36 rounded-full border-4 border-blue-400 shadow-xl object-cover mb-6 bg-blue-50"
+        class="w-36 h-36 rounded-full shadow-xl object-cover mb-6 bg-blue-50"
         loading="lazy"
       />
       <h2
@@ -1134,7 +1035,32 @@ import "../styles/glass-droplet.css";
         padding-left: 18px !important;
       }
     }
-  </style>
+    /* Animasi awan modern */
+  @keyframes cloudLeft {
+    0% { transform: translateY(0px) scale(1); }
+    50% { transform: translateY(12px) scale(1.03); }
+    100% { transform: translateY(0px) scale(1); }
+  }
+  @keyframes cloudRight {
+    0% { transform: translateY(0px) scale(1); }
+    50% { transform: translateY(-10px) scale(1.02); }
+    100% { transform: translateY(0px) scale(1); }
+  }
+  @keyframes cloudFloat {
+    0% { transform: translateY(0px) scale(1); }
+    50% { transform: translateY(18px) scale(1.04); }
+    100% { transform: translateY(0px) scale(1); }
+  }
+  @keyframes cloudParallax {
+    0% { transform: translateX(0px); }
+    50% { transform: translateX(24px); }
+    100% { transform: translateX(0px); }
+  }
+  .animate-cloud-left { animation: cloudLeft 16s ease-in-out infinite; }
+  .animate-cloud-right { animation: cloudRight 18s ease-in-out infinite; }
+  .animate-cloud-float { animation: cloudFloat 22s ease-in-out infinite; }
+  .animate-cloud-parallax { animation: cloudParallax 32s linear infinite; }
+</style>
   <script is:inline>
     // Memastikan AOS di-refresh ketika user scroll ke bawah (khusus untuk kasus footer tidak muncul)
     let lastScroll = 0;
