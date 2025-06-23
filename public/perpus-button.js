@@ -6,16 +6,9 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.btn-baca-sekarang').forEach(btn => {
-    btn.addEventListener('click', async (e) => {
-      e.preventDefault();
-      const kategori = btn.getAttribute('data-kategori');
-      const href = btn.getAttribute('href');
-      try {
-        await supabase.from('perpustakaan_clicks').insert({ kategori });
-        window.location.href = href;
-      } catch (err) {
-        window.location.href = href;
-      }
+    btn.addEventListener('click', (e) => {
+      // Tidak ada tracking klik, langsung navigasi
+      // Tidak perlu preventDefault, biarkan browser handle default
     });
   });
 });

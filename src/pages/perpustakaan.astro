@@ -99,7 +99,7 @@ onAuthStateChanged(auth, (user) => {
     let ebooks = [];
     const kategoriList = document.getElementById('kategori-list');
 
-    // Logging klik pada card kategori utama
+    // Tidak ada tracking klik pada card kategori utama
     if (kategoriList) {
       async function fetchCategoriesAndEbooks() {
         const { data: cats, error: catErr } = await supabase.from('ebook_categories').select('*').order('nama', { ascending: true });

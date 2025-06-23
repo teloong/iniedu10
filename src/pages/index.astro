@@ -19,35 +19,39 @@ import "../styles/glass-droplet.css";
         >
       </h1>
       <div class="w-full mb-8">
-        <span id="typewriter-text" class="block text-lg md:text-xl text-gray-700 text-center min-h-[3.5rem]"></span>
+        <span
+          id="typewriter-text"
+          class="block text-lg md:text-xl text-gray-700 text-center min-h-[3.5rem]"
+        ></span>
       </div>
       <script>
         // Typewriter utama
-        const typewriterRaw = `<b class="text-black font-extrabold drop-shadow-[0_2px_6px_rgba(0,0,0,0.15)]">Platform pendidikan masa depan yang memadukan teknologi, kreativitas, dan nilai kemanusiaan untuk generasi Indonesia yang unggul.</b> Kami hadir untuk seluruh kalangan sebagai solusi mewujudkan pendidikan yang <b class="text-black font-extrabold drop-shadow-[0_2px_6px_rgba(0,0,0,0.15)]">inklusif, adaptif, dan berbasis teknologi</b> adalah kunci untuk membentuk masyarakat Indonesia yang siap bersaing secara global. Melalui kursus online, pelatihan profesional, dan eBook edukatif, IniEdu berkomitmen menyediakan <b class="text-black font-extrabold drop-shadow-[0_2px_6px_rgba(0,0,0,0.15)]">akses belajar berkualitas tinggi</b> dari mana saja, kapan saja, dan untuk siapa saja.`;
-        let el = document.getElementById('typewriter-text');
+        const typewriterRaw = `Platform pendidikan masa depan yang memadukan teknologi, kreativitas, dan nilai kemanusiaan untuk generasi Indonesia yang unggul. Kami hadir untuk seluruh kalangan sebagai solusi mewujudkan pendidikan yang inklusif, adaptif, dan berbasis teknologi adalah kunci untuk membentuk masyarakat Indonesia yang siap bersaing secara global. Melalui kursus online, pelatihan profesional, dan eBook edukatif, IniEdu berkomitmen menyediakan akses belajar berkualitas tinggi dari mana saja, kapan saja, dan untuk siapa saja.`;
+        let el = document.getElementById("typewriter-text");
         let i = 0;
-        let isTag = false, tagBuffer = '';
+        let isTag = false,
+          tagBuffer = "";
         function typeWriter() {
-          if (!el) el = document.getElementById('typewriter-text');
+          if (!el) el = document.getElementById("typewriter-text");
           if (!el) return;
           if (i < typewriterRaw.length) {
             let char = typewriterRaw[i];
-            if (char === '<') {
+            if (char === "<") {
               isTag = true;
-              tagBuffer = '<';
-            } else if (char === '>' && isTag) {
-              tagBuffer += '>';
+              tagBuffer = "<";
+            } else if (char === ">" && isTag) {
+              tagBuffer += ">";
               el.innerHTML += tagBuffer;
               isTag = false;
-              tagBuffer = '';
+              tagBuffer = "";
               i++;
-              setTimeout(typeWriter, 15);
+              typeWriter();
               return;
             }
-            if (isTag && char !== '<') {
+            if (isTag && char !== "<") {
               tagBuffer += char;
             }
-            if (!isTag && char !== '<') {
+            if (!isTag && char !== "<") {
               el.innerHTML += char;
             }
             i++;
@@ -56,11 +60,12 @@ import "../styles/glass-droplet.css";
         }
         typeWriter();
         // Typewriter Visi
-        const visiText = 'Menjadi pelopor pendidikan digital yang inklusif, adaptif, dan berdaya saing global untuk seluruh masyarakat Indonesia.';
-        let visiEl = document.getElementById('typewriter-visi');
+        const visiText =
+          "Menjadi pelopor pendidikan digital yang inklusif, adaptif, dan berdaya saing global untuk seluruh masyarakat Indonesia.";
+        let visiEl = document.getElementById("typewriter-visi");
         let visiI = 0;
         function typeWriterVisi() {
-          if (!visiEl) visiEl = document.getElementById('typewriter-visi');
+          if (!visiEl) visiEl = document.getElementById("typewriter-visi");
           if (!visiEl) return;
           if (visiI < visiText.length) {
             visiEl.innerHTML += visiText[visiI];
@@ -71,24 +76,25 @@ import "../styles/glass-droplet.css";
         typeWriterVisi();
         // Typewriter Misi (list)
         const misiList = [
-          'Menyediakan materi dan pembelajaran berkualitas tinggi.',
-          'Mengembangkan fitur interaktif dan inovatif berbasis teknologi.',
-          'Mendorong pemerataan akses pendidikan di seluruh Indonesia.',
-          'Memberikan sertifikasi resmi yang diakui industri.'
+          "Menyediakan materi dan pembelajaran berkualitas tinggi.",
+          "Mengembangkan fitur interaktif dan inovatif berbasis teknologi.",
+          "Mendorong pemerataan akses pendidikan di seluruh Indonesia.",
+          "Memberikan sertifikasi resmi yang diakui industri.",
         ];
-                function typeWriterMisi(idx: number) {
-          let misiEl = document.getElementById('typewriter-misi'+(idx+1));
+        function typeWriterMisi(idx: number) {
+          let misiEl = document.getElementById("typewriter-misi" + (idx + 1));
           let misiStr = misiList[idx];
           let misiI = 0;
           function step() {
-            if (!misiEl) misiEl = document.getElementById('typewriter-misi'+(idx+1));
+            if (!misiEl)
+              misiEl = document.getElementById("typewriter-misi" + (idx + 1));
             if (!misiEl) return;
             if (misiI < misiStr.length) {
               misiEl.innerHTML += misiStr[misiI];
               misiI++;
               setTimeout(step, 13);
-            } else if (idx+1 < misiList.length) {
-              setTimeout(()=>typeWriterMisi(idx+1), 250);
+            } else if (idx + 1 < misiList.length) {
+              setTimeout(() => typeWriterMisi(idx + 1), 250);
             }
           }
           step();
@@ -98,7 +104,8 @@ import "../styles/glass-droplet.css";
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-3xl mb-4">
         <div
           class="glass-iphone rounded-2xl shadow-lg p-8 border-l-4 border-blue-400 flex flex-col items-start group hover:shadow-[0_12px_32px_rgba(56,189,248,0.15)] hover:scale-105 hover:-translate-y-2 hover:ring-8 hover:ring-blue-400 hover:ring-offset-2 hover:border-blue-600 border border-transparent transition-all duration-500 min-h-[150px]"
-          data-aos="fade-up" data-aos-delay="0"
+          data-aos="fade-up"
+          data-aos-delay="0"
         >
           <span class="droplet"></span>
           <span class="droplet"></span>
@@ -118,7 +125,8 @@ import "../styles/glass-droplet.css";
         </div>
         <div
           class="glass-iphone rounded-2xl shadow-lg p-8 border-l-4 border-cyan-400 flex flex-col items-start group hover:shadow-[0_12px_32px_rgba(6,182,212,0.15)] hover:scale-105 hover:-translate-y-2 hover:ring-8 hover:ring-cyan-400 hover:ring-offset-2 hover:border-cyan-600 border border-transparent transition-all duration-500 min-h-[150px]"
-          data-aos="fade-up" data-aos-delay="100"
+          data-aos="fade-up"
+          data-aos-delay="100"
         >
           <span class="droplet"></span>
           <div class="flex items-center gap-2 mb-2">
@@ -132,21 +140,32 @@ import "../styles/glass-droplet.css";
             <h2 class="text-2xl font-bold text-cyan-600">Misi</h2>
           </div>
           <ul class="list-disc ml-6 text-gray-700 space-y-2">
-            <li class="font-bold min-h-[1.8rem]"><span id="typewriter-misi1"></span></li>
-            <li class="font-bold min-h-[1.8rem]"><span id="typewriter-misi2"></span></li>
-            <li class="font-bold min-h-[1.8rem]"><span id="typewriter-misi3"></span></li>
-            <li class="font-bold min-h-[1.8rem]"><span id="typewriter-misi4"></span></li>
+            <li class="font-bold min-h-[1.8rem]">
+              <span id="typewriter-misi1"></span>
+            </li>
+            <li class="font-bold min-h-[1.8rem]">
+              <span id="typewriter-misi2"></span>
+            </li>
+            <li class="font-bold min-h-[1.8rem]">
+              <span id="typewriter-misi3"></span>
+            </li>
+            <li class="font-bold min-h-[1.8rem]">
+              <span id="typewriter-misi4"></span>
+            </li>
           </ul>
         </div>
       </div>
     </div>
     {/* Particle dots dekorasi */}
-    <span class="particle-dot animate-dot-move" style="top:20%;left:10%;"></span>
-    <span class="particle-dot animate-dot-move2" style="top:60%;left:80%;"></span>
-    <span class="particle-dot animate-dot-move3" style="top:75%;left:25%;"></span>
-    <span class="particle-dot animate-dot-move4" style="top:40%;left:60%;"></span>
+    <span class="particle-dot animate-dot-move" style="top:20%;left:10%;"
+    ></span>
+    <span class="particle-dot animate-dot-move2" style="top:60%;left:80%;"
+    ></span>
+    <span class="particle-dot animate-dot-move3" style="top:75%;left:25%;"
+    ></span>
+    <span class="particle-dot animate-dot-move4" style="top:40%;left:60%;"
+    ></span>
   </section>
-
 </Layout>
 
 <style>
@@ -545,7 +564,6 @@ import "../styles/glass-droplet.css";
   class="py-20 bg-gradient-to-br from-blue-100 via-cyan-100 to-blue-200 relative overflow-hidden"
   data-aos="fade-up"
 >
-
   <div class="max-w-3xl mx-auto px-4 relative z-10">
     <div
       class="glass-iphone p-10 md:p-14 flex flex-col items-center aos-init aos-animate relative overflow-hidden"
@@ -1036,31 +1054,63 @@ import "../styles/glass-droplet.css";
       }
     }
     /* Animasi awan modern */
-  @keyframes cloudLeft {
-    0% { transform: translateY(0px) scale(1); }
-    50% { transform: translateY(12px) scale(1.03); }
-    100% { transform: translateY(0px) scale(1); }
-  }
-  @keyframes cloudRight {
-    0% { transform: translateY(0px) scale(1); }
-    50% { transform: translateY(-10px) scale(1.02); }
-    100% { transform: translateY(0px) scale(1); }
-  }
-  @keyframes cloudFloat {
-    0% { transform: translateY(0px) scale(1); }
-    50% { transform: translateY(18px) scale(1.04); }
-    100% { transform: translateY(0px) scale(1); }
-  }
-  @keyframes cloudParallax {
-    0% { transform: translateX(0px); }
-    50% { transform: translateX(24px); }
-    100% { transform: translateX(0px); }
-  }
-  .animate-cloud-left { animation: cloudLeft 16s ease-in-out infinite; }
-  .animate-cloud-right { animation: cloudRight 18s ease-in-out infinite; }
-  .animate-cloud-float { animation: cloudFloat 22s ease-in-out infinite; }
-  .animate-cloud-parallax { animation: cloudParallax 32s linear infinite; }
-</style>
+    @keyframes cloudLeft {
+      0% {
+        transform: translateY(0px) scale(1);
+      }
+      50% {
+        transform: translateY(12px) scale(1.03);
+      }
+      100% {
+        transform: translateY(0px) scale(1);
+      }
+    }
+    @keyframes cloudRight {
+      0% {
+        transform: translateY(0px) scale(1);
+      }
+      50% {
+        transform: translateY(-10px) scale(1.02);
+      }
+      100% {
+        transform: translateY(0px) scale(1);
+      }
+    }
+    @keyframes cloudFloat {
+      0% {
+        transform: translateY(0px) scale(1);
+      }
+      50% {
+        transform: translateY(18px) scale(1.04);
+      }
+      100% {
+        transform: translateY(0px) scale(1);
+      }
+    }
+    @keyframes cloudParallax {
+      0% {
+        transform: translateX(0px);
+      }
+      50% {
+        transform: translateX(24px);
+      }
+      100% {
+        transform: translateX(0px);
+      }
+    }
+    .animate-cloud-left {
+      animation: cloudLeft 16s ease-in-out infinite;
+    }
+    .animate-cloud-right {
+      animation: cloudRight 18s ease-in-out infinite;
+    }
+    .animate-cloud-float {
+      animation: cloudFloat 22s ease-in-out infinite;
+    }
+    .animate-cloud-parallax {
+      animation: cloudParallax 32s linear infinite;
+    }
+  </style>
   <script is:inline>
     // Memastikan AOS di-refresh ketika user scroll ke bawah (khusus untuk kasus footer tidak muncul)
     let lastScroll = 0;

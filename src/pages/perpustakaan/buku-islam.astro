@@ -70,6 +70,27 @@ import Layout from '../../layouts/Layout.astro';
             ${buku.deskripsi ? `<div class='text-xs text-gray-500 mb-2 italic'>${buku.deskripsi}</div>` : ''}
             <a href="${buku.link}" target="_blank" class="px-4 py-2 bg-green-600 text-white rounded-full font-semibold mt-auto">Baca Sekarang</a>
           `;
+          // Tracking klik Baca Sekarang
+          setTimeout(() => {
+            const btn = div.querySelector('a');
+            if (btn) {
+              btn.addEventListener('click', async (e) => {
+                // Tracking ke Supabase
+                try {
+                  await supabase.from('perpustakaan_clicks').insert({
+                    kategori: 'buku_islam',
+                    ebook_id: buku.id,
+                    judul: buku.judul,
+                    clicked_at: new Date().toISOString()
+                  });
+                } catch (err) {
+                  // Optional: log error
+                  console.error('Gagal tracking klik eBook:', err);
+                }
+                // Tidak perlu preventDefault, biarkan link tetap terbuka
+              });
+            }
+          }, 0);
           grid.appendChild(div);
         });
       }
