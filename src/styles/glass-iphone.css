@@ -2,8 +2,8 @@
   background: linear-gradient(135deg, rgba(180,220,255,0.25) 0%, rgba(255,255,255,0.38) 60%, rgba(120,180,255,0.22) 100%);
   border-radius: 2.5rem;
   box-shadow: 0 16px 56px 0 rgba(60,130,230,0.18), 0 2px 12px 0 rgba(0,0,0,0.13), 0 0 0 2px rgba(120,180,255,0.10) inset;
-  -webkit-backdrop-filter: blur(44px) saturate(2.6);
-  backdrop-filter: blur(44px) saturate(2.6);
+  -webkit-backdrop-filter: blur(0px) saturate(2.6);
+  backdrop-filter: blur(0px) saturate(2.6);
   border: 2.5px solid rgba(255,255,255,0.45);
   position: relative;
   transition: box-shadow 0.4s, background 0.4s;
@@ -37,6 +37,8 @@
 .glass-iphone:hover {
   box-shadow: 0 24px 72px 0 rgba(60,130,230,0.22), 0 2px 16px 0 rgba(0,0,0,0.16), 0 0 0 4px rgba(120,180,255,0.13) inset;
   background: linear-gradient(135deg, rgba(180,220,255,0.32) 0%, rgba(255,255,255,0.56) 60%, rgba(120,180,255,0.28) 100%);
+  -webkit-backdrop-filter: blur(0px) saturate(2.6);
+  backdrop-filter: blur(0px) saturate(2.6);
 }
 @media (max-width: 767px) {
   .glass-iphone {
