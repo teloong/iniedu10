@@ -89,10 +89,10 @@ import "../styles/global.css";
             </td>
             <td class="px-4 py-2">
               <img
-                src="${blog.image && blog.image !== "EMPTY" ? blog.image : "/default.jpg"}"
+                src="${blog.image && blog.image !== "EMPTY" ? blog.image : "/images/default.jpg"}"
                 alt="Gambar"
                 class="w-16 h-10 object-cover rounded"
-                onerror="if(!this._defaulted){this._defaulted=true;this.src='/default.jpg'}"
+                onerror="if(!this._defaulted){this._defaulted=true;this.src='/images/default.jpg'}"
               />
             </td>
             <td class="px-4 py-2">${blog.created_at ? new Date(blog.created_at).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" }) : "-"}</td>
