@@ -1,80 +1,161 @@
 ---
-import Header from '../components/Header.astro';
+import "../styles/global.css";
+import Header from "../components/Header.astro";
 import FirebaseAuth from "../components/FirebaseAuth.astro";
 
-
 interface Props {
-	title: string;
-	bodyClass?: string;
+  title: string;
+  bodyClass?: string;
 }
 
-const { title = 'IniEdu - Platform Pendidikan Online' } = Astro.props;
+const { title = "IniEdu - Platform Pendidikan Online" } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="id">
-	<head>
-    <link rel="stylesheet" href="/src/styles/global.css">
-		<!-- Preload font lokal Roboto Slab untuk mencegah FOUT -->
-		<link rel="preload" href="/fonts/roboto-slab-v35-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
-		<link rel="preload" href="/fonts/roboto-slab-v35-latin-700.woff2" as="font" type="font/woff2" crossorigin>
-		<link rel="preload" href="/fonts/roboto-slab-v35-latin-900.woff2" as="font" type="font/woff2" crossorigin>
-		<meta charset="UTF-8" />
-		<meta name="description" content="IniEdu - Platform Pendidikan Online Terbaik" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
-		<link rel="apple-touch-icon" href="/images/favicon.ico" />
-		<link rel="shortcut icon" href="/images/favicon.ico" />
-		<!-- Structured Data Logo for Google Search -->
-		<script type="application/ld+json">
-		{
-		  "@context": "https://schema.org",
-		  "@type": "Organization",
-		  "url": "https://iniedu.id",
-		  "logo": "https://iniedu.id/images/favicon.ico"
-		}
-		</script>
-		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
-		<!-- Akhir preload font lokal -->
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"></noscript>
-		<link rel="preload" as="image" href="/images/education-animate.svg" type="image/svg+xml" />
-		<!-- Firebase CDN -->
-		
-		<style>
-			/* Reset CSS untuk menghilangkan garis dan outline */
-			*, *::before, *::after {
-				box-sizing: border-box;
-				outline: none !important;
-			}
-			body, html {
-				margin: 0;
-				padding: 0;
-				overflow-x: hidden;
-			}
-		</style>
-	  <link rel="preload" as="image" href="/lcp-3d-kelas-online.webp" imagesrcset="/lcp-3d-kelas-online.webp 370w, /lcp-3d-kelas-online-240.webp 240w" imagesizes="(max-width: 480px) 240px, 370px" />
-</head>
-	
-	<body class={`flex flex-col bg-gray-50 ${Astro.props.bodyClass ?? ''}`}>
-		<Header />
-		<style>
-		body.admin-dashboard header {
-			display: none !important;
-		}
-		</style>
-		<!-- Tombol Login/Profil Firebase Global -->
-		<div id="auth-action" class="hidden flex gap-2 items-center justify-end p-4">
-			<button id="login-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Login</button>
-			<a href="/profil" id="profile-btn" class="hidden bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">Profil</a>
-		</div>
-		<main class="flex-grow p-0 m-0">
-			<slot />
-		</main>
+  <head>
+    <!-- Preload font lokal Roboto Slab untuk mencegah FOUT -->
+    <link
+      rel="preload"
+      href="/fonts/roboto-slab-v35-latin-regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/roboto-slab-v35-latin-700.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/roboto-slab-v35-latin-900.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/roboto-slab-v35-latin-500.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/roboto-slab-v35-latin-600.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/roboto-slab-v35-latin-800.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <meta charset="UTF-8" />
+    <meta
+      name="description"
+      content="IniEdu - Platform Pendidikan Online Terbaik"
+    />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+    <link rel="apple-touch-icon" href="/images/favicon.ico" />
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+    <!-- Structured Data Logo for Google Search -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "url": "https://iniedu.id",
+        "logo": "https://iniedu.id/images/favicon.ico"
+      }
+    </script>
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <!-- Akhir preload font lokal -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript
+      ><link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"
+      /></noscript
+    >
+    <link
+      rel="preload"
+      as="image"
+      href="/images/education-animate.svg"
+      type="image/svg+xml"
+    />
+    <!-- Firebase CDN -->
 
-		<script src="/firebaseConfig.js" is:inline></script>
-<script type="module" src="/header-firebase.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js" defer onload="if(window.AOS){window.AOS.init({duration:700,once:true,delay:0});}"></script>
-	</body>
+    <style>
+      /* Reset CSS untuk menghilangkan garis dan outline */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        outline: none !important;
+      }
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+      }
+    </style>
+    <link
+      rel="preload"
+      as="image"
+      href="/lcp-3d-kelas-online.webp"
+      imagesrcset="/lcp-3d-kelas-online.webp 370w, /lcp-3d-kelas-online-240.webp 240w"
+      imagesizes="(max-width: 480px) 240px, 370px"
+    />
+  </head>
+
+  <body class={`flex flex-col bg-gray-50 ${Astro.props.bodyClass ?? ""}`}>
+    <Header />
+    <style>
+      body.admin-dashboard header {
+        display: none !important;
+      }
+    </style>
+    <!-- Tombol Login/Profil Firebase Global -->
+    <div
+      id="auth-action"
+      class="hidden flex gap-2 items-center justify-end p-4"
+    >
+      <button
+        id="login-btn"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+        >Login</button
+      >
+      <a
+        href="/profil"
+        id="profile-btn"
+        class="hidden bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+        >Profil</a
+      >
+    </div>
+    <main class="flex-grow p-0 m-0">
+      <slot />
+    </main>
+
+    <script src="/firebaseConfig.js" is:inline></script>
+    <script type="module" src="/header-firebase.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"
+      defer
+      onload="if(window.AOS){window.AOS.init({duration:700,once:true,delay:0});}"
+    ></script>
+  </body>
 </html>

@@ -1,3 +1,9 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Kustomisasi tambahan */
 @font-face {
   font-family: 'Roboto Slab';
   src: url('/fonts/roboto-slab-v35-latin-regular.woff2') format('woff2');
@@ -35,11 +41,6 @@
   font-display: swap;
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Kustomisasi tambahan */
 @layer base {
   body {
     @apply font-sans text-gray-800;
