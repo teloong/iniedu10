@@ -27,71 +27,71 @@
     <nav class="hidden md:flex flex-1 items-center justify-center space-x-8">
       <a
         href="/"
-        class="text-gray-800 hover:text-primary font-medium transition-colors"
+        class="text-gray-800 hover:text-primary font-semibold transition-colors text-lg"
         >Beranda</a
       >
 
       <a
         href="/kursus"
-        class="text-gray-800 hover:text-primary font-medium transition-colors"
+        class="text-gray-800 hover:text-primary font-semibold transition-colors text-lg"
         >Kursus</a
       >
       <a
         href="/perpustakaan"
-        class="text-gray-800 hover:text-primary font-medium transition-colors"
+        class="text-gray-800 hover:text-primary font-semibold transition-colors text-lg"
         >Perpustakaan</a
       >
       <a
         href="/blog"
-        class="text-gray-800 hover:text-primary font-medium transition-colors"
+        class="text-gray-800 hover:text-primary font-semibold transition-colors text-lg"
         >Blog</a
       >
     </nav>
-    <!-- Tombol Login kanan -->
-    <div
-      class="md:flex items-center ml-6 min-w-[140px] hidden"
-      id="auth-action"
-    >
-      <a href="/login" class="btn btn-primary hidden" id="login-btn">Login</a>
-      <a
-        href="/profil"
-        id="profile-btn"
-        class="hidden flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 via-cyan-400 to-purple-500 text-white font-semibold shadow-lg hover:shadow-2xl hover:scale-105 hover:ring-4 hover:ring-blue-300 transition-all duration-300 focus:outline-none"
-      >
-        <svg
-          class="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-          ><circle cx="12" cy="8" r="4"></circle><path
-            d="M4 20c0-4 8-4 8-4s8 0 8 4"></path></svg
+    <!-- Right Side Actions -->
+    <div class="flex items-center justify-end space-x-2 ml-auto mr-6 md:min-w-[120px]">
+      <!-- Tombol Login/Profil (order-1 on mobile) -->
+      <div id="auth-action" class="flex items-center order-1">
+        <a href="/login" class="btn btn-primary hidden" id="login-btn">Login</a>
+        <a
+          href="/profil"
+          id="profile-btn"
+          class="hidden flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 via-cyan-400 to-purple-500 text-white font-semibold shadow-lg hover:shadow-2xl hover:scale-105 hover:ring-4 hover:ring-blue-300 transition-all duration-300 focus:outline-none"
         >
-        <span>Profil</span>
-      </a>
-    </div>
-
-    <!-- Menu Mobile Toggle -->
-    <div class="md:hidden">
-      <button
-        id="mobile-menu-button"
-        class="text-gray-800 focus:outline-none"
-        aria-label="Buka menu navigasi"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
             stroke-width="2"
-            d="M4 6h16M4 12h16M4 18h16"></path>
-        </svg>
-      </button>
+            viewBox="0 0 24 24"
+            ><circle cx="12" cy="8" r="4"></circle><path
+              d="M4 20c0-4 8-4 8-4s8 0 8 4"></path></svg
+          >
+          <span>Profil</span>
+        </a>
+      </div>
+
+      <!-- Menu Mobile Toggle (order-2 on mobile) -->
+      <div class="md:hidden order-2">
+        <button
+          id="mobile-menu-button"
+          class="text-gray-800 focus:outline-none p-2"
+          aria-label="Buka menu navigasi"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
     </div>
   </div>
 

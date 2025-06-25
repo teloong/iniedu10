@@ -7,6 +7,9 @@ module.exports = {
         primary: '#0066cc',
         secondary: '#ff9900',
       },
+      fontFamily: {
+        sans: ['Roboto Slab', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Arial', 'sans-serif'],
+      },
     },
   },
   plugins: [],

@@ -1,83 +1,35 @@
-<section class="py-16 px-2 bg-gradient-to-br from-[#e3f6fc] to-[#e8f6f3]">
-  <div class="max-w-6xl mx-auto">
-    <h2 class="text-3xl md:text-4xl font-extrabold text-center mb-12 text-gray-800 tracking-tight drop-shadow-lg">
-      Mengapa Harus Belajar di IniEdu?
-    </h2>
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-      <!-- Flexibility -->
-      <div class="relative">
-        <div class="absolute -left-4 -top-4 w-10 h-10 bg-[#ed4747] rounded-xl z-0"></div>
-        <div class="absolute -right-4 -bottom-4 w-10 h-10 bg-[#ed4747] rounded-xl z-0"></div>
-        <div class="relative bg-white rounded-xl shadow-2xl p-6 min-h-[170px] flex flex-col items-start z-10">
-          <div class="font-extrabold text-lg md:text-xl uppercase text-gray-800 mb-2">Flexibility</div>
-          <div class="text-gray-700 text-base">Kamu boleh belajar di mana saja, diulang kapan saja, sesuai dengan ritmemu sendiri</div>
+---
+const cards = [
+  { title: "FLEXIBILITY", text: "Kamu boleh belajar di mana saja, diulang kapan saja, sesuai dengan ritmemu sendiri", color: "#ed4747" },
+  { title: "MICROLEARNING", text: "Konten digital pembelajaran yang padat, cocok untuk mengefektifkan waktumu", color: "#ffb100" },
+  { title: "DIGITAL LIBRARY", text: "Akses koleksi buku, modul, dan bacaan edukatif yang terus bertambah", color: "#00b6b7" },
+  { title: "SELF-GROWTH", text: "Topik pembelajaran yang mendukung pengembangan diri dan bersertifikat", color: "#a36fc7" },
+  { title: "DIVERSE TOPICS", text: "Pilihan berbagai topik belajar yang relevan saat ini, eksplor kebutuhanmu", color: "#90cba0" },
+  { title: "E-COURSES", text: "Kursus-kursus yang akan dukung peningkatan kemampuanmu", color: "#ffe156" },
+  { title: "QUALITY CONTENT", text: "Seluruh konten telah dikurasi dan dikembangkan oleh orang-orang profesional di bidangnya", color: "#e88a4e" },
+  { title: "COMMUNITY", text: "Belajar tidak mesti sendiri, kamu dapat terhubung dan tumbuh bersama pembelajar lainnya", color: "#f46b6b" },
+];
+---
+
+<section class="py-10 md:py-16 px-4" style="background:linear-gradient(120deg, #f0efff 0%, #e3f6fc 100%)">
+  <div class="max-w-7xl mx-auto">
+    <h2 class="text-2xl md:text-3xl font-black text-center mb-16 text-gray-900 tracking-tight">Mengapa Harus Belajar di IniEdu?</h2>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-20">
+      
+      {cards.map(card => (
+        <div class="relative group" data-aos="fade-up">
+          <div 
+            class="absolute -inset-2 rounded-3xl transform -rotate-6 transition-transform duration-300 ease-in-out group-hover:rotate-0"
+            style={`background-color: ${card.color};`}
+          ></div>
+          <div class="relative bg-white rounded-2xl shadow-lg p-6 min-h-[200px] flex flex-col justify-center text-center h-full">
+            <h3 class="font-black text-2xl uppercase text-gray-900 mb-3 tracking-tight">{card.title}</h3>
+            <p class="text-gray-600 text-base leading-relaxed">{card.text}</p>
+          </div>
         </div>
-      </div>
-      <!-- Microlearning -->
-      <div class="relative">
-        <div class="absolute -left-4 -top-4 w-10 h-10 bg-[#ffb100] rounded-xl z-0"></div>
-        <div class="absolute -right-4 -bottom-4 w-10 h-10 bg-[#ffb100] rounded-xl z-0"></div>
-        <div class="relative bg-white rounded-xl shadow-2xl p-6 min-h-[170px] flex flex-col items-start z-10">
-          <div class="font-extrabold text-lg md:text-xl uppercase text-gray-800 mb-2">Microlearning</div>
-          <div class="text-gray-700 text-base">Konten digital pembelajaran yang padat, cocok untuk mengefektifkan waktumu</div>
-        </div>
-      </div>
-      <!-- Digital Library -->
-      <div class="relative">
-        <div class="absolute -left-4 -top-4 w-10 h-10 bg-[#00b6b7] rounded-xl z-0"></div>
-        <div class="absolute -right-4 -bottom-4 w-10 h-10 bg-[#00b6b7] rounded-xl z-0"></div>
-        <div class="relative bg-white rounded-xl shadow-2xl p-6 min-h-[170px] flex flex-col items-start z-10">
-          <div class="font-extrabold text-lg md:text-xl uppercase text-gray-800 mb-2">Digital Library</div>
-          <div class="text-gray-700 text-base">Akses koleksi buku, modul, dan bacaan edukatif yang terus bertambah</div>
-        </div>
-      </div>
-      <!-- Self-Growth -->
-      <div class="relative">
-        <div class="absolute -left-4 -top-4 w-10 h-10 bg-[#a36fc7] rounded-xl z-0"></div>
-        <div class="absolute -right-4 -bottom-4 w-10 h-10 bg-[#a36fc7] rounded-xl z-0"></div>
-        <div class="relative bg-white rounded-xl shadow-2xl p-6 min-h-[170px] flex flex-col items-start z-10">
-          <div class="font-extrabold text-lg md:text-xl uppercase text-gray-800 mb-2">Self-Growth</div>
-          <div class="text-gray-700 text-base">Topik pembelajaran yang mendukung pengembangan diri dan bersertifikat</div>
-        </div>
-      </div>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-      <!-- Diverse Topics -->
-      <div class="relative">
-        <div class="absolute -left-4 -top-4 w-10 h-10 bg-[#90cba0] rounded-xl z-0"></div>
-        <div class="absolute -right-4 -bottom-4 w-10 h-10 bg-[#90cba0] rounded-xl z-0"></div>
-        <div class="relative bg-white rounded-xl shadow-2xl p-6 min-h-[170px] flex flex-col items-start z-10">
-          <div class="font-extrabold text-lg md:text-xl uppercase text-gray-800 mb-2">Diverse Topics</div>
-          <div class="text-gray-700 text-base">Pilihan berbagai topik belajar yang relevan saat ini, eksplor kebutuhanmu</div>
-        </div>
-      </div>
-      <!-- E-Courses -->
-      <div class="relative">
-        <div class="absolute -left-4 -top-4 w-10 h-10 bg-[#ffe156] rounded-xl z-0"></div>
-        <div class="absolute -right-4 -bottom-4 w-10 h-10 bg-[#ffe156] rounded-xl z-0"></div>
-        <div class="relative bg-white rounded-xl shadow-2xl p-6 min-h-[170px] flex flex-col items-start z-10">
-          <div class="font-extrabold text-lg md:text-xl uppercase text-gray-800 mb-2">E-Courses</div>
-          <div class="text-gray-700 text-base">Kursus-kursus yang akan dukung peningkatan kemampuanmu</div>
-        </div>
-      </div>
-      <!-- Quality Content -->
-      <div class="relative">
-        <div class="absolute -left-4 -top-4 w-10 h-10 bg-[#e88a4e] rounded-xl z-0"></div>
-        <div class="absolute -right-4 -bottom-4 w-10 h-10 bg-[#e88a4e] rounded-xl z-0"></div>
-        <div class="relative bg-white rounded-xl shadow-2xl p-6 min-h-[170px] flex flex-col items-start z-10">
-          <div class="font-extrabold text-lg md:text-xl uppercase text-gray-800 mb-2">Quality Content</div>
-          <div class="text-gray-700 text-base">Seluruh konten telah dikurasi dan dikembangkan oleh orang-orang profesional di bidangnya</div>
-        </div>
-      </div>
-      <!-- Community -->
-      <div class="relative">
-        <div class="absolute -left-4 -top-4 w-10 h-10 bg-[#f46b6b] rounded-xl z-0"></div>
-        <div class="absolute -right-4 -bottom-4 w-10 h-10 bg-[#f46b6b] rounded-xl z-0"></div>
-        <div class="relative bg-white rounded-xl shadow-2xl p-6 min-h-[170px] flex flex-col items-start z-10">
-          <div class="font-extrabold text-lg md:text-xl uppercase text-gray-800 mb-2">Community</div>
-          <div class="text-gray-700 text-base">Belajar tidak mesti sendiri, kamu dapat terhubung dan tumbuh bersama pembelajar lainnya</div>
-        </div>
-      </div>
+      ))}
+
     </div>
   </div>
 </section>

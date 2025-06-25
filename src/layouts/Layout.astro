@@ -1,8 +1,6 @@
 ---
 import Header from '../components/Header.astro';
 import FirebaseAuth from "../components/FirebaseAuth.astro";
-import '../styles/global.css';
-// Gunakan import global CSS via tag <link> agar selalu di-load dari public
 
 
 interface Props {
@@ -16,10 +14,11 @@ const { title = 'IniEdu - Platform Pendidikan Online' } = Astro.props;
 <!doctype html>
 <html lang="id">
 	<head>
-		<!-- Optimasi Google Fonts: preconnect dan display=swap -->
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/src/styles/global.css">
+		<!-- Preload font lokal Roboto Slab untuk mencegah FOUT -->
+		<link rel="preload" href="/fonts/roboto-slab-v35-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+		<link rel="preload" href="/fonts/roboto-slab-v35-latin-700.woff2" as="font" type="font/woff2" crossorigin>
+		<link rel="preload" href="/fonts/roboto-slab-v35-latin-900.woff2" as="font" type="font/woff2" crossorigin>
 		<meta charset="UTF-8" />
 		<meta name="description" content="IniEdu - Platform Pendidikan Online Terbaik" />
 		<meta name="viewport" content="width=device-width" />
@@ -37,7 +36,7 @@ const { title = 'IniEdu - Platform Pendidikan Online' } = Astro.props;
 		</script>
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
-		<!-- Akhir optimasi Google Fonts -->
+		<!-- Akhir preload font lokal -->
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"></noscript>
 		<link rel="preload" as="image" href="/images/education-animate.svg" type="image/svg+xml" />

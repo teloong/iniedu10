@@ -1,189 +1,104 @@
 ---
-import "../styles/glass-iphone.css";
-import "../styles/global.css";
+// HeroSection component for IniEdu, redesigned based on the new layout.
 ---
-<section
-  class="relative flex flex-col items-center justify-center py-16 px-4 bg-gradient-to-br from-blue-50 via-white to-blue-100 overflow-hidden w-screen min-w-0 font-sans"
->
-  <div class="z-10 flex flex-col items-center justify-center w-full">
-    <h1
-      class="text-4xl md:text-5xl font-extrabold mb-4 text-[#232b4d] drop-shadow-lg text-center"
-      data-aos="fade-right"
-    >
-      Tentang <span
-        class="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent"
-        >IniEdu</span
-      >
-    </h1>
-    <div class="w-full mb-8">
-      <span
-        id="typewriter-text"
-        class="block text-xl md:text-2xl text-gray-700 text-center min-h-[3.5rem]"
-        style="font-family: 'Inter', 'Poppins', 'Nunito', Arial, sans-serif;"
-      ></span>
-    </div>
-    <script>
-      // Typewriter utama
-      const typewriterRaw = `Platform pendidikan masa depan yang memadukan teknologi, kreativitas, dan nilai kemanusiaan untuk generasi Indonesia yang unggul. Kami hadir untuk seluruh kalangan sebagai solusi mewujudkan pendidikan yang inklusif, adaptif, dan berbasis teknologi adalah kunci untuk membentuk masyarakat Indonesia yang siap bersaing secara global. Melalui kursus online, pelatihan profesional, dan eBook edukatif, IniEdu berkomitmen menyediakan akses belajar berkualitas tinggi dari mana saja, kapan saja, dan untuk siapa saja.`;
-      let el = document.getElementById("typewriter-text");
-      let i = 0;
-      let isTag = false,
-        tagBuffer = "";
-      function typeWriter() {
-        if (!el) el = document.getElementById("typewriter-text");
-        if (!el) return;
-        if (i < typewriterRaw.length) {
-          let char = typewriterRaw[i];
-          if (char === "<") {
-            isTag = true;
-            tagBuffer = "<";
-          } else if (char === ">" && isTag) {
-            tagBuffer += ">";
-            el.innerHTML += tagBuffer;
-            isTag = false;
-            tagBuffer = "";
-            i++;
-            typeWriter();
-            return;
-          }
-          if (isTag && char !== "<") {
-            tagBuffer += char;
-          }
-          if (!isTag && char !== "<") {
-            el.innerHTML += char;
-          }
-          i++;
-          setTimeout(typeWriter, 15);
-        }
-      }
-      typeWriter();
-      // Typewriter Visi
-      const visiText =
-        "Menjadi pelopor pendidikan digital yang inklusif, adaptif, dan berdaya saing global untuk seluruh masyarakat Indonesia.";
-      let visiEl = document.getElementById("typewriter-visi");
-      let visiI = 0;
-      function typeWriterVisi() {
-        if (!visiEl) visiEl = document.getElementById("typewriter-visi");
-        if (!visiEl) return;
-        if (visiI < visiText.length) {
-          visiEl.innerHTML += visiText[visiI];
-          visiI++;
-          setTimeout(typeWriterVisi, 13);
-        }
-      }
-      typeWriterVisi();
-      // Typewriter Misi (list)
-      const misiList = [
-        "Menyediakan materi dan pembelajaran berkualitas tinggi.",
-        "Mengembangkan fitur interaktif dan inovatif berbasis teknologi.",
-        "Mendorong pemerataan akses pendidikan di seluruh Indonesia.",
-        "Memberikan sertifikasi resmi yang diakui industri.",
-      ];
-      /**
-       * @param {number} idx
-       */
-      function typeWriterMisi(idx: number) {
-        let misiEl = document.getElementById("typewriter-misi" + (idx + 1));
-        let misiStr = misiList[idx];
-        let misiI = 0;
-        function step() {
-          if (!misiEl)
-            misiEl = document.getElementById("typewriter-misi" + (idx + 1));
-          if (!misiEl) return;
-          if (misiI < misiStr.length) {
-            misiEl.innerHTML += misiStr[misiI];
-            misiI++;
-            setTimeout(step, 13);
-          } else if (idx + 1 < misiList.length) {
-            setTimeout(() => typeWriterMisi(idx + 1), 250);
-          }
-        }
-        step();
-      }
-      typeWriterMisi(0);
-    </script>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 gap-x-10 w-full max-w-5xl mb-4">
-      <div
-        class="glass-iphone rounded-2xl shadow-lg p-8 border-l-4 border-blue-400 flex flex-col items-start group hover:scale-105 hover:-translate-y-2 hover:ring-8 hover:ring-blue-400 hover:ring-offset-2 hover:border-blue-600 border border-transparent transition-all duration-500 min-h-[150px] max-w-xl md:max-w-2xl w-full"
-        data-aos="fade-up"
-        data-aos-delay="0"
-      >
-        <span class="droplet"></span>
-        <span class="droplet"></span>
-        <div class="flex items-center gap-2 mb-2">
-          <svg width="32" height="32" fill="none" viewBox="0 0 32 32"
-            ><circle cx="16" cy="16" r="16" fill="#38bdf822"></circle><path
-              d="M16 12a4 4 0 1 1 0 8a4 4 0 0 1 0-8zm0 0c4.418 0 8 3.582 8 4s-3.582 4-8 4-8-3.582-8-4 3.582-4 8-4z"
-              stroke="#009fff"
-              stroke-width="2"
-              fill="none"></path></svg
-          >
-          <h2 class="text-2xl font-bold text-blue-600">Visi</h2>
+
+<section class="relative bg-white overflow-hidden font-sans">
+  <!-- Main Content Container -->
+  <div class="container mx-auto px-6 py-20 md:py-28 relative z-10">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      
+      <!-- Left Content -->
+      <div class="text-left" data-aos="fade-right">
+        <h1 class="text-4xl lg:text-5xl font-extrabold text-gray-800 leading-tight mb-8">
+          Belajar Mandiri Tak Harus Sendiri, <br class="hidden lg:block"/>
+          <span class="text-blue-700">Mulai Perjalanan Belajarmu Bareng IniEdu!</span>
+        </h1>
+
+        <!-- Gambar khusus untuk mobile, akan disembunyikan di desktop -->
+        <div class="my-8 lg:hidden" data-aos="zoom-in-up">
+  <img src="/images/laptop.webp" class="w-full max-w-md mx-auto rounded-lg shadow-lg" alt="Siswa Belajar dengan IniEdu" loading="lazy">
+</div>
+        
+        <div class="flex flex-col sm:flex-row items-center gap-6 mt-8">
+          <a href="/login" class="flex-shrink-0 bg-gradient-to-br from-cyan-400 to-blue-600 text-white font-bold uppercase text-center rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 w-40 h-40 flex flex-col justify-center items-center">
+              <span class="text-lg leading-tight">Akses</span>
+              <span class="text-lg leading-tight">Belajar</span>
+              <span class="text-lg leading-tight">Gratis</span>
+          </a>
+          <p class="text-gray-600 text-lg leading-relaxed max-w-md">
+            Kami berkomitmen melayani pengalaman belajar terbaik untuk mendampingi kesiapanmu menjadi generasi unggul dan berkarakter.
+          </p>
         </div>
-        <p class="text-gray-700 font-bold min-h-[3.5rem] text-lg md:text-xl">
-          <span id="typewriter-visi"></span>
-        </p>
       </div>
-      <div
-        class="glass-iphone rounded-2xl shadow-lg p-8 border-l-4 border-cyan-400 flex flex-col items-start group hover:scale-105 hover:-translate-y-2 hover:ring-8 hover:ring-cyan-400 hover:ring-offset-2 hover:border-cyan-600 border border-transparent transition-all duration-500 min-h-[150px]"
-        data-aos="fade-up"
-        data-aos-delay="100"
-      >
-        <span class="droplet"></span>
-        <div class="flex items-center gap-2 mb-2">
-          <svg width="32" height="32" fill="none" viewBox="0 0 32 32"
-            ><circle cx="16" cy="16" r="16" fill="#00ffe722"></circle><path
-                d="M10 16h12M16 10v12"
-                stroke="#00bcd4"
-                stroke-width="2"
-                stroke-linecap="round"></path></svg
-          >
-          <h2 class="text-2xl font-bold text-cyan-600">Misi</h2>
-        </div>
-        <ul class="list-disc ml-6 text-gray-700 space-y-2">
-          <li class="font-bold min-h-[1.8rem]">
-            <p class="text-gray-700 min-h-[3.5rem] text-lg md:text-xl">
-              <span id="typewriter-misi1"></span>
-            </p>
-          </li>
-          <li class="font-bold min-h-[1.8rem]">
-            <p class="text-gray-700 min-h-[3.5rem] text-lg md:text-xl">
-              <span id="typewriter-misi2"></span>
-            </p>
-          </li>
-          <li class="font-bold min-h-[1.8rem]">
-            <p class="text-gray-700 min-h-[3.5rem] text-lg md:text-xl">
-              <span id="typewriter-misi3"></span>
-            </p>
-          </li>
-          <li class="font-bold min-h-[1.8rem]">
-            <p class="text-gray-700 min-h-[3.5rem] text-lg md:text-xl">
-              <span id="typewriter-misi4"></span>
-            </p>
-          </li>
-        </ul>
-      </div>
+
+      <!-- Kolom kanan sengaja dikosongkan untuk memberi ruang -->
+      <div></div>
     </div>
   </div>
-  {/* Particle dots dekorasi */}
-  <span class="particle-dot animate-dot-move" style="top:20%;left:10%;"
-  ></span>
-  <span class="particle-dot animate-dot-move2" style="top:60%;left:80%;"
-  ></span>
-  <span class="particle-dot animate-dot-move3" style="top:75%;left:25%;"
-  ></span>
-  <span class="particle-dot animate-dot-move4" style="top:40%;left:60%;"
-  ></span>
-  <style>
-    /* Glassmorphism motif bubble & dot (tanpa animasi) */
-    .particle-dot {
-      position: absolute;
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #bae6fd 60%, #38bdf8 100%);
-      opacity: 0.38;
-      filter: blur(1.5px);
-    }
-  </style>
+
+  <!-- Persegi Panjang Vertikal di Pojok Kanan Halaman -->
+  <div class="hidden lg:block absolute top-0 right-0 h-full w-[28rem] bg-gradient-to-b from-cyan-400 to-blue-600 rounded-l-2xl z-5 pointer-events-none overflow-hidden" data-aos="fade-left">
+    <!-- Motif di dalam kotak biru -->
+    <div class="absolute bottom-8 left-8 opacity-75 z-10" aria-hidden="true">
+      <svg width="60" height="120" fill="white">
+        <pattern id="box-grid-dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+          <circle cx="4" cy="4" r="2"></circle>
+        </pattern>
+        <rect x="0" y="0" width="100%" height="100%" fill="url(#box-grid-dots)"></rect>
+      </svg>
+    </div>
+    <div class="absolute top-8 left-1/4 opacity-75 z-10" aria-hidden="true">
+        <svg width="240" height="20" fill="white">
+            <pattern id="box-line-dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                <circle cx="4" cy="4" r="2"></circle>
+            </pattern>
+            <rect x="0" y="0" width="100%" height="100%" fill="url(#box-line-dots)"></rect>
+        </svg>
+    </div>
+    <div class="absolute bottom-0 right-0 translate-y-1/4 translate-x-1/4 opacity-80 z-10" aria-hidden="true">
+        <svg width="250" height="250" viewBox="0 0 100 100">
+          <defs>
+            <pattern id="box-hatch" patternUnits="userSpaceOnUse" width="8" height="8">
+              <path d="M-2,2 l4,-4 M0,8 l8,-8 M6,10 l4,-4" stroke="white" stroke-width="1.5"></path>
+            </pattern>
+          </defs>
+          <circle cx="50" cy="50" r="50" fill="url(#box-hatch)"/>
+        </svg>
+    </div>
+
+    <!-- Tempat untuk foto, bisa diisi dengan tag <img> -->
+    <img src="/images/laptop.webp" class="absolute top-8 bottom-8 inset-x-0 object-cover z-20 rounded-lg" style="transform:scale(1.18) translateY(40px);" alt="">
+  </div>
+  <!-- Decorative Elements -->
+  <div class="absolute top-0 left-0 h-full w-4 bg-cyan-300 opacity-40" aria-hidden="true"></div>
+  <div class="absolute top-1/2 left-0 h-1/4 w-4 bg-blue-400 opacity-50 transform -translate-y-1/2" aria-hidden="true"></div>
+
+  <!-- Background Pattern SVGs -->
+  <div class="absolute top-10 left-10 opacity-20 text-blue-500 hidden lg:block" aria-hidden="true">
+    <svg width="100" height="100" fill="currentColor"><pattern id="dots-pattern-1" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="3"></circle></pattern><rect x="0" y="0" width="100%" height="100%" fill="url(#dots-pattern-1)"></rect></svg>
+  </div>
+  
+  <div class="absolute top-16 right-[48%] opacity-20 text-blue-400 hidden lg:block" aria-hidden="true">
+    <svg width="100" height="100" fill="currentColor"><pattern id="dots-pattern-2" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="3"></circle></pattern><rect x="0" y="0" width="100%" height="100%" fill="url(#dots-pattern-2)"></rect></svg>
+  </div>
+  
+  <div class="absolute bottom-10 left-1/4 opacity-30 text-blue-600 hidden lg:block" aria-hidden="true">
+    <svg width="80" height="80" viewBox="0 0 100 100">
+      <defs>
+        <pattern id="hatch" patternUnits="userSpaceOnUse" width="8" height="8">
+          <path d="M-2,2 l4,-4 M0,8 l8,-8 M6,10 l4,-4" stroke="currentColor" stroke-width="1.5"></path>
+        </pattern>
+      </defs>
+      <circle cx="50" cy="50" r="50" fill="url(#hatch)"/>
+    </svg>
+  </div>
+
+
+
+  <!-- Faint library background at the bottom -->
+  <div 
+    class="absolute bottom-0 left-0 w-full h-[150px] md:h-[200px] z-0"
+    style="background-image: url('/images/buku.jpg'); background-size: cover; background-position: center; opacity: 0.15;"
+    aria-hidden="true"
+  ></div>
 </section>

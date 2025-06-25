@@ -1,5 +1,6 @@
 ---
 // Tidak ada props, hanya copy kode footer dari index.astro
+const year = new Date().getFullYear();
 ---
 <footer
   class="w-full bg-gradient-to-br from-[#e8f0fa] via-[#dbeafe] to-[#c7d7ee] text-[#232b4d]"
@@ -81,168 +82,171 @@
         >
       </div>
     </div>
-    <!-- Kolom 2: Product Iniedu -->
-    <div
-      class="flex flex-col gap-2 min-w-[150px] mt-5 pl-20"
-      data-aos="fade-up"
-    >
-      <div class="font-bold text-base mb-1">Product Iniedu</div>
-      <ul class="list-none pl-0 space-y-3 text-sm text-gray-800">
-        <li>
-          <a
-            href="/kursus"
-            class="font-semibold hover:underline transition-all duration-200"
-            ><span class="text-blue-600">Ini</span><span class="text-yellow-500"
-              >Sekolah</span
-            ></a
-          >
-        </li>
-        <li>
-          <a
-            href="#"
-            class="font-semibold hover:underline transition-all duration-200"
-            ><span class="text-blue-600">Ini</span><span class="text-yellow-500"
-              >Kampus</span
-            ></a
-          >
-        </li>
-        <li>
-          <a
-            href="/perpustakaan"
-            class="font-semibold hover:underline transition-all duration-200"
-            ><span class="text-blue-600">Ini</span><span class="text-yellow-500"
-              >Perpustakaan</span
-            ></a
-          >
-        </li>
-        <li>
-          <a
-            href="#"
-            class="font-semibold hover:underline transition-all duration-200"
-            ><span class="text-blue-600">Ini</span><span class="text-yellow-500"
-              >Ibadah</span
-            ></a
-          >
-        </li>
-        <li>
-          <a
-            href="#"
-            class="font-semibold hover:underline transition-all duration-200"
-            ><span class="text-blue-600">Ini</span><span class="text-yellow-500"
-              >Keluarga</span
-            ></a
-          >
-        </li>
-        <li>
-          <a
-            href="#"
-            class="font-semibold hover:underline transition-all duration-200"
-            ><span class="text-blue-600">Ini</span><span class="text-yellow-500"
-              >Budaya</span
-            ></a
-          >
-        </li>
-        <li>
-          <a
-            href="#"
-            class="font-semibold hover:underline transition-all duration-200"
-            ><span class="text-blue-600">Ini</span><span class="text-yellow-500"
-              >Cipta</span
-            ></a
-          >
-        </li>
-        <li>
-          <a
-            href="#"
-            class="font-semibold hover:underline transition-all duration-200"
-            ><span class="text-blue-600">Ini</span><span class="text-yellow-500"
-              >Ekonomi</span
-            ></a
-          >
-        </li>
-        <li>
-          <a
-            href="#"
-            class="font-semibold hover:underline transition-all duration-200"
-            ><span class="text-blue-600">Ini</span><span class="text-yellow-500"
-              >Komunitas</span
-            ></a
-          >
-        </li>
-        <li>
-          <a
-            href="#"
-            class="font-semibold hover:underline transition-all duration-200"
-            ><span class="text-blue-600">Ini</span><span class="text-yellow-500"
-              >Kesehatan</span
-            ></a
-          >
-        </li>
-        <li>
-          <a
-            href="#"
-            class="font-semibold hover:underline transition-all duration-200"
-            ><span class="text-blue-600">Ini</span><span class="text-yellow-500"
-              >Bank</span
-            ></a
-          >
-        </li>
-        <li>
-          <a
-            href="#"
-            class="font-semibold hover:underline transition-all duration-200"
-            ><span class="text-blue-600">Ini</span><span class="text-yellow-500"
-              >Peradaban</span
-            ></a
-          >
-        </li>
-      </ul>
-    </div>
-    <!-- Kolom 3: Bantuan & Panduan -->
-    <div
-      class="flex flex-col gap-2 min-w-[150px] mt-5 pl-20"
-      data-aos="fade-up"
-    >
-      <div class="font-bold text-base mb-1">Bantuan & Panduan</div>
-      <a
-        href="/syarat-ketentuan"
-        class="font-semibold text-blue-600 hover:underline transition-all duration-200"
-        >Syarat & Ketentuan</a
+    <!-- Kolom 2 & 3 Wrapper -->
+    <div class="grid grid-cols-2 gap-8 md:col-span-2">
+      <!-- Kolom 2: Product Iniedu -->
+      <div
+        class="flex flex-col gap-2 min-w-[150px] mt-5"
+        data-aos="fade-up"
       >
-      <a
-        href="/privasi"
-        class="font-semibold text-yellow-500 hover:underline transition-all duration-200"
-        >Kebijakan Privasi</a
+        <div class="font-bold text-base mb-1">Product Iniedu</div>
+        <ul class="list-none pl-0 space-y-3 text-sm text-gray-800">
+          <li>
+            <a
+              href="/kursus"
+              class="font-semibold hover:underline transition-all duration-200"
+              ><span class="text-blue-600">Ini</span><span class="text-yellow-500"
+                >Sekolah</span
+              ></a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="font-semibold hover:underline transition-all duration-200"
+              ><span class="text-blue-600">Ini</span><span class="text-yellow-500"
+                >Kampus</span
+              ></a
+            >
+          </li>
+          <li>
+            <a
+              href="/perpustakaan"
+              class="font-semibold hover:underline transition-all duration-200"
+              ><span class="text-blue-600">Ini</span><span class="text-yellow-500"
+                >Perpustakaan</span
+              ></a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="font-semibold hover:underline transition-all duration-200"
+              ><span class="text-blue-600">Ini</span><span class="text-yellow-500"
+                >Ibadah</span
+              ></a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="font-semibold hover:underline transition-all duration-200"
+              ><span class="text-blue-600">Ini</span><span class="text-yellow-500"
+                >Keluarga</span
+              ></a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="font-semibold hover:underline transition-all duration-200"
+              ><span class="text-blue-600">Ini</span><span class="text-yellow-500"
+                >Budaya</span
+              ></a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="font-semibold hover:underline transition-all duration-200"
+              ><span class="text-blue-600">Ini</span><span class="text-yellow-500"
+                >Cipta</span
+              ></a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="font-semibold hover:underline transition-all duration-200"
+              ><span class="text-blue-600">Ini</span><span class="text-yellow-500"
+                >Ekonomi</span
+              ></a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="font-semibold hover:underline transition-all duration-200"
+              ><span class="text-blue-600">Ini</span><span class="text-yellow-500"
+                >Komunitas</span
+              ></a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="font-semibold hover:underline transition-all duration-200"
+              ><span class="text-blue-600">Ini</span><span class="text-yellow-500"
+                >Kesehatan</span
+              ></a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="font-semibold hover:underline transition-all duration-200"
+              ><span class="text-blue-600">Ini</span><span class="text-yellow-500"
+                >Bank</span
+              ></a
+            >
+          </li>
+          <li>
+            <a
+              href="#"
+              class="font-semibold hover:underline transition-all duration-200"
+              ><span class="text-blue-600">Ini</span><span class="text-yellow-500"
+                >Peradaban</span
+              ></a
+            >
+          </li>
+        </ul>
+      </div>
+      <!-- Kolom 3: Bantuan & Panduan -->
+      <div
+        class="flex flex-col gap-2 min-w-[150px] mt-5"
+        data-aos="fade-up"
       >
-      <a
-        href="/tentang"
-        class="font-semibold text-blue-600 hover:underline transition-all duration-200"
-        >Tentang Kami</a
-      >
-      <a
-        href="/kontak"
-        class="font-semibold text-blue-600 hover:underline transition-all duration-200"
-        >Kontak Kami</a
-      >
-      <a
-        href="/pengaduan"
-        class="font-semibold text-yellow-500 hover:underline transition-all duration-200"
-        >Pengaduan</a
-      >
-      <a
-        href="/bantuan"
-        class="font-semibold text-blue-600 hover:underline transition-all duration-200"
-        >Bantuan</a
-      >
-      <a
-        href="/karir"
-        class="font-semibold text-blue-600 hover:underline transition-all duration-200"
-        >Karir</a
-      >
+        <div class="font-bold text-base mb-1">Bantuan & Panduan</div>
+        <a
+          href="/syarat-ketentuan"
+          class="font-semibold text-blue-600 hover:underline transition-all duration-200"
+          >Syarat & Ketentuan</a
+        >
+        <a
+          href="/privasi"
+          class="font-semibold text-yellow-500 hover:underline transition-all duration-200"
+          >Kebijakan Privasi</a
+        >
+        <a
+          href="/tentang"
+          class="font-semibold text-blue-600 hover:underline transition-all duration-200"
+          >Tentang Kami</a
+        >
+        <a
+          href="/kontak"
+          class="font-semibold text-blue-600 hover:underline transition-all duration-200"
+          >Kontak Kami</a
+        >
+        <a
+          href="/pengaduan"
+          class="font-semibold text-yellow-500 hover:underline transition-all duration-200"
+          >Pengaduan</a
+        >
+        <a
+          href="/bantuan"
+          class="font-semibold text-blue-600 hover:underline transition-all duration-200"
+          >Bantuan</a
+        >
+        <a
+          href="/karir"
+          class="font-semibold text-blue-600 hover:underline transition-all duration-200"
+          >Karir</a
+        >
+      </div>
     </div>
     <!-- Kolom 4: Sosial Media & Ilustrasi (kanan) -->
     <div
-      class="flex flex-col items-end gap-3 min-w-[150px]"
+      class="flex flex-col items-end gap-3 min-w-[150px] -mt-40 md:mt-0"
       data-aos="fade-left"
     >
       <img
@@ -255,46 +259,10 @@
       />
     </div>
   </div>
-  <div class="w-full mt-8 flex justify-center items-center" data-aos="zoom-in">
-    <span
-      style="background:linear-gradient(90deg,#00ffe7,#009fff 60%,#7f5cff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700;font-size:1.08rem;display:flex;align-items:center;gap:0.6rem;letter-spacing:0.04em;"
-    >
-      <svg
-        width="22"
-        height="22"
-        viewBox="0 0 24 24"
-        fill="none"
-        style="vertical-align:-4px;"
-        ><defs
-          ><linearGradient
-            id="copyright-gradient"
-            x1="0"
-            y1="0"
-            x2="24"
-            y2="24"
-            gradientUnits="userSpaceOnUse"
-            ><stop stop-color="#00ffe7"></stop><stop
-              offset="0.6"
-              stop-color="#009fff"></stop><stop offset="1" stop-color="#7f5cff"
-            ></stop></linearGradient
-          ></defs
-        ><circle
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="url(#copyright-gradient)"
-          stroke-width="2"
-          fill="none"></circle><text
-          x="8.5"
-          y="17"
-          font-size="11"
-          font-family="Arial"
-          fill="url(#copyright-gradient)">C</text
-        ></svg
-      >
-      {new Date().getFullYear()} Iniedu. All Rights Reserved. | Futuristic Education
-      for a Brighter Tomorrow
-    </span>
+  <div class="w-full mt-8 flex justify-center items-center text-center px-4">
+    <p class="text-slate-600 text-sm font-semibold">
+      ©️ {year} Iniedu. All Rights Reserved. | Futuristic Education for a Brighter Tomorrow
+    </p>
   </div>
   <style>
     .sosmed-btn {
