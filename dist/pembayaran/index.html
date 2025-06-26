@@ -1,0 +1,184 @@
+<!DOCTYPE html><html lang="id"> <head><title>Pembayaran Kursus</title><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="/_astro/admin-blog.D7XzEFUB.css">
+<link rel="stylesheet" href="/_astro/admin-blog.DgGGraMg.css">
+<style>@media (min-width: 768px){.hide-mobile-auth[data-astro-cid-3ef6ksr2]{display:none}}body.admin-dashboard header[data-astro-cid-sckkx6r4]{display:none!important}[data-astro-cid-sckkx6r4],[data-astro-cid-sckkx6r4]:before,[data-astro-cid-sckkx6r4]:after{box-sizing:border-box;outline:none!important}body,html{margin:0;padding:0;overflow-x:hidden}
+</style></head> <body> <html lang="id" data-astro-cid-sckkx6r4> <head><!-- Preload font lokal Roboto Slab untuk mencegah FOUT --><link rel="preload" href="/fonts/roboto-slab-v35-latin-regular.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/roboto-slab-v35-latin-700.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/roboto-slab-v35-latin-900.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/roboto-slab-v35-latin-500.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/roboto-slab-v35-latin-600.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/roboto-slab-v35-latin-800.woff2" as="font" type="font/woff2" crossorigin><meta charset="UTF-8"><meta name="description" content="IniEdu - Platform Pendidikan Online Terbaik"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/x-icon" href="/images/favicon.ico"><link rel="apple-touch-icon" href="/images/favicon.ico"><link rel="shortcut icon" href="/images/favicon.ico"><!-- Structured Data Logo for Google Search --><script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "url": "https://iniedu.id",
+        "logo": "https://iniedu.id/images/favicon.ico"
+      }
+    </script><meta name="generator" content="Astro v5.10.0"><title>Pembayaran Kursus</title><!-- Akhir preload font lokal --><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"></noscript><link rel="preload" as="image" href="/images/education-animate.svg" type="image/svg+xml"><!-- Firebase CDN --><link rel="preload" as="image" href="/lcp-3d-kelas-online.webp" imagesrcset="/lcp-3d-kelas-online.webp 370w, /lcp-3d-kelas-online-240.webp 240w" imagesizes="(max-width: 480px) 240px, 370px"></head> <body class="flex flex-col bg-gray-50 " data-astro-cid-sckkx6r4> <header class="bg-white sticky top-0 z-50" data-astro-cid-3ef6ksr2> <div class="container mx-auto px-4 py-3 flex items-center" data-astro-cid-3ef6ksr2> <!-- Logo IniEdu --> <div class="flex items-center ml-6" data-astro-cid-3ef6ksr2> <a href="/" class="flex items-center" data-astro-cid-3ef6ksr2> <picture data-astro-cid-3ef6ksr2> <source srcset="/images/logo-iniedu.webp" type="image/webp" data-astro-cid-3ef6ksr2> <img src="/images/logo-iniedu-web.png" alt="IniEdu Logo" width="120" height="40" class="h-10 w-auto max-w-full" decoding="async" fetchpriority="high" style="max-width:100%;height:auto" data-astro-cid-3ef6ksr2> </picture> </a> </div> <!-- Menu Navigasi Tengah --> <nav class="hidden md:flex flex-1 items-center justify-center space-x-8" data-astro-cid-3ef6ksr2> <a href="/" class="text-gray-800 hover:text-primary font-semibold transition-colors text-lg" data-astro-cid-3ef6ksr2>Beranda</a> <a href="/kursus" class="text-gray-800 hover:text-primary font-semibold transition-colors text-lg" data-astro-cid-3ef6ksr2>Kursus</a> <a href="/perpustakaan" class="text-gray-800 hover:text-primary font-semibold transition-colors text-lg" data-astro-cid-3ef6ksr2>Perpustakaan</a> <a href="/blog" class="text-gray-800 hover:text-primary font-semibold transition-colors text-lg" data-astro-cid-3ef6ksr2>Blog</a> </nav> <!-- Right Side Actions --> <div class="flex items-center justify-end space-x-2 ml-auto mr-6 md:min-w-[120px]" data-astro-cid-3ef6ksr2> <!-- Tombol Login/Profil (order-1 on mobile) --> <div id="auth-action" class="flex items-center order-1" data-astro-cid-3ef6ksr2> <a href="/login" class="btn btn-primary hidden" id="login-btn" data-astro-cid-3ef6ksr2>Login</a> <a href="/profil" id="profile-btn" class="hidden flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 via-cyan-400 to-purple-500 text-white font-semibold shadow-lg hover:shadow-2xl hover:scale-105 hover:ring-4 hover:ring-blue-300 transition-all duration-300 focus:outline-none" data-astro-cid-3ef6ksr2> <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" data-astro-cid-3ef6ksr2><circle cx="12" cy="8" r="4" data-astro-cid-3ef6ksr2></circle><path d="M4 20c0-4 8-4 8-4s8 0 8 4" data-astro-cid-3ef6ksr2></path></svg> <span data-astro-cid-3ef6ksr2>Profil</span> </a> </div> <!-- Menu Mobile Toggle (order-2 on mobile) --> <div class="md:hidden order-2" data-astro-cid-3ef6ksr2> <button id="mobile-menu-button" class="text-gray-800 focus:outline-none p-2" aria-label="Buka menu navigasi" data-astro-cid-3ef6ksr2> <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-3ef6ksr2> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" data-astro-cid-3ef6ksr2></path> </svg> </button> </div> </div> </div> <!-- Menu Mobile --> <div id="mobile-menu" class="md:hidden hidden bg-white border-t" data-astro-cid-3ef6ksr2> <div class="container mx-auto px-4 py-3 flex flex-col space-y-4" data-astro-cid-3ef6ksr2> <a href="/" class="text-gray-800 hover:text-primary font-medium transition-colors py-2" data-astro-cid-3ef6ksr2>Beranda</a> <a href="/kursus" class="text-gray-800 hover:text-primary font-medium transition-colors py-2" data-astro-cid-3ef6ksr2>Kursus</a> <a href="/perpustakaan" class="text-gray-800 hover:text-primary font-medium transition-colors py-2" data-astro-cid-3ef6ksr2>Perpustakaan</a> <a href="/blog" class="text-gray-800 hover:text-primary font-medium transition-colors py-2" data-astro-cid-3ef6ksr2>Blog</a> <a href="/login" class="text-blue-600 hover:text-blue-800 font-medium transition-colors py-2 hide-mobile-auth" data-astro-cid-3ef6ksr2>Login</a> <a href="/daftar" class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded px-4 py-2 transition-all hide-mobile-auth" data-astro-cid-3ef6ksr2>Daftar</a> </div> </div> </header>  <script type="module">const e=document.getElementById("mobile-menu-button"),t=document.getElementById("mobile-menu");e?.addEventListener("click",()=>{t?.classList.toggle("hidden")});</script> <script type="module">function i(){var e=document.getElementById("profile-btn"),d=e&&getComputedStyle(e).display!=="none"&&getComputedStyle(e).visibility!=="hidden";document.querySelectorAll(".hide-mobile-auth").forEach(function(t){d?t.classList.add("hidden"):t.classList.remove("hidden")})}window.addEventListener("DOMContentLoaded",i);var n=document.getElementById("mobile-menu-button");n&&n.addEventListener("click",function(){setTimeout(i,10)});</script>  <!-- Tombol Login/Profil Firebase Global --> <div id="auth-action" class="hidden flex gap-2 items-center justify-end p-4" data-astro-cid-sckkx6r4> <button id="login-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded" data-astro-cid-sckkx6r4>Login</button> <a href="/profil" id="profile-btn" class="hidden bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded" data-astro-cid-sckkx6r4>Profil</a> </div> <main class="flex-grow p-0 m-0" data-astro-cid-sckkx6r4>  <section class="flex flex-col items-center justify-center min-h-[60vh] py-12"> <div class="bg-white rounded-2xl shadow-xl p-8 border-b-4 border-blue-400 w-full max-w-xs mx-auto flex flex-col items-center"> <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" class="mb-4"> <circle cx="22" cy="22" r="22" fill="#22c55e" opacity=".13"></circle> <rect x="10" y="16" width="24" height="14" rx="4" fill="#22c55e"></rect> <rect x="14" y="20" width="16" height="4" rx="2" fill="#fff"></rect> <rect x="26" y="23" width="4" height="2" rx="1" fill="#16a34a"></rect> <rect x="14" y="23" width="6" height="2" rx="1" fill="#a7f3d0"></rect> <rect x="12" y="18" width="20" height="2" rx="1" fill="#16a34a" opacity=".4"></rect> </svg> <h1 class="text-lg font-bold mb-2 text-blue-700 text-center">
+Pembayaran Kursus
+</h1> <p class="mb-4 text-gray-600 text-center text-sm">
+Lengkapi data berikut untuk konfirmasi pembelian kursus Anda.
+</p> <div id="pembayaran-info" class="mb-3 text-gray-700 text-center"></div> <form id="form-pembayaran" class="space-y-3 w-full"> <div> <label class="block text-gray-600 mb-1">Nama Kursus</label> <div id="nama_kursus_display" class="w-full border rounded px-3 py-2 bg-gray-50 text-gray-700 cursor-default select-none flex items-center" style="min-height:2.5rem;"></div> <input type="hidden" id="nama_kursus" name="nama_kursus"> </div> <div> <label class="block text-gray-600 mb-1">ID Kursus</label> <div id="id_kursus_display" class="w-full border rounded px-3 py-2 bg-gray-50 text-gray-700 cursor-default select-none flex items-center" style="min-height:2.5rem;"></div> <input type="hidden" id="id_kursus" name="id_kursus"> </div> <div> <label class="block text-gray-600 mb-1">Harga</label> <div id="harga_display" class="w-full border rounded px-3 py-2 bg-gray-50 text-gray-700 cursor-default select-none flex items-center" style="min-height:2.5rem;"></div> <input type="hidden" id="harga" name="harga"> </div> <div> <label class="block text-gray-600 mb-1">Nama Lengkap</label> <input type="text" id="nama_lengkap" name="nama_lengkap" class="w-full border rounded px-3 py-2" required> </div> <div> <label class="block text-gray-600 mb-1">Email</label> <div id="email_display" class="w-full border rounded px-3 py-2 bg-gray-50 text-gray-700 cursor-default select-none flex items-center" style="min-height:2.5rem;"></div> <input type="hidden" id="email" name="email"> </div> <button type="submit" id="submit-btn" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mt-4" disabled>Konfirmasi Pembelian</button> </form> <div id="pembayaran-status" class="mt-4"></div> </div> <script type="module">
+          // Ambil data kursus dari query string
+          const params = new URLSearchParams(window.location.search);
+          // Set display value dan hidden input value
+          document.getElementById("id_kursus_display").innerText =
+            params.get("id_kursus") || "";
+          document.getElementById("id_kursus").value =
+            params.get("id_kursus") || "";
+
+          document.getElementById("harga_display").innerText =
+            "Memuat harga...";
+          document.getElementById("harga").value = "";
+          document.getElementById("nama_kursus_display").innerText =
+            "Memuat nama kursus...";
+          document.getElementById("nama_kursus").value = "";
+          const idKursus = params.get("id_kursus");
+          if (idKursus) {
+            // Supabase fetch kursus
+            import(
+              "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm"
+            ).then(({ createClient }) => {
+              const supabaseUrl = "https://jcfizceoycwdvpqpwhrj.supabase.co";
+              const supabaseKey =
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA";
+              const supabase = createClient(supabaseUrl, supabaseKey);
+              supabase
+                .from("kursus")
+                .select("nama_kursus,harga")
+                .eq("id", idKursus)
+                .single()
+                .then(({ data, error }) => {
+                  const submitBtn = document.getElementById("submit-btn");
+                  if (error || !data) {
+                    document.getElementById("harga_display").innerText =
+                      "Gagal mengambil harga";
+                    document.getElementById("harga").value = "";
+                    document.getElementById("nama_kursus_display").innerText =
+                      "Gagal mengambil nama kursus";
+                    document.getElementById("nama_kursus").value = "";
+                    if (submitBtn) submitBtn.disabled = true;
+                  } else {
+                    document.getElementById("harga_display").innerText =
+                      data.harga;
+                    document.getElementById("harga").value = data.harga;
+                    document.getElementById("nama_kursus_display").innerText =
+                      data.nama_kursus;
+                    document.getElementById("nama_kursus").value =
+                      data.nama_kursus;
+                    if (submitBtn) submitBtn.disabled = false;
+                  }
+                });
+            });
+          } else {
+            document.getElementById("harga_display").innerText = "";
+            document.getElementById("harga").value = "";
+            document.getElementById("nama_kursus_display").innerText = "";
+            document.getElementById("nama_kursus").value = "";
+          }
+
+          // Firebase Modular Auth
+          import {
+            initializeApp,
+            getApps,
+          } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+          import {
+            getAuth,
+            onAuthStateChanged,
+          } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+          const firebaseConfig = window.firebaseConfig || {
+            apiKey: "AIzaSyAlxYWD4bCwpoKEErXDX1_4AZC9wzQTkwA",
+            authDomain: "iniedu.firebaseapp.com",
+            projectId: "iniedu",
+            storageBucket: "iniedu.appspot.com",
+            messagingSenderId: "743403637628",
+            appId: "1:743403637628:web:15b40396e94c8b91ce32f9",
+            measurementId: "G-P2NBXXWM7T",
+          };
+          let app;
+          if (!getApps().length) {
+            app = initializeApp(firebaseConfig);
+          } else {
+            app = getApps()[0];
+          }
+          const auth = getAuth(app);
+          onAuthStateChanged(auth, (user) => {
+            if (!user) {
+              window.location.href = "/login";
+            } else {
+              document.getElementById("nama_lengkap").value =
+                user.displayName || "";
+              document.getElementById("email_display").innerText =
+                user.email || "";
+              document.getElementById("email").value = user.email || "";
+            }
+          });
+
+          // Supabase Insert
+          import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+          const supabaseUrl = "https://jcfizceoycwdvpqpwhrj.supabase.co";
+          const supabaseKey =
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA";
+          const supabase = createClient(supabaseUrl, supabaseKey);
+
+          document
+            .getElementById("form-pembayaran")
+            .addEventListener("submit", async (e) => {
+              e.preventDefault();
+              const user = auth.currentUser;
+              if (!user) {
+                document.getElementById("pembayaran-status").innerHTML =
+                  '<span class="text-red-600">User belum login!</span>';
+                return;
+              }
+              // Ambil data dari form
+              const nama_kursus = document.getElementById("nama_kursus").value;
+              const nama_lengkap =
+                document.getElementById("nama_lengkap").value;
+              const email = user.email;
+              const amount = parseInt(document.getElementById("harga").value);
+              document.getElementById("pembayaran-status").innerHTML =
+                '<span class="text-blue-600">Membuat invoice, mohon tunggu...</span>';
+              try {
+                const res = await fetch(
+                  "https://jcfizceoycwdvpqpwhrj.functions.supabase.co/create_invoice",
+                  {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      name: nama_lengkap, // diambil dari input
+                      email: email,
+                      amount: amount,
+                      nama_kursus: nama_kursus, // diambil dari hasil fetch database
+                      user_uid: user.uid, // KIRIM UID KE BACKEND
+                      id_kursus: parseInt(idKursus) // KIRIM ID KURSUS SEBAGAI INTEGER KE BACKEND
+                    }),
+                  }
+                );
+                if (res.ok) {
+                  const data = await res.json();
+                  if (data && data.invoice_url) {
+                    window.location.href = data.invoice_url;
+                  } else {
+                    document.getElementById("pembayaran-status").innerHTML =
+                      '<span class="text-red-600">Gagal membuat invoice. Silakan coba lagi.</span>';
+                  }
+                } else {
+                  let pesan = "Gagal membuat invoice. Silakan coba lagi.";
+                  try {
+                    const errData = await res.json();
+                    if (
+                      res.status === 409 ||
+                      (errData &&
+                        errData.error &&
+                        errData.error.includes("sudah pernah membeli"))
+                    ) {
+                      pesan =
+                        "<span class='text-red-600'>Kamu sudah pernah membeli kursus ini.</span>";
+                    } else if (errData && errData.error) {
+                      pesan = `<span class='text-red-600'>${errData.error}</span>`;
+                    }
+                  } catch {}
+                  document.getElementById("pembayaran-status").innerHTML =
+                    pesan;
+                }
+              } catch (err) {
+                document.getElementById("pembayaran-status").innerHTML =
+                  '<span class="text-red-600">Terjadi kesalahan saat membuat invoice.</span>';
+              }
+            });
+        </script> </section>  </main> <script type="module" src="/header-auth.js"></script> <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js" defer onload="if(window.AOS){window.AOS.init({duration:700,once:true,delay:0});}"></script> </body> </html> </body> </html>
