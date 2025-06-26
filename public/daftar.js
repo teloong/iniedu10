@@ -1,33 +1,32 @@
-import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-
-const firebaseConfig = window.firebaseConfig;
-const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
 const messageDiv = document.getElementById('message');
 const form = document.getElementById('register-form');
 if (form) {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const recaptchaResponse = grecaptcha.getResponse();
-    if (!recaptchaResponse) {
-      messageDiv.textContent = "Silakan centang reCAPTCHA terlebih dahulu!";
-      return;
-    }
+    // Jika ingin tanpa reCAPTCHA, cukup komentar baris di bawah
+    // const recaptchaResponse = grecaptcha.getResponse();
+    // if (!recaptchaResponse) {
+    //   messageDiv.textContent = "Silakan centang reCAPTCHA terlebih dahulu!";
+    //   return;
+    // }
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
+    const nama = "User"; // Atau ambil dari input jika ada field nama
+
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      window.location.href = "/";
-    } catch (error) {
-      messageDiv.textContent = "Registrasi gagal: " + error.message;
+      const res = await fetch('https://iniedu.id/register.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}&nama=${encodeURIComponent(nama)}`
+      });
+      const data = await res.json();
+      if (data.success) {
+        window.location.href = '/login'; // Redirect ke login setelah daftar
+      } else {
+        messageDiv.textContent = data.message;
+      }
+    } catch (err) {
+      messageDiv.textContent = 'Terjadi error koneksi.';
     }
   });
 }
-
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    window.location.href = "/";
-  }
-});
