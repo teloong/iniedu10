@@ -1,0 +1,166 @@
+<!DOCTYPE html><html lang="id"> <head><title>5 Tips Belajar Efektif di Era Digital | IniEdu Blog</title><meta name="description" content="Tips belajar efektif, motivasi, dan inspirasi dari IniEdu. Baca artikel lengkapnya di sini!"><link rel="icon" type="image/x-icon" href="/images/favicon.ico"><link rel="apple-touch-icon" href="/images/favicon.ico"><link rel="shortcut icon" href="/images/favicon.ico"><link rel="stylesheet" href="/_astro/admin-blog.DJK6K-LV.css">
+<link rel="stylesheet" href="/_astro/admin-blog.CNs2Spn2.css">
+<style>.blog-detail-content a{color:#2563eb;text-decoration:underline;transition:color .2s}.blog-detail-content a:visited{color:#7c3aed}.blog-detail-content a:hover{color:#1d4ed8}
+</style></head> <body class="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-purple-100 flex flex-col"> <main class="flex-1 container mx-auto px-4 py-8 max-w-2xl"> <div id="blog-detail-loading" class="text-center text-gray-400 mb-8">
+Loading...
+</div> <div id="blog-detail"></div> <div id="comments-container"> <h2 class="text-2xl font-bold mb-4">Komentar</h2> <form id="comment-form"> <input type="text" id="nama" placeholder="Nama" class="block w-full p-2 mb-2 border border-gray-300 rounded" required> <input type="email" id="email" placeholder="Email" class="block w-full p-2 mb-2 border border-gray-300 rounded" required> <textarea id="komentar" placeholder="Tulis komentar" class="block w-full p-2 mb-2 border border-gray-300 rounded" required></textarea> <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Kirim</button> </form> <div id="comments-list"></div> </div> <script type="module">
+        import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+        const supabase = createClient(
+          "https://jcfizceoycwdvpqpwhrj.supabase.co",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA"
+        );
+        function getQueryId() {
+          const url = new URL(window.location.href);
+          return url.searchParams.get("id");
+        }
+        function formatWIBDate(dateStr) {
+          // Konversi ke waktu WIB (Asia/Jakarta) dengan Intl API jika tersedia
+          try {
+            const date = new Date(dateStr);
+            return (
+              date.toLocaleString("id-ID", {
+                timeZone: "Asia/Jakarta",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+              }) + " WIB"
+            );
+          } catch (e) {
+            // Fallback manual jika browser tidak support
+            const date = new Date(dateStr);
+            const localOffset = date.getTimezoneOffset();
+            const wibOffset = -420;
+            const wibTime = new Date(
+              date.getTime() + (wibOffset - localOffset) * 60000
+            );
+            return (
+              wibTime.toLocaleString("id-ID", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+              }) + " WIB"
+            );
+          }
+        }
+        async function loadBlogDetail() {
+          const id = getQueryId();
+          const loading = document.getElementById("blog-detail-loading");
+          const container = document.getElementById("blog-detail");
+          if (!id) {
+            loading.textContent = "ID artikel tidak ditemukan.";
+            return;
+          }
+          const { data, error } = await supabase
+            .from("blog")
+            .select("*")
+            .eq("id", id)
+            .single();
+          if (error || !data) {
+            loading.textContent = "Artikel blog tidak ditemukan.";
+            return;
+          }
+          loading.remove();
+          // Fungsi untuk auto-link URL polos
+          function autoLink(text) {
+            // Deteksi URL polos (http/https)
+            return text.replace(/(https?:\/\/[\w\-._~:/?#[\]@!$&'()*+,;=%]+)(?![^<]*>|[^<>]*<\/a>)/g, function(url) {
+              return `<a href="${url}" target="_blank" rel="noopener" class="text-blue-600 underline break-all">${url}</a>`;
+            });
+          }
+          container.innerHTML = `
+            <div class="flex flex-wrap items-center gap-4 text-gray-500 text-sm mb-2">
+              <span>${formatWIBDate(Date.now())}</span> <!-- Tampilkan waktu real time WIB -->
+            </div>
+            <div class="flex items-center gap-4 mb-6">
+              <img
+                src="${
+                  data.author_photo && data.author_photo.includes("cloudinary.com")
+                    ? data.author_photo.replace(
+                        "/upload/",
+                        "/upload/w_200,h_200,c_fill,q_auto,f_auto/"
+                      )
+                    : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                        data.author || "A"
+                      )}&background=2563eb&color=fff&size=256`
+                }"
+                alt="Penulis"
+                class="w-20 h-20 rounded-full object-cover shadow"
+              />
+
+              <div>
+                <div class="font-bold text-blue-800">${data.author || "-"}</div>
+                <div class="text-xs text-gray-500">${data.author_role || "Penulis Blog IniEdu"}</div>
+              </div>
+            </div>
+            <h1 class="text-2xl md:text-3xl font-bold mb-4 max-w-2xl mx-auto break-words">${data.title}</h1>
+            <div class="mb-2">
+              ${data.image ? `<img src="${data.image}" alt="Sampul Artikel" class="w-full rounded-xl shadow mb-1" />` : ""}
+              <div class="text-xs text-gray-400 break-all">
+                ${data.source ? (data.source.match(/^https?:\/\//i)
+                  ? `Sumber: <a href="${data.source}" target="_blank" rel="noopener" class="text-blue-600 underline break-all">${data.source}</a>`
+                  : `Sumber: ${data.source}`
+                ) : ''}
+              </div>
+            </div>
+            <article class="max-w-2xl mx-auto mb-8 text-gray-800 whitespace-pre-line break-words text-base leading-relaxed blog-detail-content">${autoLink(data.content.replace(/\n/g, "<br/>"))}</article>
+          `;
+          loadComments();
+        }
+        async function loadComments() {
+          const id = getQueryId();
+          const commentsList = document.getElementById("comments-list");
+          const { data, error } = await supabase
+            .from("blog_comment")
+            .select("*")
+            .eq("blog_id", id);
+          if (error) {
+            return;
+          }
+          commentsList.innerHTML = "";
+          data.forEach((comment) => {
+            const commentHTML = `
+              <div class="flex gap-3 items-start mb-4">
+                <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(comment.nama)}&background=94a3b8&color=fff" alt="Komentator" class="w-9 h-9 rounded-full object-cover border">
+                <div>
+                  <div class="font-semibold text-gray-800">${comment.nama}</div>
+                  <div class="text-xs text-gray-500 mb-1">${formatWIBDate(comment.created_at)}</div>
+                  <div class="bg-gray-100 rounded px-3 py-2">${comment.komentar}</div>
+                </div>
+              </div>
+            `;
+            commentsList.insertAdjacentHTML("beforeend", commentHTML);
+          });
+        }
+        document
+          .getElementById("comment-form")
+          .addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const nama = document.getElementById("nama").value;
+            const email = document.getElementById("email").value;
+            const komentar = document.getElementById("komentar").value;
+            if (!nama || !email || !komentar) {
+              alert("Nama, email, dan komentar harus diisi!");
+              return;
+            }
+            const id = getQueryId();
+            const { data, error } = await supabase
+              .from("blog_comment")
+              .insert([{ blog_id: id, nama, email, komentar }]);
+            if (error) {
+              alert("Gagal kirim komentar: " + error.message);
+              error;
+              return;
+            }
+            loadComments();
+            document.getElementById("nama").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("komentar").value = "";
+          });
+        document.addEventListener("DOMContentLoaded", loadBlogDetail);
+      </script> </main> </body> </html>
