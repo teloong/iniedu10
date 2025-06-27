@@ -1,70 +1,105 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import Layout from "../../layouts/Layout.astro";
 ---
 
 <Layout title="Koleksi Buku Sekolah Digital">
   <section class="max-w-7xl mx-auto py-12 px-6">
-    <h1 class="text-3xl md:text-4xl font-extrabold text-blue-700 mb-4 text-center">Koleksi Buku Sekolah Digital</h1>
-    <p class="text-lg text-gray-700 mb-10 text-center max-w-2xl mx-auto">Berikut adalah kumpulan buku pelajaran digital SD, SMP, dan SMA yang dapat diakses secara gratis untuk menunjang pembelajaran formal di sekolah.</p>
+    <h1
+      class="text-3xl md:text-4xl font-extrabold text-blue-700 mb-4 text-center"
+    >
+      Koleksi Buku Sekolah Digital
+    </h1>
+    <p class="text-lg text-gray-700 mb-10 text-center max-w-2xl mx-auto">
+      Berikut adalah kumpulan buku pelajaran digital SD, SMP, dan SMA yang dapat
+      diakses secara gratis untuk menunjang pembelajaran formal di sekolah.
+    </p>
     <div id="theme-filter" class="flex flex-wrap justify-center mb-8"></div>
-    <input id="ebook-search" type="text" placeholder="Cari e-book..." class="block w-full max-w-md mx-auto mb-8 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400" />
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10" id="ebook-sekolah-list">
+    <input
+      id="ebook-search"
+      type="text"
+      placeholder="Cari e-book..."
+      class="block w-full max-w-md mx-auto mb-8 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+    />
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10"
+      id="ebook-sekolah-list"
+    >
       <!-- Buku akan tampil di sini secara dinamis dari Supabase -->
     </div>
     <script type="module">
-      import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-      const supabase = createClient('https://jcfizceoycwdvpqpwhrj.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA');
-      const grid = document.getElementById('ebook-sekolah-list');
-      const themeFilter = document.getElementById('theme-filter');
+      import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+      const supabase = createClient(
+        "https://jcfizceoycwdvpqpwhrj.supabase.co",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA"
+      );
+      const grid = document.getElementById("ebook-sekolah-list");
+      const themeFilter = document.getElementById("theme-filter");
       let allBooks = [];
       let selectedTheme = null;
       async function fetchAndRenderSekolahBooks() {
         // Ambil kategori "sekolah"
-        const { data: cats, error: catErr } = await supabase.from('ebook_categories').select('*');
+        const { data: cats, error: catErr } = await supabase
+          .from("ebook_categories")
+          .select("*");
         if (catErr || !cats) {
-          grid.innerHTML = '<div class="col-span-3 text-center text-red-500">Gagal memuat kategori.</div>';
+          grid.innerHTML =
+            '<div class="col-span-3 text-center text-red-500">Gagal memuat kategori.</div>';
           return;
         }
-        const cat = cats.find(c => c.nama.toLowerCase().includes('sekolah'));
+        const cat = cats.find((c) => c.nama.toLowerCase().includes("sekolah"));
         if (!cat) {
-          grid.innerHTML = '<div class="col-span-3 text-center text-gray-400">Kategori buku sekolah belum tersedia.</div>';
+          grid.innerHTML =
+            '<div class="col-span-3 text-center text-gray-400">Kategori buku sekolah belum tersedia.</div>';
           return;
         }
         // Ambil tema dari ebook_themes
-        const { data: themes, error: themeErr } = await supabase.from('ebook_themes').select('*').eq('category_id', cat.id);
+        const { data: themes, error: themeErr } = await supabase
+          .from("ebook_themes")
+          .select("*")
+          .eq("category_id", cat.id);
         if (themeErr) {
-          console.error('Gagal memuat tema:', themeErr);
+          "Gagal memuat tema:", themeErr;
         } else {
           renderThemeFilter(themes);
           window.allThemes = themes;
         }
         // Ambil semua buku kategori ini
-        const { data: books, error: bookErr } = await supabase.from('ebooks').select('*').eq('kategori_id', cat.id);
+        const { data: books, error: bookErr } = await supabase
+          .from("ebooks")
+          .select("*")
+          .eq("kategori_id", cat.id);
         if (bookErr) {
-          grid.innerHTML = '<div class="col-span-3 text-center text-red-500">Gagal memuat buku.</div>';
+          grid.innerHTML =
+            '<div class="col-span-3 text-center text-red-500">Gagal memuat buku.</div>';
           return;
         }
         if (!books || books.length === 0) {
-          grid.innerHTML = '<div class="col-span-3 text-center text-gray-400">Belum ada buku.</div>';
+          grid.innerHTML =
+            '<div class="col-span-3 text-center text-gray-400">Belum ada buku.</div>';
           return;
         }
         allBooks = books;
         renderBooks(books);
       }
       function renderThemeFilter(themes) {
-        themeFilter.innerHTML = '';
+        themeFilter.innerHTML = "";
         if (!themes || themes.length === 0) return;
-        themeFilter.innerHTML = themes.map(
-          t => `<button data-id="${t.id}" class="tema-btn px-4 py-2 rounded-full border border-blue-400 bg-white text-blue-700 font-semibold shadow hover:bg-blue-50 transition ${selectedTheme===t.id?'ring-2 ring-blue-400':''}">${t.name}</button>`
-        ).join('');
+        themeFilter.innerHTML = themes
+          .map(
+            (t) =>
+              `<button data-id="${t.id}" class="tema-btn px-4 py-2 rounded-full border border-blue-400 bg-white text-blue-700 font-semibold shadow hover:bg-blue-50 transition ${selectedTheme === t.id ? "ring-2 ring-blue-400" : ""}">${t.name}</button>`
+          )
+          .join("");
       }
-      themeFilter.addEventListener('click', e => {
-        if (e.target.classList.contains('tema-btn')) {
-          const id = e.target.getAttribute('data-id');
-          selectedTheme = (selectedTheme === id) ? null : id;
+      themeFilter.addEventListener("click", (e) => {
+        if (e.target.classList.contains("tema-btn")) {
+          const id = e.target.getAttribute("data-id");
+          selectedTheme = selectedTheme === id ? null : id;
           renderThemeFilter(window.allThemes);
           if (selectedTheme) {
-            const filtered = allBooks.filter(buku => buku.tema_id === selectedTheme);
+            const filtered = allBooks.filter(
+              (buku) => buku.tema_id === selectedTheme
+            );
             renderBooks(filtered);
           } else {
             renderBooks(allBooks);
@@ -72,16 +107,17 @@ import Layout from '../../layouts/Layout.astro';
         }
       });
       function renderBooks(books) {
-        grid.innerHTML = '';
-        books.forEach(buku => {
-          const div = document.createElement('div');
-          div.className = 'bg-white rounded-xl shadow p-4 flex flex-col items-center min-w-[240px] h-full';
+        grid.innerHTML = "";
+        books.forEach((buku) => {
+          const div = document.createElement("div");
+          div.className =
+            "bg-white rounded-xl shadow p-4 flex flex-col items-center min-w-[240px] h-full";
           div.innerHTML = `
-            <img src="${buku.cover || '/default-cover.png'}" alt="Cover Buku" class="w-32 h-44 object-cover rounded mb-2" />
+            <img src="${buku.cover || "/default-cover.png"}" alt="Cover Buku" class="w-32 h-44 object-cover rounded mb-2" />
             <div class="font-bold mt-2 text-center">${buku.judul}</div>
-            <div class="text-sm text-gray-500 mb-1">${buku.penulis}${buku.tahun ? ', ' + buku.tahun : ''}</div>
-            ${buku.penerbit ? `<div class='text-xs text-gray-400 mb-1'>Penerbit: ${buku.penerbit}</div>` : ''}
-            ${buku.deskripsi ? `<div class='text-xs text-gray-500 mb-2 italic'>${buku.deskripsi}</div>` : ''}
+            <div class="text-sm text-gray-500 mb-1">${buku.penulis}${buku.tahun ? ", " + buku.tahun : ""}</div>
+            ${buku.penerbit ? `<div class='text-xs text-gray-400 mb-1'>Penerbit: ${buku.penerbit}</div>` : ""}
+            ${buku.deskripsi ? `<div class='text-xs text-gray-500 mb-2 italic'>${buku.deskripsi}</div>` : ""}
             <a href="${buku.link}" target="_blank" class="px-4 py-2 bg-blue-600 text-white rounded-full font-semibold mt-auto">Baca Sekarang</a>
           `;
           grid.appendChild(div);
@@ -89,25 +125,31 @@ import Layout from '../../layouts/Layout.astro';
       }
       fetchAndRenderSekolahBooks();
       // Real-time search
-      const searchInput = document.getElementById('ebook-search');
+      const searchInput = document.getElementById("ebook-search");
       if (searchInput) {
-        searchInput.addEventListener('input', () => {
+        searchInput.addEventListener("input", () => {
           const q = searchInput.value.trim().toLowerCase();
           let filtered = allBooks;
           if (selectedTheme) {
-            filtered = filtered.filter(buku => buku.tema_id === selectedTheme);
+            filtered = filtered.filter(
+              (buku) => buku.tema_id === selectedTheme
+            );
           }
-          filtered = filtered.filter(buku =>
-            (buku.judul && buku.judul.toLowerCase().includes(q)) ||
-            (buku.penulis && buku.penulis.toLowerCase().includes(q)) ||
-            (buku.penerbit && buku.penerbit.toLowerCase().includes(q)) ||
-            (buku.deskripsi && buku.deskripsi.toLowerCase().includes(q)) ||
-            (buku.tahun && String(buku.tahun).toLowerCase().includes(q))
+          filtered = filtered.filter(
+            (buku) =>
+              (buku.judul && buku.judul.toLowerCase().includes(q)) ||
+              (buku.penulis && buku.penulis.toLowerCase().includes(q)) ||
+              (buku.penerbit && buku.penerbit.toLowerCase().includes(q)) ||
+              (buku.deskripsi && buku.deskripsi.toLowerCase().includes(q)) ||
+              (buku.tahun && String(buku.tahun).toLowerCase().includes(q))
           );
           renderBooks(filtered);
         });
       }
     </script>
-    <div class="text-center text-sm text-gray-500 mt-10">* Semua buku diambil dari sumber resmi Kemdikbud dan dapat diakses secara legal.</div>
+    <div class="text-center text-sm text-gray-500 mt-10">
+      * Semua buku diambil dari sumber resmi Kemdikbud dan dapat diakses secara
+      legal.
+    </div>
   </section>
 </Layout>

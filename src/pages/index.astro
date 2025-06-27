@@ -75,184 +75,14 @@ import "../styles/glass-droplet.css";
         badge.style.boxShadow = "";
       });
     });
-  </script>
-  <style>
-    .faq-image-container {
-      max-width: 700px; /* Perbesar lebar gambar */
-      flex-shrink: 0; /* Mencegah gambar menyusut */
-    }
-    .faq-image {
-      width: 100%;
-      height: auto;
-      border-radius: 1.5rem; /* rounded-3xl */
-      object-fit: cover;
-    }
 
-    /* Responsive: sembunyikan gambar versi desktop di mobile */
-    @media (max-width: 1024px) {
-      .faq-image-container {
-        display: none; /* Sembunyikan gambar desktop di mobile */
-      }
-      .faq-image {
-        max-width: 100%;
-        height: auto;
-      }
-      .faq-section-bg {
-        justify-content: center;
+    // Script scroll footer (PASTIKAN HANYA ADA SATU)
+    // @ts-ignore
+    declare global {
+      interface Window {
+        AOS?: any;
       }
     }
-  </style>
-  <style>
-    @media (max-width: 640px) {
-      .ml-64.justify-center {
-        justify-content: flex-start !important;
-        margin-left: 0 !important;
-        padding-left: 18px !important;
-      }
-      .pl-52.items-start {
-        padding-left: 0 !important;
-      }
-      /* Tambahkan jarak bawah pada badge terakhir di mobile */
-      .flex-wrap.gap-4.mt-4 > span:last-child {
-        margin-bottom: 16px !important;
-      }
-    }
-    /* Animasi Bubble Glassmorphism & Dot Floating (INLINE) */
-    .animate-bubble-float-slow {
-      animation: bubbleFloatSlow 18s ease-in-out infinite alternate;
-    }
-    .animate-bubble-float-medium {
-      animation: bubbleFloatMedium 13s ease-in-out infinite alternate;
-    }
-    .animate-bubble-float-fast {
-      animation: bubbleFloatFast 9s ease-in-out infinite alternate;
-    }
-    @keyframes bubbleFloatSlow {
-      0% {
-        transform: translateY(0) scale(1);
-      }
-      100% {
-        transform: translateY(-32px) scale(1.04);
-      }
-    }
-    @keyframes bubbleFloatMedium {
-      0% {
-        transform: translateY(0) scale(1);
-      }
-      100% {
-        transform: translateY(-24px) scale(1.03);
-      }
-    }
-    @keyframes bubbleFloatFast {
-      0% {
-        transform: translateY(0) scale(1);
-      }
-      100% {
-        transform: translateY(-16px) scale(1.01);
-      }
-    }
-    .particle-dot {
-      position: absolute;
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #bae6fd 60%, #38bdf8 100%);
-      opacity: 0.38;
-      filter: blur(1.5px);
-    }
-    .animate-dot-move {
-      animation: dotMove 12s linear infinite alternate;
-    }
-    .animate-dot-move2 {
-      animation: dotMove2 15s linear infinite alternate;
-    }
-    .animate-dot-move3 {
-      animation: dotMove3 18s linear infinite alternate;
-    }
-    .animate-dot-move4 {
-      animation: dotMove4 21s linear infinite alternate;
-    }
-    @keyframes dotMove {
-      0% {
-        transform: translateY(0) scale(1);
-      }
-      100% {
-        transform: translateY(-40px) scale(1.12);
-      }
-    }
-    @keyframes dotMove2 {
-      0% {
-        transform: translateY(0) scale(1);
-      }
-      100% {
-        transform: translateY(28px) scale(0.93);
-      }
-    }
-    @keyframes dotMove3 {
-      0% {
-        transform: translateX(0) scale(1);
-      }
-      100% {
-        transform: translateX(-36px) scale(1.09);
-      }
-    }
-    @keyframes dotMove4 {
-      0% {
-        transform: translateX(0) scale(1);
-      }
-      100% {
-        transform: translateX(30px) scale(0.97);
-      }
-    }
-  </style>
-
-  <style>
-    .sosmed-btn {
-      transition:
-        transform 0.16s,
-        box-shadow 0.16s,
-        filter 0.16s;
-      filter: brightness(1);
-      cursor: pointer;
-    }
-    .sosmed-btn:hover {
-      -webkit-backdrop-filter: blur(44px) saturate(2.6);
-      backdrop-filter: blur(44px) saturate(2.6);
-      transform: translateY(-3px) scale(1.07);
-      filter: brightness(1.08) drop-shadow(0 4px 16px #0002);
-      box-shadow: 0 4px 18px #0002;
-      z-index: 2;
-    }
-    @media (max-width: 640px) {
-      footer .flex.flex-1.min-w-\[340px\].gap-8.justify-end.flex-wrap {
-        align-items: flex-start !important;
-        justify-content: flex-start !important;
-        padding-left: 18px !important;
-      }
-      footer .footer-btn {
-        text-align: left !important;
-        justify-content: flex-start !important;
-        margin-left: 0 !important;
-        padding-left: 0 !important;
-      }
-      footer .flex.flex-col.gap-2.mt-2.min-w-\[160px\] {
-        align-items: flex-start !important;
-      }
-      footer .flex.justify-end.items-start {
-        justify-content: flex-start !important;
-        padding-left: 0 !important;
-      }
-      footer img.w-\[210px\] {
-        margin-left: 0 !important;
-      }
-      footer .w-full.mt-8.flex.justify-center.items-center {
-        justify-content: flex-start !important;
-        padding-left: 18px !important;
-      }
-    }
-  </style>
-  <script is:inline>
-    // Memastikan AOS di-refresh ketika user scroll ke bawah (khusus untuk kasus footer tidak muncul)
     let lastScroll = 0;
     let footerShown = false;
     window.addEventListener("scroll", function () {
@@ -273,5 +103,5 @@ import "../styles/glass-droplet.css";
         footerShown = false;
       }
     });
-  </script>
-</Layout>
+  </script></Layout
+>

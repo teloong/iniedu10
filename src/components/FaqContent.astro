@@ -194,9 +194,9 @@ const faqs = [
 
 <script is:inline>
   function setupAccordion() {
-    console.log("CASCADE: Mencoba menjalankan script accordion...");
+    ("CASCADE: Mencoba menjalankan script accordion...");
     const wrappers = document.querySelectorAll(".faq-item-wrapper");
-    console.log(`CASCADE: Ditemukan ${wrappers.length} item FAQ.`);
+    `CASCADE: Ditemukan ${wrappers.length} item FAQ.`;
 
     if (wrappers.length === 0) return;
 
@@ -206,7 +206,7 @@ const faqs = [
 
       if (button && answer) {
         button.addEventListener("click", () => {
-          console.log(`CASCADE: Item FAQ #${index + 1} diklik.`);
+          `CASCADE: Item FAQ #${index + 1} diklik.`;
           const wasActive = wrapper.classList.contains("active");
 
           // Tutup semua yang lain
@@ -223,9 +223,7 @@ const faqs = [
           // Buka/tutup yang diklik
           if (!wasActive) {
             wrapper.classList.add("active");
-            console.log(
-              `CASCADE: scrollHeight jawaban adalah ${answer.scrollHeight}px`
-            );
+            `CASCADE: scrollHeight jawaban adalah ${answer.scrollHeight}px`;
             answer.style.maxHeight = answer.scrollHeight + "px";
           } else {
             wrapper.classList.remove("active");
@@ -233,9 +231,7 @@ const faqs = [
           }
         });
       } else {
-        console.error(
-          `CASCADE: Tombol atau jawaban tidak ditemukan untuk item #${index + 1}`
-        );
+        `CASCADE: Tombol atau jawaban tidak ditemukan untuk item #${index + 1}`;
       }
     });
   }

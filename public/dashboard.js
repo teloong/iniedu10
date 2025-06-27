@@ -44,7 +44,7 @@ async function fetchPembelian(uid) {
     .eq('status_pembayaran', 'PAID')
     .order('waktu_pembelian', { ascending: false });
   if (error) {
-    console.error('Supabase error:', error); // Debug error detail
+    ('Supabase error:', error); // Debug error detail
     dashboardDiv.innerHTML = '<div class="text-red-500">Gagal memuat data pembelian.</div>';
     return;
   }

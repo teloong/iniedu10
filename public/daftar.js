@@ -17,6 +17,7 @@ if (form) {
       const res = await fetch('https://iniedu.id/register.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        credentials: 'include', // WAJIB untuk session/cookie
         body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}&nama=${encodeURIComponent(nama)}`
       });
       const data = await res.json();
