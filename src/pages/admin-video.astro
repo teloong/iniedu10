@@ -1,0 +1,213 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AdminSidebar from '../components/AdminSidebar.astro';
+import '../styles/global.css';
+---
+<Layout title="Video Pembelajaran">
+  <div class="min-h-screen bg-gray-50 flex">
+    <div class="sticky top-0 h-screen hidden md:block">
+      <AdminSidebar active="videopembelajaran" />
+    </div>
+    <main class="flex-1 overflow-x-auto">
+      <section class="max-w-2xl mx-auto mt-12 bg-white rounded-2xl shadow-lg p-8">
+        
+        <form id="video-form" class="flex flex-col gap-4 mb-8">
+          <input type="text" id="title" required placeholder="Judul Video" class="border rounded p-2" />
+          <select id="kelas" required class="border rounded p-2">
+  <option value="">Pilih Kelas</option>
+  <optgroup label="SD">
+    <option value="1">Kelas 1</option>
+    <option value="2">Kelas 2</option>
+    <option value="3">Kelas 3</option>
+    <option value="4">Kelas 4</option>
+    <option value="5">Kelas 5</option>
+    <option value="6">Kelas 6</option>
+  </optgroup>
+  <optgroup label="SMP">
+    <option value="7">Kelas 7</option>
+    <option value="8">Kelas 8</option>
+    <option value="9">Kelas 9</option>
+  </optgroup>
+  <optgroup label="SMA">
+    <option value="10">Kelas 10</option>
+    <option value="11">Kelas 11</option>
+    <option value="12">Kelas 12</option>
+  </optgroup>
+</select>
+          <select id="mapel" required class="border rounded p-2"></select>
+          <input type="url" id="url" placeholder="URL Video (YouTube)" class="border rounded p-2" />
+          <div class="text-xs text-gray-500 mb-2">Masukkan link YouTube (mode privat/unlisted) yang ingin di-embed.</div>
+          <select id="id_kursus" required class="border rounded p-2">
+            <option value="">Pilih Kursus</option>
+            <option value="1">Konten Pembelajaran Digital</option>
+            <option value="2">Simulasi Ujian</option>
+            <option value="3">Kelas Menulis / Workshop</option>
+          </select>
+          <div class="text-xs text-gray-500 mb-2">Pilih kursus yang sesuai untuk video ini.</div>
+          <textarea id="deskripsi" placeholder="Deskripsi (opsional)" class="border rounded p-2"></textarea>
+          <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded">Tambah Video</button>
+          <div id="video-message" class="text-center text-red-500"></div>
+        </form>
+        <!-- Tidak ada lagi list video di dashboard admin -->
+      </section>
+    </main>
+  </div>
+</Layout>
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+  // Mapel per jenjang
+  const mapelByJenjang = {
+    SD: [
+      'Matematika', 'Bahasa Indonesia', 'Bahasa Arab', 'Bahasa Jawa', 'Bahasa Inggris',
+      'PKN', 'PAI', 'Seni Teater', 'Seni Musik', 'Seni Tari', 'Seni Rupa', 'IPAS'
+    ],
+    SMP: [
+      'Matematika', 'Bahasa Indonesia', 'Bahasa Arab', 'Bahasa Jawa', 'Bahasa Inggris',
+      'PKN', 'PAI', 'Seni Teater', 'Seni Musik', 'Seni Tari', 'Seni Rupa', 'IPA', 'IPS', 'Informatika', 'PJOK'
+    ],
+    SMA: [
+      'Matematika', 'Bahasa Indonesia', 'Bahasa Arab', 'Bahasa Jawa', 'Bahasa Inggris',
+      'PAI', 'PPKn', 'PJOK', 'Informatika', 'Seni Musik', 'Seni Tari', 'Seni Teater', 'Seni Rupa',
+      'Biologi', 'Kimia', 'Fisika', 'Geografi', 'Ekonomi', 'Sosiologi', 'Sejarah', 'IPA', 'IPS'
+    ]
+  };
+
+  function getJenjangByKelas(kelas) {
+    if (kelas >= 1 && kelas <= 6) return 'SD';
+    if (kelas >= 7 && kelas <= 9) return 'SMP';
+    if (kelas >= 10 && kelas <= 12) return 'SMA';
+    return null;
+  }
+
+  function renderMapelOptions(kelas, selectedMapel = '') {
+    const select = document.getElementById('mapel');
+    select.innerHTML = '';
+    const optionDefault = document.createElement('option');
+    optionDefault.value = '';
+    optionDefault.textContent = 'Pilih Mapel';
+    select.appendChild(optionDefault);
+    const jenjang = getJenjangByKelas(Number(kelas));
+    if (!jenjang) return;
+    mapelByJenjang[jenjang].forEach(mapel => {
+      const opt = document.createElement('option');
+      opt.value = mapel;
+      opt.textContent = mapel;
+      if (mapel === selectedMapel) opt.selected = true;
+      select.appendChild(opt);
+    });
+  }
+
+  // Inisialisasi mapel saat load
+  document.getElementById('kelas').addEventListener('change', (e) => {
+    renderMapelOptions(e.target.value);
+  });
+  // Prefill default kosong saat load awal
+  renderMapelOptions('');
+
+  // Inisialisasi Supabase
+  const supabaseUrl = 'https://jcfizceoycwdvpqpwhrj.supabase.co';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA';
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  // Proteksi: hanya user yang login Supabase yang bisa akses halaman ini
+  (async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session || session.user.email !== "lemindes@gmail.com") {
+      window.location.href = '/admin-login';
+    }
+  })();
+
+  // Validasi YouTube URL
+  function isValidYouTubeUrl(url) {
+    return (
+      url.match(/^https?:\/\/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[\w-]{11}/) != null
+    );
+  }
+
+  const form = document.getElementById('video-form');
+  const videoMessage = document.getElementById('video-message');
+
+  // Prefill form jika mode edit
+  async function prefillEditForm() {
+    const params = new URLSearchParams(window.location.search);
+    const editId = params.get('edit');
+    if (editId) {
+      // Ganti tombol
+      form.querySelector('button[type="submit"]').textContent = 'Update Video';
+      // Ambil data video dari Supabase
+      const { data, error } = await supabase.from('videos').select('*').eq('id', editId).single();
+      if (error || !data) {
+        videoMessage.textContent = 'Gagal memuat data video untuk diedit.';
+        return;
+      }
+      document.getElementById('title').value = data.title || '';
+      document.getElementById('kelas').value = data.kelas || '';
+      renderMapelOptions(data.kelas, data.mapel || '');
+      document.getElementById('mapel').value = data.mapel || '';
+      document.getElementById('url').value = data.url || '';
+      document.getElementById('id_kursus').value = data.id_kursus || '';
+      document.getElementById('deskripsi').value = data.description || '';
+      form.dataset.editId = editId;
+    } else {
+      form.querySelector('button[type="submit"]').textContent = 'Tambah Video';
+      form.dataset.editId = '';
+    }
+  }
+  // Jalankan prefill saat halaman dimuat
+  prefillEditForm();
+
+
+  // Tambah video baru
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    videoMessage.textContent = '';
+    const title = document.getElementById('title').value.trim();
+    const kelas = document.getElementById('kelas').value;
+    const mapel = document.getElementById('mapel').value;
+    const url = document.getElementById('url').value.trim();
+    const id_kursus = document.getElementById('id_kursus').value;
+    const description = document.getElementById('deskripsi').value.trim();
+    // Debug: tampilkan payload
+    
+    if (!title || !kelas || !mapel || !url || !id_kursus) {
+      videoMessage.textContent = 'Semua field wajib diisi!';
+      return;
+    }
+    if (!isValidYouTubeUrl(url)) {
+      videoMessage.textContent = 'Mohon masukkan URL YouTube yang valid!';
+      return;
+    }
+    // Cek mode edit atau tambah baru
+    const editId = form.dataset.editId;
+    if (editId) {
+      // Update video
+      const { error, data } = await supabase.from('videos').update({ title, kelas, mapel, url, id_kursus, description }).eq('id', editId);
+      // Debug: tampilkan response update
+      
+      if (error) {
+        videoMessage.textContent = 'Gagal mengupdate video.';
+        
+      } else {
+        videoMessage.textContent = 'Berhasil mengupdate video!';
+        setTimeout(() => { window.location.href = '/admin-daftar-video'; }, 1000);
+      }
+    } else {
+      // Tambah baru
+      const { error, data } = await supabase.from('videos').insert([{ title, url, kelas, mapel, id_kursus, description }]);
+      // Debug: tampilkan response insert
+      
+      if (error) {
+        videoMessage.textContent = 'Gagal menambah video.';
+        videoMessage.classList.remove('text-green-600');
+        videoMessage.classList.add('text-red-500');
+        
+      } else {
+        form.reset();
+        videoMessage.textContent = 'Berhasil menambah video!';
+        videoMessage.classList.remove('text-red-500');
+        videoMessage.classList.add('text-green-600');
+      }
+    }
+  });
+</script>

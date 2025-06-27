@@ -1,0 +1,130 @@
+---
+// Section with background and CSS-generated frame
+---
+
+<section id="sambutan-bg" class="relative h-screen overflow-hidden">
+  <!-- Background Image -->
+  <div class="absolute inset-0">
+    <img
+      src="/images/Background.webp"
+      alt="Latar belakang abstrak biru dan hijau"
+      class="w-full h-full object-cover"
+      loading="lazy"
+    />
+  </div>
+
+  <!-- CSS Frame Container -->
+  <div class="relative h-full w-full p-6 md:p-8" data-aos="zoom-in">
+    <div
+      class="relative h-full w-full border-4 border-blue-600 flex flex-col md:flex-row items-start md:items-center justify-start p-2 sm:p-4 md:p-8 lg:p-16 gap-4 md:gap-0"
+    >
+      <!-- Top-left corner -->
+      <div class="corner top-left">
+        <div class="dots"></div>
+        <div class="lines"></div>
+      </div>
+      <!-- Top-right corner -->
+      <div class="corner top-right">
+        <div class="lines -scale-x-100"></div>
+        <div class="dots"></div>
+      </div>
+      <!-- Bottom-left corner -->
+      <div class="corner bottom-left">
+        <div class="dots"></div>
+        <div class="lines -scale-y-100"></div>
+      </div>
+      <!-- Bottom-right corner -->
+      <div class="corner bottom-right">
+        <div class="lines -scale-x-100 -scale-y-100"></div>
+        <div class="dots"></div>
+      </div>
+      <!-- Text Content -->
+      <div
+        class="z-20 w-full max-w-full md:max-w-2xl text-left px-2 sm:px-4 md:px-0"
+        data-aos="fade-up"
+        data-aos-delay="400"
+      >
+        <h1 class="text-4xl md:text-6xl font-bold text-white">
+          Cerita dari <br />
+          <span class="text-yellow-400 font-extrabold">Founder IniEdu.</span>
+        </h1>
+        <div class="mt-6 space-y-4 text-base md:text-lg text-white/95">
+          <p>
+            Saya bukan berasal dari generasi digital. Tapi saya hidup yang
+            menuntut saya untuk terus belajar bukan demi gelar, tapi demi bisa
+            terus hidup dengan bermakna. Banyak dari kita merasa belajar adalah
+            milik mereka yang anak kecil atau yang muda. Padahal, belajar
+            seharusnya milik semua orang. Milik siapa pun yang ingin memahami
+            dunia dengan lebih baik.
+          </p>
+          <p>
+            IniEdu.id lahir dari keyakinan itu. Bahwa belajar bisa dilakukan
+            dengan cara yang sederhana. Dengan video singkat. Dengan membaca
+            sedikit demi sedikit. Dengan satu klik setiap harinya. Dengan tidak
+            terburu-buru.
+          </p>
+          <p>
+            Iniedu hadir bukan karena saya ahli teknologi. Tapi karena saya tahu
+            rasanya ingin belajar, tapi tidak tahu harus mulai dari mana, harus
+            kapan, dan harus dengan siapa. Maka kami siap berkomitmen menemani
+            berprosesmu, mendampingi belajarmu, terima uluran tangan kami
+            melalui Iniedu. Selamat bermakna! Belajar adalah keberanian untuk
+            terus bertumbuh.
+          </p>
+        </div>
+        <div
+          class="mt-8 inline-block rounded-full bg-yellow-400 px-8 py-3 text-blue-900 font-bold text-lg shadow-lg"
+        >
+          Founder IniEdu
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .corner {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    z-index: 10;
+  }
+  .top-left {
+    top: 1.5rem;
+    left: 1.5rem;
+  }
+  .top-right {
+    top: 1.5rem;
+    right: 1.5rem;
+  }
+  .bottom-left {
+    bottom: 1.5rem;
+    left: 1.5rem;
+  }
+  .bottom-right {
+    bottom: 1.5rem;
+    right: 1.5rem;
+  }
+
+  .dots {
+    width: 48px;
+    height: 24px;
+    --dot-color: #2563eb; /* Corresponds to blue-600 */
+    background-image: radial-gradient(var(--dot-color) 2px, transparent 2px);
+    background-size: 8px 8px;
+  }
+
+  .lines {
+    width: 70px;
+    height: 24px;
+    --line-color: #2563eb; /* Corresponds to blue-600 */
+    background: repeating-linear-gradient(
+      -45deg,
+      var(--line-color),
+      var(--line-color) 2px,
+      transparent 3px,
+      transparent 6px
+    );
+  }
+</style>

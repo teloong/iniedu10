@@ -1,0 +1,165 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AdminSidebar from '../components/AdminSidebar.astro';
+import '../styles/global.css';
+---
+<Layout title="Daftar E-Book Perpustakaan">
+  <div class="min-h-screen bg-gray-50 flex">
+    <div class="sticky top-0 h-screen hidden md:block">
+      <AdminSidebar active="daftar-ebook" />
+    </div>
+    <main class="flex-1 overflow-x-auto">
+      <div class="max-w-7xl mx-auto px-6 py-8">
+        <h1 class="text-2xl font-bold text-blue-700 mb-2">Daftar E-Book Perpustakaan</h1>
+        <div class="mb-6 flex items-center gap-3">
+          <input id="ebook-search" type="text" placeholder="Cari e-book berdasarkan judul, penulis, penerbit, atau deskripsi..." class="w-full md:w-96 px-4 py-2 rounded-lg border border-blue-200 shadow focus:outline-none focus:ring-2 focus:ring-blue-400 transition" />
+          <svg class="w-6 h-6 text-blue-400 -ml-8 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" stroke="currentColor"></circle><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-linecap="round"></path></svg>
+        </div>
+        <div id="kategori-list">
+          <!-- Daftar kategori dan e-book akan dirender di sini -->
+        </div>
+      </div>
+    </main>
+  </div>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+    const supabase = createClient('https://jcfizceoycwdvpqpwhrj.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA');
+    let categories = [];
+    let ebooks = [];
+    const kategoriList = document.getElementById('kategori-list');
+
+    async function fetchCategoriesAndEbooks() {
+      const { data: cats, error: catErr } = await supabase.from('ebook_categories').select('*').order('nama', { ascending: true });
+      if (catErr) {
+        kategoriList.innerHTML = '<div class="text-center text-red-500">Gagal memuat kategori.</div>';
+        return;
+      }
+      categories = cats;
+      // Fetch semua buku
+      const { data: books, error: bookErr } = await supabase.from('ebooks').select('*');
+      if (bookErr) {
+        kategoriList.innerHTML = '<div class="text-center text-red-500">Gagal memuat buku.</div>';
+        return;
+      }
+      ebooks = books;
+      renderCategoriesAndEbooks();
+    }
+
+    function renderCategoriesAndEbooks() {
+      kategoriList.innerHTML = '';
+      if (categories.length === 0) {
+        kategoriList.innerHTML = '<div class="text-center text-gray-400">Belum ada kategori.</div>';
+        return;
+      }
+      // Ambil nilai search
+      const searchVal = (document.getElementById('ebook-search')?.value || '').toLowerCase();
+      // State halaman per kategori
+      if (!window.ebookPageState) window.ebookPageState = {};
+      const pageState = window.ebookPageState;
+      const pageSize = 10;
+
+      categories.forEach(cat => {
+        const section = document.createElement('section');
+        section.className = 'mb-12';
+        // Filter e-book sesuai kategori dan search
+        const filteredEbooks = ebooks.filter(b => b.kategori_id === cat.id && (
+          b.judul?.toLowerCase().includes(searchVal) ||
+          b.penulis?.toLowerCase().includes(searchVal) ||
+          b.penerbit?.toLowerCase().includes(searchVal) ||
+          b.deskripsi?.toLowerCase().includes(searchVal)
+        ));
+        // Pagination logic
+        const page = pageState[cat.id] || 1;
+        const totalPages = Math.max(1, Math.ceil(filteredEbooks.length / pageSize));
+        const startIdx = (page - 1) * pageSize;
+        const endIdx = startIdx + pageSize;
+        const pagedEbooks = filteredEbooks.slice(startIdx, endIdx);
+
+        section.innerHTML = `
+          <h2 class="text-xl font-bold mb-4">${cat.nama}</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+            ${pagedEbooks.length === 0
+              ? '<div class="col-span-3 text-center text-gray-400">Belum ada buku.</div>'
+              : pagedEbooks.map(buku => `
+                <div class="bg-white rounded-xl shadow p-4 flex flex-col items-center min-w-[240px] h-full" key="${buku.id}">
+                  <img src="${buku.cover || '/default-cover.png'}" alt="Cover Buku" class="w-32 h-44 object-cover rounded mb-2" />
+                  <div class="flex flex-col flex-grow w-full">
+                    <div>
+                      <div class="font-bold mt-2 text-center">${buku.judul}</div>
+                      <div class="text-sm text-gray-500 mb-1">${buku.penulis}${buku.tahun ? ', ' + buku.tahun : ''}</div>
+                      ${buku.penerbit ? `<div class='text-xs text-gray-400 mb-1'>Penerbit: ${buku.penerbit}</div>` : ''}
+                      ${buku.deskripsi ? `<div class='text-xs text-gray-500 mb-2 italic'>${buku.deskripsi}</div>` : ''}
+                      ${buku.link && buku.link.endsWith('.pdf') ? `<iframe src="${buku.link}" width="100%" height="350" class="mt-3 rounded border"></iframe>` : ''}
+                    </div>
+                    <div class="mt-auto flex flex-col items-center w-full">
+                      <a href="${buku.link}" target="_blank" class="px-4 py-2 bg-blue-500 text-white rounded-full font-semibold mb-2 w-full text-center">Baca Sekarang</a>
+                      <div class="flex gap-2 w-full justify-center">
+                        <button class="px-3 py-1 bg-yellow-400 text-white rounded font-bold text-xs w-1/2" onclick="window.location.href='/admin-edit-ebook?id=${buku.id}'">Edit</button>
+                        <button class="px-3 py-1 bg-red-500 text-white rounded font-bold text-xs w-1/2" onclick="hapusEbook('${buku.id}')">Hapus</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+          </div>
+          <div class="flex justify-center mt-4 gap-2 flex-wrap">
+  <button class="px-3 py-1 rounded bg-gray-200 text-gray-700 disabled:opacity-50" data-page="prev" data-cat="${cat.id}" ${page === 1 ? 'disabled' : ''}>Sebelumnya</button>
+  ${Array.from({length: totalPages}, (_,i) => `
+    <button class="px-3 py-1 rounded ${page === i+1 ? 'bg-blue-600 text-white font-bold' : 'bg-gray-200 text-gray-700'}" data-page="${i+1}" data-cat="${cat.id}">${i+1}</button>
+  `).join('')}
+  <button class="px-3 py-1 rounded bg-gray-200 text-gray-700 disabled:opacity-50" data-page="next" data-cat="${cat.id}" ${page === totalPages ? 'disabled' : ''}>Berikutnya</button>
+</div>
+        `;
+
+        // Event listener pagination
+        setTimeout(() => {
+          section.querySelectorAll('button[data-page]').forEach(btn => {
+            btn.addEventListener('click', e => {
+              const pageAttr = btn.getAttribute('data-page');
+              const catId = btn.getAttribute('data-cat');
+              let newPage = pageState[catId] || 1;
+              if (pageAttr === 'prev') {
+                newPage = Math.max(1, newPage - 1);
+              } else if (pageAttr === 'next') {
+                const totalPages = Math.max(1, Math.ceil((ebooks.filter(b => b.kategori_id === catId && (
+                  b.judul?.toLowerCase().includes(searchVal) ||
+                  b.penulis?.toLowerCase().includes(searchVal) ||
+                  b.penerbit?.toLowerCase().includes(searchVal) ||
+                  b.deskripsi?.toLowerCase().includes(searchVal)
+                ))).length / pageSize));
+                newPage = Math.min(totalPages, newPage + 1);
+              } else {
+                newPage = parseInt(pageAttr);
+              }
+              pageState[catId] = newPage;
+              renderCategoriesAndEbooks();
+            });
+          });
+        }, 0);
+
+        kategoriList.appendChild(section);
+      });
+    }
+
+    fetchCategoriesAndEbooks();
+
+    // Event listener untuk search real-time
+    const searchInput = document.getElementById('ebook-search');
+    if (searchInput) {
+      searchInput.addEventListener('input', () => {
+        renderCategoriesAndEbooks();
+      });
+    }
+
+    // Fungsi hapus e-book
+    window.hapusEbook = async function(id) {
+      if (!confirm('Yakin ingin menghapus e-book ini?')) return;
+      const { error } = await supabase.from('ebooks').delete().eq('id', id);
+      if (error) {
+        alert('Gagal menghapus e-book: ' + error.message);
+        return;
+      }
+      fetchCategoriesAndEbooks();
+    }
+  </script>
+</Layout>

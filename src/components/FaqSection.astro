@@ -1,0 +1,73 @@
+---
+// Komponen ini menyediakan section dengan background untuk FAQ.
+---
+
+<section class="faq-section-bg">
+  <!--
+    Letakkan komponen FAQ atau konten lainnya di sini.
+    Contoh: <AccordionSection /> atau komponen FAQ kustom.
+  -->
+  <slot />
+  <img
+    src="/images/rumput2.png"
+    alt="Ornamen Rumput"
+    class="rumput-tengah"
+    data-aos="fade-up"
+    data-aos-anchor-placement="top-bottom"
+    data-aos-delay="200"
+  />
+  <img
+    src="/images/rumput1.png"
+    alt="Ornamen Rumput"
+    class="rumput-kanan"
+    data-aos="fade-up"
+    data-aos-anchor-placement="top-bottom"
+    data-aos-delay="300"
+  />
+</section>
+
+<style>
+  .faq-section-bg {
+    display: flex;
+    align-items: center; /* Menengahkan konten secara vertikal */
+    justify-content: space-between; /* Memberi ruang antara konten & gambar */
+    padding: 4rem 10%; /* Padding di kedua sisi */
+    gap: 2rem; /* Jarak antara konten dan gambar */
+    min-height: 700px; /* Menentukan tinggi minimal section */
+    width: 100%;
+    position: relative;
+    overflow: hidden; /* Penting untuk menampung elemen absolut */
+    isolation: isolate; /* Membuat stacking context baru */
+
+    /* Background utama tanpa rumput */
+    background-image: url("/images/gelombangfaq.webp"),
+      url("/images/bgfaqsec.webp");
+    background-position:
+      top left,
+      center;
+    background-size:
+      40% auto,
+      cover;
+    background-repeat: no-repeat;
+  }
+  .rumput-tengah,
+  .rumput-kanan {
+    position: absolute;
+    bottom: 0;
+    z-index: -1;
+    pointer-events: none; /* Agar tidak mengganggu klik */
+  }
+
+  .rumput-tengah {
+    left: 40%;
+    transform: translateX(-50%);
+    width: 15%;
+    height: auto;
+  }
+
+  .rumput-kanan {
+    right: 0;
+    width: 12%;
+    height: auto;
+  }
+</style>

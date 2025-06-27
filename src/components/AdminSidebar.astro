@@ -1,0 +1,87 @@
+---
+const { active = "dashboard" } = Astro.props;
+const menu = [
+  { label: "Dashboard", href: "/admin-dashboard", icon: `<svg class='w-5 h-5' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'><path d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6' stroke-linecap='round' stroke-linejoin='round'/></svg>` },
+  { label: "Kursus", href: "/kursus", icon: `<svg class='w-5 h-5' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'><rect x='3' y='7' width='18' height='13' rx='2'/><path d='M16 3v4M8 3v4' stroke-linecap='round' stroke-linejoin='round'/></svg>` },
+  { label: "Video Pembelajaran", href: "/admin-video", icon: `<svg class='w-5 h-5' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'><rect x='3' y='5' width='18' height='14' rx='2'/><path d='M10 9l5 3-5 3V9z' stroke-linecap='round' stroke-linejoin='round'/></svg>`,
+    submenu: [
+      { label: "Daftar Video", href: "/admin-daftar-video" }
+    ]
+  },
+  { label: "Perpustakaan", href: "/admin-perpus", icon: `<svg class='w-5 h-5' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'><rect x='4' y='4' width='16' height='16' rx='2'/><path d='M8 4v16M16 4v16' stroke-linecap='round' stroke-linejoin='round'/></svg>`,
+    submenu: [
+      { label: "Daftar E-Book", href: "/admin-daftar-ebook" },
+      { label: "Tema E-Book", href: "/admin-tema-ebook" }
+    ]
+  },
+  { label: "Blog", href: "/admin-blog", icon: `<svg class='w-5 h-5' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'><rect x='4' y='4' width='16' height='16' rx='2'/><path d='M8 8h8M8 12h8M8 16h4' stroke-linecap='round' stroke-linejoin='round'/></svg>`,
+    submenu: [
+      { label: "Daftar Blog", href: "/admin-daftar-blog" }
+    ]
+  },
+  { label: "Statistik & Laporan", href: "/admin-statistik", icon: `<svg class='w-5 h-5' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'><path d='M3 17v-2a4 4 0 014-4h10a4 4 0 014 4v2' stroke-linecap='round' stroke-linejoin='round'/><circle cx='12' cy='7' r='4'/></svg>`,
+    submenu: [
+      { label: "Charts", href: "/admin-charts" }
+    ]
+  },
+  { label: "Pengaturan", href: "/admin-pengaturan", icon: `<svg class='w-5 h-5' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'><path d='M12 6v6l4 2' stroke-linecap='round' stroke-linejoin='round'/><circle cx='12' cy='12' r='10'/></svg>` },
+];
+---
+<aside class="bg-[#232b4d] min-h-screen w-60 px-4 py-6 flex flex-col shadow-lg justify-between">
+  <div class="flex items-center gap-2 mb-8 px-2">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#2563eb"/><path d="M10 22V10a2 2 0 012-2h8a2 2 0 012 2v12" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span class="text-white text-xl font-bold tracking-wide">Dashboard</span>
+  </div>
+  <nav class="flex-1 flex flex-col gap-1">
+    {menu.map(item => (
+      <>
+        <a href={item.href} class={["flex items-center gap-3 px-4 py-2 rounded-lg font-medium transition-all text-base",
+          active === item.label.toLowerCase().replace(/\s/g,"") ? "bg-white/10 text-white font-semibold shadow" : "text-blue-100 hover:bg-white/5 hover:text-white"].join(' ')}>
+          <span class="inline-block" set:html={item.icon}></span>
+          {item.label}
+        </a>
+        {item.submenu && (
+          (
+            // Tampilkan submenu jika menu Blog, Video Pembelajaran, Perpustakaan, atau Statistik & Laporan aktif
+            ((active === 'blog' || active.startsWith('daftar-blog')) && item.label === 'Blog') ||
+            ((active === 'videopembelajaran' || active.startsWith('daftar-video')) && item.label === 'Video Pembelajaran') ||
+            ((active === 'perpustakaan' || active.startsWith('daftar-ebook')) && item.label === 'Perpustakaan') ||
+            ((active === 'statistik&laporan' || active === 'admin-charts') && item.label === 'Statistik & Laporan') ||
+            (active === 'tema-ebook' && item.label === 'Perpustakaan')
+          ) && (
+            <div class="ml-8 flex flex-col gap-1">
+              {item.submenu.map(sub => (
+                <a href={sub.href} class={["block px-4 py-2 rounded-lg text-base transition-all",
+                  // Highlight submenu aktif
+                   ((active === 'daftar-blog' && item.label === 'Blog' && sub.label === 'Daftar Blog') ||
+                   (active === 'daftar-video' && item.label === 'Video Pembelajaran' && sub.label === 'Daftar Video') ||
+                   (active === 'daftar-ebook' && item.label === 'Perpustakaan' && sub.label === 'Daftar E-Book') ||
+                   (active === 'admin-charts' && item.label === 'Statistik & Laporan' && sub.label === 'Charts')) ||
+                   (active === 'tema-ebook' && item.label === 'Perpustakaan' && sub.label === 'Tema E-Book')
+                    ? "bg-white/10 text-white font-semibold"
+                    : "text-blue-100 hover:bg-white/5 hover:text-white"
+                ].join(' ')}>
+                  {sub.label}
+                </a>
+              ))}
+            </div>
+          )
+        )}
+      </>
+    ))}
+  </nav>
+  <form id="logout-form" class="mt-8">
+    <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded transition-all">Logout</button>
+  </form>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+    const supabaseUrl = 'https://jcfizceoycwdvpqpwhrj.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA';
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    document.getElementById('logout-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await supabase.auth.signOut();
+      window.location.href = '/admin-login';
+    });
+  </script>
+</aside>

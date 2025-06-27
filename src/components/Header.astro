@@ -1,0 +1,175 @@
+---
+// Header component untuk website IniEdu
+---
+
+<header class="bg-white sticky top-0 z-50">
+  <div class="container mx-auto px-4 py-3 flex items-center">
+    <!-- Logo IniEdu -->
+    <div class="flex items-center ml-6">
+      <a href="/" class="flex items-center">
+        <picture>
+          <source srcset="/images/logo-iniedu.webp" type="image/webp" />
+          <img
+            src="/images/logo-iniedu-web.png"
+            alt="IniEdu Logo"
+            width="120"
+            height="40"
+            class="h-10 w-auto max-w-full"
+            decoding="async"
+            fetchpriority="high"
+            style="max-width:100%;height:auto"
+          />
+        </picture>
+      </a>
+    </div>
+
+    <!-- Menu Navigasi Tengah -->
+    <nav class="hidden md:flex flex-1 items-center justify-center space-x-8">
+      <a
+        href="/"
+        class="text-gray-800 hover:text-primary font-semibold transition-colors text-lg"
+        >Beranda</a
+      >
+
+      <a
+        href="/kursus"
+        class="text-gray-800 hover:text-primary font-semibold transition-colors text-lg"
+        >Kursus</a
+      >
+      <a
+        href="/perpustakaan"
+        class="text-gray-800 hover:text-primary font-semibold transition-colors text-lg"
+        >Perpustakaan</a
+      >
+      <a
+        href="/blog"
+        class="text-gray-800 hover:text-primary font-semibold transition-colors text-lg"
+        >Blog</a
+      >
+    </nav>
+    <!-- Right Side Actions -->
+    <div class="flex items-center justify-end space-x-2 ml-auto mr-6 md:min-w-[120px]">
+      <!-- Tombol Login/Profil (order-1 on mobile) -->
+      <div id="auth-action" class="flex items-center order-1">
+        <a href="/login" class="btn btn-primary hidden" id="login-btn">Login</a>
+        <a
+          href="/profil"
+          id="profile-btn"
+          class="hidden flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 via-cyan-400 to-purple-500 text-white font-semibold shadow-lg hover:shadow-2xl hover:scale-105 hover:ring-4 hover:ring-blue-300 transition-all duration-300 focus:outline-none"
+        >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            ><circle cx="12" cy="8" r="4"></circle><path
+              d="M4 20c0-4 8-4 8-4s8 0 8 4"></path></svg
+          >
+          <span>Profil</span>
+        </a>
+      </div>
+
+      <!-- Menu Mobile Toggle (order-2 on mobile) -->
+      <div class="md:hidden order-2">
+        <button
+          id="mobile-menu-button"
+          class="text-gray-800 focus:outline-none p-2"
+          aria-label="Buka menu navigasi"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menu Mobile -->
+  <div id="mobile-menu" class="md:hidden hidden bg-white border-t">
+    <div class="container mx-auto px-4 py-3 flex flex-col space-y-4">
+      <a
+        href="/"
+        class="text-gray-800 hover:text-primary font-medium transition-colors py-2"
+        >Beranda</a
+      >
+
+      <a
+        href="/kursus"
+        class="text-gray-800 hover:text-primary font-medium transition-colors py-2"
+        >Kursus</a
+      >
+      <a
+        href="/perpustakaan"
+        class="text-gray-800 hover:text-primary font-medium transition-colors py-2"
+        >Perpustakaan</a
+      >
+      <a
+        href="/blog"
+        class="text-gray-800 hover:text-primary font-medium transition-colors py-2"
+        >Blog</a
+      >
+      <a
+        href="/login"
+        class="text-blue-600 hover:text-blue-800 font-medium transition-colors py-2 hide-mobile-auth"
+        >Login</a
+      >
+      <a
+        href="/daftar"
+        class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded px-4 py-2 transition-all hide-mobile-auth"
+        >Daftar</a
+      >
+    </div>
+  </div>
+</header>
+
+<style>
+  .hide-mobile-auth {
+    @apply md:hidden;
+  }
+</style>
+<script>
+  // Sembunyikan tombol login/daftar di mobile jika user sudah login
+  function hideMobileAuthIfLoggedIn() {
+    var profileBtn = document.getElementById("profile-btn");
+    var isLoggedIn =
+      profileBtn &&
+      getComputedStyle(profileBtn).display !== "none" &&
+      getComputedStyle(profileBtn).visibility !== "hidden";
+    document.querySelectorAll(".hide-mobile-auth").forEach(function (el) {
+      if (isLoggedIn) {
+        el.classList.add("hidden");
+      } else {
+        el.classList.remove("hidden");
+      }
+    });
+  }
+  window.addEventListener("DOMContentLoaded", hideMobileAuthIfLoggedIn);
+  // Jalankan juga setiap kali menu mobile dibuka
+  var mobileMenuButton = document.getElementById("mobile-menu-button");
+  if (mobileMenuButton) {
+    mobileMenuButton.addEventListener("click", function () {
+      setTimeout(hideMobileAuthIfLoggedIn, 10);
+    });
+  }
+</script>
+
+<script>
+  // Toggle menu mobile
+  const mobileMenuButton = document.getElementById("mobile-menu-button");
+  const mobileMenu = document.getElementById("mobile-menu");
+
+  mobileMenuButton?.addEventListener("click", () => {
+    mobileMenu?.classList.toggle("hidden");
+  });
+</script>

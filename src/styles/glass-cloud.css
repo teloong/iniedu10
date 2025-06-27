@@ -1,0 +1,22 @@
+.glass-cloud {
+  background: rgba(255,255,255,0.18);
+  border-radius: 2.5rem;
+  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(255,255,255,0.22);
+  transition: box-shadow 0.3s, border 0.3s;
+}
+
+.glass-cloud:hover {
+  box-shadow: 0 12px 40px 0 rgba(31,38,135,0.22);
+  border: 2px solid rgba(255,255,255,0.32);
+}
+
+@media (max-width: 767px) {
+  .glass-cloud {
+    border-radius: 1.5rem;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+}

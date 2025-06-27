@@ -1,0 +1,399 @@
+---
+import Layout from "../layouts/Layout.astro";
+import AdminSidebar from "../components/AdminSidebar.astro";
+import { supabase } from "../utils/supabase.js";
+import "../styles/global.css";
+
+// Ambil jumlah user dari Supabase
+const { count: userCount } = await supabase
+  .from("users")
+  .select("*", { count: "exact", head: true });
+
+// Ambil jumlah video dari Supabase
+const { count: videoCount } = await supabase
+  .from("videos")
+  .select("*", { count: "exact", head: true });
+
+// Ambil jumlah kursus dari Supabase
+const { count: kursusCount } = await supabase
+  .from("kursus")
+  .select("*", { count: "exact", head: true });
+
+// Ambil total klik perpustakaan per kategori
+const { count: countBukuSekolah } = await supabase
+  .from("perpustakaan_clicks")
+  .select("*", { count: "exact", head: true })
+  .eq("kategori", "buku_sekolah");
+const { count: countBukuIslam } = await supabase
+  .from("perpustakaan_clicks")
+  .select("*", { count: "exact", head: true })
+  .eq("kategori", "buku_islam");
+const { count: countBukuAnak } = await supabase
+  .from("perpustakaan_clicks")
+  .select("*", { count: "exact", head: true })
+  .eq("kategori", "buku_anak");
+---
+
+<Layout title="Dashboard Admin">
+  <!-- Proteksi tetap ada di atas -->
+  <div id="dashboard-root"></div>
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+    const supabaseUrl = "https://jcfizceoycwdvpqpwhrj.supabase.co";
+    const supabaseKey =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA";
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    // Proteksi: hanya user login Supabase yang bisa akses
+    (async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (!session) {
+        window.location.href = "/admin-login";
+      }
+    })();
+
+    // Fetch user terbaru dari endpoint backend
+    async function fetchLatestUsers() {
+      try {
+        const res = await fetch("/users-latest.json");
+        if (!res.ok) {
+          return;
+        }
+        const data = await res.json();
+        if (Array.isArray(data.users)) {
+          // Update tabel user terbaru
+          const tbody = document.querySelector("table.min-w-full tbody");
+          tbody.innerHTML = "";
+          data.users.forEach((user) => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td class="py-2 px-3">${user.displayName || "-"}</td>
+              <td class="py-2 px-3">${user.email}</td>
+              <td class="py-2 px-3">${user.created_at}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+          // Update statistik
+          document.querySelectorAll(".stat-user-count").forEach((el) => {
+            el.textContent = data.users.length > 0 ? data.users.length : "-";
+          });
+          // Update chart aktivitas user (dummy: jumlah user baru per hari 7 hari terakhir)
+          const chartLabels = [];
+          const chartData = [];
+          const dateMap = {};
+          data.users.forEach((u) => {
+            dateMap[u.created_at] = (dateMap[u.created_at] || 0) + 1;
+          });
+          const now = new Date();
+          for (let i = 6; i >= 0; i--) {
+            const d = new Date(now);
+            d.setDate(now.getDate() - i);
+            const dateStr = d.toISOString().slice(0, 10);
+            chartLabels.push(dateStr);
+            chartData.push(dateMap[dateStr] || 0);
+          }
+          if (window.Chart) {
+            // Inisialisasi variabel global chart jika belum ada
+            if (typeof window._userChart === "undefined")
+              window._userChart = null;
+            const ctx = document
+              .getElementById("activityChart")
+              .getContext("2d");
+            if (
+              window._userChart &&
+              typeof window._userChart.destroy === "function"
+            ) {
+              window._userChart.destroy();
+            }
+            window._userChart = new window.Chart(ctx, {
+              type: "line",
+              data: {
+                labels: chartLabels,
+                datasets: [
+                  {
+                    label: "User Baru",
+                    data: chartData,
+                    borderColor: "#2563eb",
+                    backgroundColor: "rgba(37,99,235,0.1)",
+                    fill: true,
+                    tension: 0.4,
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+              },
+            });
+          }
+        }
+      } catch (err) {}
+    }
+    document.addEventListener("DOMContentLoaded", fetchLatestUsers);
+  </script>
+</Layout>
+
+<!-- SIDEBAR & MAIN DASHBOARD -->
+<div class="min-h-screen bg-gray-50 flex">
+  <div class="sticky top-0 h-screen hidden md:block">
+    <AdminSidebar active="dashboard" />
+  </div>
+  <main class="flex-1 overflow-x-auto">
+    <div class="max-w-7xl mx-auto px-4 py-8">
+      <!-- Statistik Card (rapi satu baris) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6 mb-10">
+        <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
+          <div class="mb-2 text-blue-600 text-3xl">
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24"
+              ><circle cx="12" cy="12" r="12" fill="#dbeafe"></circle><path
+                d="M12 12a4 4 0 100-8 4 4 0 000 8zm0 2c-3.314 0-6 1.343-6 3v1a1 1 0 001 1h10a1 1 0 001-1v-1c0-1.657-2.686-3-6-3z"
+                fill="#2563eb"></path></svg
+            >
+          </div>
+          <div class="text-sm text-gray-500 mb-1">Total Video</div>
+          <div class="text-2xl font-bold stat-video-count">-</div>
+        </div>
+        <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
+          <div class="mb-2 text-yellow-600 text-3xl">
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24"
+              ><circle cx="12" cy="12" r="12" fill="#fef9c3"></circle><path
+                d="M7 17V7a2 2 0 012-2h6a2 2 0 012 2v10"
+                stroke="#ca8a04"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"></path></svg
+            >
+          </div>
+          <div class="text-sm text-gray-500 mb-1">Total Kursus</div>
+          <div class="text-2xl font-bold stat-kursus-count">-</div>
+        </div>
+        <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
+          <div class="mb-2 text-green-600 text-3xl">
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24"
+              ><circle cx="12" cy="12" r="12" fill="#dcfce7"></circle><path
+                d="M8 17V7a2 2 0 012-2h4a2 2 0 012 2v10"
+                stroke="#16a34a"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"></path></svg
+            >
+          </div>
+          <div class="text-sm text-gray-500 mb-1">Total Blog</div>
+          <div class="text-2xl font-bold stat-blog-count">-</div>
+        </div>
+        <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
+          <div class="mb-2 text-purple-600 text-3xl">
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="12" fill="#ede9fe"></circle>
+              <path
+                d="M4 7a2 2 0 012-2h6a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V7z"
+                stroke="#7c3aed"
+                stroke-width="2"
+                fill="#fff"></path>
+              <path
+                d="M20 7a2 2 0 00-2-2h-4v12h4a2 2 0 002-2V7z"
+                stroke="#7c3aed"
+                stroke-width="2"
+                fill="#fff"></path>
+              <path
+                d="M8 7v10"
+                stroke="#7c3aed"
+                stroke-width="1.5"
+                stroke-dasharray="2,2"></path>
+            </svg>
+          </div>
+          <div class="text-sm text-gray-500 mb-1">Total Ebook</div>
+          <div class="text-2xl font-bold stat-ebook-count">-</div>
+        </div>
+        <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
+          <div class="mb-2 text-blue-600 text-3xl">
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#dbeafe"></circle><rect x="7" y="7" width="10" height="10" rx="2" fill="#2563eb"/></svg>
+          </div>
+          <div class="text-sm text-gray-500 mb-1">Buku Sekolah</div>
+          <div class="text-2xl font-bold stat-buku-sekolah">{countBukuSekolah ?? '-'}</div>
+        </div>
+        <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
+          <div class="mb-2 text-green-600 text-3xl">
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#dcfce7"></circle><rect x="7" y="7" width="10" height="10" rx="2" fill="#16a34a"/></svg>
+          </div>
+          <div class="text-sm text-gray-500 mb-1">Buku Islam</div>
+          <div class="text-2xl font-bold stat-buku-islam">{countBukuIslam ?? '-'}</div>
+        </div>
+        <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
+          <div class="mb-2 text-pink-600 text-3xl">
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#fce7f3"></circle><rect x="7" y="7" width="10" height="10" rx="2" fill="#e040fb"/></svg>
+          </div>
+          <div class="text-sm text-gray-500 mb-1">Buku Anak</div>
+          <div class="text-2xl font-bold stat-buku-anak">{countBukuAnak ?? '-'}</div>
+        </div>
+      </div>
+
+      <!-- Statistik Pembelian Kursus per Kategori -->
+      <div
+        id="stat-kategori-kursus"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-10"
+      >
+      </div>
+      <script type="module">
+        import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+        const supabase = createClient("https://jcfizceoycwdvpqpwhrj.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA");
+        // Semua fungsi di bawah ini WAJIB pakai instance supabase yang sama!
+        async function updatePerpusClickStats() {
+          const { count: countBukuSekolah } = await supabase
+            .from("perpustakaan_clicks")
+            .select("*", { count: "exact", head: true })
+            .eq("kategori", "buku_sekolah");
+          const { count: countBukuIslam } = await supabase
+            .from("perpustakaan_clicks")
+            .select("*", { count: "exact", head: true })
+            .eq("kategori", "buku_islam");
+          const { count: countBukuAnak } = await supabase
+            .from("perpustakaan_clicks")
+            .select("*", { count: "exact", head: true })
+            .eq("kategori", "buku_anak");
+          document.querySelector(".stat-buku-sekolah").textContent = typeof countBukuSekolah === "number" ? countBukuSekolah : "-";
+          document.querySelector(".stat-buku-islam").textContent = typeof countBukuIslam === "number" ? countBukuIslam : "-";
+          document.querySelector(".stat-buku-anak").textContent = typeof countBukuAnak === "number" ? countBukuAnak : "-";
+        }
+        // Jalankan sekali saat load
+        updatePerpusClickStats();
+        // Realtime subscription
+        supabase
+          .channel('perpustakaan_clicks')
+          .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'perpustakaan_clicks' }, payload => {
+            updatePerpusClickStats();
+          })
+          .subscribe();
+
+        // HAPUS DUPLIKASI INISIALISASI SUPABASE DI SINI!
+        async function fetchDashboardStats() {
+          // Total Video
+          const { count: videoCount } = await supabase
+            .from("videos")
+            .select("*", { count: "exact", head: true });
+          document.querySelector(".stat-video-count").textContent =
+            typeof videoCount === "number" ? videoCount : "-";
+          // Total Kursus
+          const { count: kursusCount } = await supabase
+            .from("kursus")
+            .select("*", { count: "exact", head: true });
+          document.querySelector(".stat-kursus-count").textContent =
+            typeof kursusCount === "number" ? kursusCount : "-";
+          // Total Blog
+          const { count: blogCount } = await supabase
+            .from("blog")
+            .select("*", { count: "exact", head: true });
+          document.querySelector(".stat-blog-count").textContent =
+            typeof blogCount === "number" ? blogCount : "-";
+          // Total Ebook
+          const { count: ebookCount } = await supabase
+            .from("ebooks")
+            .select("*", { count: "exact", head: true });
+          document.querySelector(".stat-ebook-count").textContent =
+            typeof ebookCount === "number" ? ebookCount : "-";
+        }
+        async function fetchPembelianKursusPerKategori() {
+          // Ambil semua data pembelian_kursus
+          const { data, error } = await supabase
+            .from("pembelian_kursus")
+            .select("nama_kursus");
+          "[DEBUG] Data hasil fetch pembelian_kursus:", data;
+          if (error) {
+            "Gagal fetch pembelian_kursus:", error;
+            return;
+          }
+          // Kelompokkan dan hitung per kategori
+          const kategoriMap = {};
+          data.forEach((row) => {
+            if (!row.nama_kursus) return;
+            if (!kategoriMap[row.nama_kursus]) kategoriMap[row.nama_kursus] = 0;
+            kategoriMap[row.nama_kursus]++;
+          });
+          // Render card dinamis
+          const grid = document.getElementById("stat-kategori-kursus");
+          grid.innerHTML = "";
+          if (Object.keys(kategoriMap).length === 0) {
+            grid.innerHTML = `<div class='col-span-full text-center text-gray-400 py-10'>Belum ada pembelian kursus</div>`;
+            return;
+          }
+          Object.entries(kategoriMap).forEach(([kategori, jumlah]) => {
+            grid.innerHTML += `
+              <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center">
+                <div class="mb-2 text-indigo-600 text-3xl">
+                  <svg width="32" height="32" fill="none" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="12" fill="#e0e7ff"></circle>
+                    <path d="M12 8v4l3 3" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="text-sm text-gray-500 mb-1">${kategori}</div>
+                <div class="text-2xl font-bold">${jumlah}</div>
+              </div>
+            `;
+          });
+        }
+        document.addEventListener("DOMContentLoaded", () => {
+          fetchDashboardStats();
+          fetchPembelianKursusPerKategori();
+        });
+      </script>
+    </div>
+  </main>
+</div>
+
+<script type="module">
+  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+  const supabaseUrl = "https://jcfizceoycwdvpqpwhrj.supabase.co";
+  const supabaseKey =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA";
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  // Pastikan ada elemen dengan id videoCount di HTML!
+  const videoCountEl = document.getElementById("videoCount");
+  if (videoCountEl) videoCountEl.textContent = "...";
+
+  // Fungsi untuk cek login dan fetch jumlah video
+  async function fetchVideoCountIfAdmin() {
+    try {
+      // Cek session login
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (!session || !session.user) {
+        if (videoCountEl) videoCountEl.textContent = "-";
+        alert("Anda belum login sebagai admin. Silakan login terlebih dahulu.");
+        window.location.href = "/admin-login";
+        return;
+      }
+      // Debug: log session info
+
+      // Cek email admin
+      const adminEmail = "lemindes@gmail.com";
+      if (session.user.email !== adminEmail) {
+        if (videoCountEl) videoCountEl.textContent = "-";
+        alert("Akses hanya untuk admin. Silakan login dengan email admin.");
+        window.location.href = "/admin-login";
+        return;
+      }
+      // Jika sudah login sebagai admin, fetch jumlah video
+      const { count, error } = await supabase
+        .from("videos")
+        .select("*", { count: "exact", head: true });
+      // Debug: log hasil query count
+
+      if (error) {
+        if (videoCountEl) videoCountEl.textContent = "-";
+
+        return;
+      }
+      if (typeof count === "number") {
+        if (videoCountEl) videoCountEl.textContent = count;
+      } else {
+        if (videoCountEl) videoCountEl.textContent = "-";
+      }
+    } catch (err) {
+      if (videoCountEl) videoCountEl.textContent = "-";
+    }
+  }
+  fetchVideoCountIfAdmin();
+</script>

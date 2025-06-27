@@ -1,0 +1,368 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Kustomisasi tambahan */
+@font-face {
+  font-family: 'Roboto Slab';
+  src: url('/fonts/roboto-slab-v35-latin-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Roboto Slab';
+  src: url('/fonts/roboto-slab-v35-latin-500.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Roboto Slab';
+  src: url('/fonts/roboto-slab-v35-latin-600.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Roboto Slab';
+  src: url('/fonts/roboto-slab-v35-latin-700.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Roboto Slab';
+  src: url('/fonts/roboto-slab-v35-latin-800.woff2') format('woff2');
+  font-weight: 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Roboto Slab';
+  src: url('/fonts/roboto-slab-v35-latin-900.woff2') format('woff2');
+  font-weight: 900;
+  font-display: swap;
+}
+
+@layer base {
+  body {
+    @apply font-sans text-gray-800;
+  font-family: 'Roboto Slab', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  }
+
+  /* Reset CSS untuk menghilangkan garis */
+  *, *::before, *::after {
+    box-sizing: border-box;
+    outline: none !important;
+  }
+
+  body, html {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden !important;
+    /* height: 100%;  <-- hapus atau beri komentar */
+}
+  /* Hapus semua garis dan elemen pseudo */
+  body::before, body::after,
+  html::before, html::after,
+  div::before, div::after,
+  header::before, header::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  /* Hapus outline pada semua elemen fokus */
+  :focus {
+    outline: none !important;
+  }
+}
+
+/* [data-aos] {
+  overflow: visible !important;
+} */
+
+html, body {
+  overflow-x: hidden !important;
+  /* Jangan set overflow-y di sini agar scroll utama tetap normal */
+}
+
+/* Agar scrollbar area selalu stabil, mencegah flick navbar saat refresh */
+
+
+/* Hilangkan scrollbar saat tidak diperlukan, tapi tambahkan padding-right pada .container jika scrollbar muncul */
+html {
+  overflow-y: auto;
+}
+
+body::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-right: calc(100vw - 100%);
+  }
+}
+
+@layer components {
+  /* Animasi Bubble Glassmorphism & Dot Floating */
+  .animate-bubble-float-slow {
+    animation: bubbleFloatSlow 18s ease-in-out infinite alternate;
+  }
+  .animate-bubble-float-medium {
+    animation: bubbleFloatMedium 13s ease-in-out infinite alternate;
+  }
+  .animate-bubble-float-fast {
+    animation: bubbleFloatFast 9s ease-in-out infinite alternate;
+  }
+  @keyframes bubbleFloatSlow {
+    0% { transform: translateY(0) scale(1); }
+    100% { transform: translateY(-32px) scale(1.04); }
+  }
+  @keyframes bubbleFloatMedium {
+    0% { transform: translateY(0) scale(1); }
+    100% { transform: translateY(-24px) scale(1.03); }
+  }
+  @keyframes bubbleFloatFast {
+    0% { transform: translateY(0) scale(1); }
+    100% { transform: translateY(-16px) scale(1.01); }
+  }
+  .particle-dot {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #bae6fd 60%, #38bdf8 100%);
+    opacity: 0.38;
+    filter: blur(1.5px);
+  }
+  .animate-dot-move {
+    animation: dotMove 12s linear infinite alternate;
+  }
+  .animate-dot-move2 {
+    animation: dotMove2 15s linear infinite alternate;
+  }
+  .animate-dot-move3 {
+    animation: dotMove3 18s linear infinite alternate;
+  }
+  .animate-dot-move4 {
+    animation: dotMove4 21s linear infinite alternate;
+  }
+  @keyframes dotMove {
+    0% { transform: translateY(0) scale(1); }
+    100% { transform: translateY(-40px) scale(1.12); }
+  }
+  @keyframes dotMove2 {
+    0% { transform: translateY(0) scale(1); }
+    100% { transform: translateY(28px) scale(0.93); }
+  }
+  @keyframes dotMove3 {
+    0% { transform: translateX(0) scale(1); }
+    100% { transform: translateX(-36px) scale(1.09); }
+  }
+  @keyframes dotMove4 {
+    0% { transform: translateX(0) scale(1); }
+    100% { transform: translateX(30px) scale(0.97); }
+  }
+
+  /* Motif SVG Ombak Hero Section */
+  .motif-ombak {
+    transition: filter 0.5s cubic-bezier(.4,2,.3,1.2);
+  }
+  section:hover .motif-ombak {
+    filter: brightness(1.1) blur(1.5px);
+  }
+
+  /* Efek 3D & nyata untuk SVG awan di section Mengapa Belajar di Iniedu */
+  .awan-3d {
+    filter: drop-shadow(0 12px 36px rgba(56,189,248,0.22)) drop-shadow(0 2px 12px rgba(0,0,0,0.10));
+    /* Layer highlight halus */
+    position: relative;
+    z-index: 10;
+    transition: filter 0.3s, transform 0.7s cubic-bezier(.4,2,.3,1.2);
+    /* Simulasi depth dengan blur tipis di layer bawah */
+  }
+  .awan-3d ellipse, .awan-3d path {
+    filter: drop-shadow(0 3px 12px rgba(186,230,253,0.32));
+  }
+  .awan-3d {
+    /* Simulasi highlight awan dengan gradien radial */
+    /* Bisa dipadukan dengan SVG <defs> radialGradient jika ingin lebih nyata */
+    background: radial-gradient(circle at 60% 40%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 80%);
+  }
+  .awan-3d {
+    /* Efek soft blur untuk layer bawah awan */
+    box-shadow: 0 18px 48px 0 rgba(56,189,248,0.13), 0 2px 12px 0 rgba(0,0,0,0.09);
+  }
+  .awan-3d:hover {
+    filter: brightness(1.07) blur(1.5px) drop-shadow(0 18px 48px rgba(56,189,248,0.22));
+    transform: scale(1.025) translateY(-4px);
+  }
+  .awan-3d svg {
+    /* Untuk SVG yang di-embed langsung, pastikan inherit filter */
+    filter: inherit;
+  }
+
+  /* Responsive tweak: efek lebih subtle di mobile */
+  @media (max-width: 768px) {
+    .awan-3d {
+      filter: drop-shadow(0 6px 16px rgba(56,189,248,0.16)) drop-shadow(0 1px 5px rgba(0,0,0,0.08));
+      box-shadow: 0 8px 24px 0 rgba(56,189,248,0.09), 0 1px 5px 0 rgba(0,0,0,0.06);
+    }
+  }
+
+  .motif-ombak-wave {
+    transition: d 1.2s cubic-bezier(.4,2,.3,1.2);
+  }
+  section:hover .motif-ombak-wave {
+    animation: ombakMove 1.4s ease-in-out 1;
+  }
+  .motif-ombak-bubble {
+    transition: transform 1.2s cubic-bezier(.4,2,.3,1.2);
+  }
+  section:hover .motif-ombak-bubble:first-of-type {
+    transform: translateY(-18px) scale(1.09) rotate(-7deg);
+  }
+  section:hover .motif-ombak-bubble:last-of-type {
+    transform: translateY(12px) scale(1.11) rotate(8deg);
+  }
+  @keyframes ombakMove {
+    0% { transform: translateY(0); }
+    30% { transform: translateY(-12px) scaleX(1.015); }
+    60% { transform: translateY(9px) scaleX(0.98); }
+    100% { transform: translateY(0); }
+  }
+
+  /* Motif SVG Modern Section Visi Misi */
+  .motif-modern {
+    transition: filter 0.5s cubic-bezier(.4,2,.3,1.2);
+    filter: blur(0px) brightness(1);
+  }
+  section:hover .motif-modern {
+    filter: blur(2px) brightness(1.07);
+  }
+
+  .motif-bubble {
+    transition: transform 1.2s cubic-bezier(.4,2,.3,1.2);
+  }
+  section:hover .motif-bubble:nth-child(2) {
+    transform: translateY(-16px) scale(1.08) rotate(-8deg);
+  }
+  section:hover .motif-bubble:nth-child(3) {
+    transform: translateX(20px) scale(0.96) rotate(3deg);
+  }
+  section:hover .motif-bubble:nth-child(4) {
+    transform: translateY(10px) scale(1.13) rotate(-5deg);
+  }
+
+  .motif-wave {
+    transition: d 1.2s cubic-bezier(.4,2,.3,1.2);
+  }
+  .motif-wave2 {
+    transition: d 1.2s cubic-bezier(.4,2,.3,1.2);
+  }
+  section:hover .motif-wave {
+    /* Sedikit naik turun dengan animasi keyframes */
+    animation: waveMove 1.5s ease-in-out 1;
+  }
+  section:hover .motif-wave2 {
+    animation: waveMove2 1.5s ease-in-out 1;
+  }
+
+  @keyframes waveMove {
+    0% { transform: translateY(0); }
+    30% { transform: translateY(-10px) scaleX(1.01); }
+    60% { transform: translateY(8px) scaleX(0.99); }
+    100% { transform: translateY(0); }
+  }
+  @keyframes waveMove2 {
+    0% { transform: translateY(0); }
+    40% { transform: translateY(12px) scaleX(1.02); }
+    80% { transform: translateY(-7px) scaleX(0.98); }
+    100% { transform: translateY(0); }
+  }
+
+  .btn {
+    @apply px-4 py-2 rounded-md transition-colors;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-primary/90;
+  }
+
+  /* Custom tombol kursus dan akses materi */
+  .hashtag-card {
+  background: linear-gradient(120deg, rgba(255,255,255,0.42) 60%, rgba(200,225,255,0.22) 100%);
+  border: 1.5px solid rgba(180,220,255,0.18);
+  box-shadow: 0 12px 48px 0 rgba(60,130,230,0.11), 0 2px 8px 0 rgba(0,0,0,0.10);
+  backdrop-filter: blur(22px) saturate(1.2);
+  -webkit-backdrop-filter: blur(22px) saturate(1.2);
+  position: relative;
+  padding: 2.2rem 2rem 1.7rem 2rem !important;
+  border-radius: 1.25rem;
+  border: 2.5px solid rgba(255,255,255,0.38);
+  transition: box-shadow 0.4s, background 0.4s;
+}
+.hashtag-card::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; width: 100%; height: 100%;
+  border-radius: inherit;
+  border: 1.5px solid rgba(180,220,255,0.18);
+  pointer-events: none;
+  z-index: 2;
+}
+
+  .hashtag-card > * { position: relative; z-index: 4; }
+  .hashtag-card:hover {
+    box-shadow: 0 12px 48px 0 rgba(60,130,230,0.14), 0 2px 8px 0 rgba(0,0,0,0.13);
+    background: linear-gradient(120deg, rgba(255,255,255,0.56) 60%, rgba(200,225,255,0.28) 100%);
+  }
+
+  .btn-kursus {
+    @apply bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold shadow-lg;
+    box-shadow: 0 4px 24px 0 rgba(0, 153, 255, 0.18), 0 1.5px 8px 0 rgba(0, 153, 255, 0.12);
+    border: none;
+    letter-spacing: 0.02em;
+    transition: all 0.25s cubic-bezier(.4,2,.3,1.2);
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-kursus:hover, .btn-kursus:focus {
+    background: linear-gradient(90deg, #38bdf8 0%, #2563eb 100%);
+    color: #232b4d !important; /* biru tua, kontras, override tailwind */
+    transform: translateY(-3px) scale(1.045) rotate(-1deg);
+    box-shadow: 0 8px 32px 0 rgba(0, 153, 255, 0.34), 0 2px 12px 0 rgba(0, 153, 255, 0.18);
+    filter: brightness(1.07);
+    outline: none;
+  }
+  .btn-kursus:active {
+    transform: scale(0.97);
+    filter: brightness(0.95);
+  }
+  /* Animasi pulse khusus untuk tombol akses materi jika ingin membedakan */
+  .btn-akses-materi {
+    @apply bg-gradient-to-r from-green-400 to-cyan-500 text-white font-bold shadow-lg;
+    animation: aksesPulse 1.2s infinite alternate;
+    border: none;
+    letter-spacing: 0.02em;
+    transition: all 0.25s cubic-bezier(.4,2,.3,1.2);
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-akses-materi:hover, .btn-akses-materi:focus {
+    background: linear-gradient(90deg, #22d3ee 0%, #059669 100%);
+    color: #166534 !important; /* hijau tua, kontras, override tailwind */
+    transform: translateY(-3px) scale(1.045) rotate(1deg);
+    box-shadow: 0 8px 32px 0 rgba(16, 185, 129, 0.34), 0 2px 12px 0 rgba(6, 182, 212, 0.18);
+    filter: brightness(1.09);
+    outline: none;
+    animation: none;
+  }
+  .btn-akses-materi:active {
+    transform: scale(0.97);
+    filter: brightness(0.96);
+  }
+  @keyframes aksesPulse {
+    0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.25); }
+    100% { box-shadow: 0 0 0 12px rgba(16, 185, 129, 0.08); }
+  }
+}

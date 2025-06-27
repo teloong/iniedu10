@@ -1,0 +1,159 @@
+---
+import Layout from '../layouts/Layout.astro';
+title: "Perpustakaan"
+---
+
+<script>
+declare global {
+  interface Window {
+    firebaseConfig: any;
+  }
+}
+window.firebaseConfig = {
+  apiKey: "AIzaSyAlxYWD4bCwpoKEErXDX1_4AZC9wzQTkwA",
+  authDomain: "iniedu.firebaseapp.com",
+  projectId: "iniedu",
+  storageBucket: "iniedu.appspot.com",
+  messagingSenderId: "743403637628",
+  appId: "1:743403637628:web:15b40396e94c8b91ce32f9",
+  measurementId: "G-P2NBXXWM7T"
+};
+</script>
+<script type="module">
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+const firebaseConfig = window.firebaseConfig;
+let app;
+if (!getApps().length) {
+  app = initializeApp(firebaseConfig);
+} else {
+  app = getApps()[0];
+}
+const auth = getAuth(app);
+const loader = document.createElement('div');
+loader.id = 'auth-loading';
+loader.style.cssText = 'width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;position:fixed;top:0;left:0;z-index:9999;background:white;font-size:1.3rem;color:#232b4d;';
+loader.innerText = 'Memeriksa autentikasi...';
+document.body.appendChild(loader);
+let authTimeout = setTimeout(() => {
+  document.getElementById('auth-loading')?.remove();
+  // Tidak tampilkan pesan apapun
+}, 5000);
+onAuthStateChanged(auth, (user) => {
+  clearTimeout(authTimeout);
+  if (!user) {
+    window.location.href = "/login";
+  } else {
+    document.getElementById('auth-loading')?.remove();
+  }
+});
+</script>
+<Layout title="Perpustakaan">
+  <section class="relative min-h-[50vh] flex flex-col items-center justify-center py-16 px-4 bg-gradient-to-br from-blue-50 via-white to-blue-100 overflow-hidden" data-aos="fade-up">
+    <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-[#232b4d] drop-shadow-lg" data-aos="fade-right">Perpustakaan Digital</h1>
+    <p class="mb-10 text-lg md:text-xl text-gray-700 text-center max-w-2xl" data-aos="fade-left">Akses ribuan koleksi buku digital untuk semua kebutuhan belajar, referensi, dan hiburan anak. Semua gratis dan mudah diakses!</p>
+    <div class="grid md:grid-cols-3 gap-8 w-full max-w-5xl">
+      <!-- Card 1: Koleksi Buku Sekolah Digital -->
+      <div class="bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center transition-all duration-300 border-b-4 border-blue-400 hover:scale-105 hover:-rotate-x-3 hover:rotate-y-3 hover:shadow-[0_8px_32px_0_rgba(0,153,255,0.19),0_2px_12px_0_rgba(0,153,255,0.13)] hover:border-b-[6px] hover:border-blue-500 hover:bg-gradient-to-br hover:from-white hover:to-blue-50 group relative overflow-hidden" data-aos="zoom-in" data-aos-delay="100">
+        <div class="icon-card">
+          <img src="/images/Koleksi Buku Sekolah Digital.ico" alt="Koleksi Buku Sekolah Digital" />
+        </div>
+        <div class="font-bold text-lg mt-4 mb-2 text-blue-700">Koleksi Buku Sekolah Digital</div>
+        <ul class="mb-4 text-base text-gray-700 text-left space-y-2">
+          <li class="flex items-start gap-2"><svg class="w-5 h-5 text-green-500 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="#d1fae5"/><path d="M7 13l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Buku pelajaran SD, SMP, SMA lengkap & resmi</li>
+          <li class="flex items-start gap-2"><svg class="w-5 h-5 text-blue-500 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2" fill="#e0f2fe" stroke="#38bdf8"/><path d="M16 3v4M8 3v4" stroke="#38bdf8" stroke-width="2"/></svg>Kurikulum nasional & daerah terbaru</li>
+          <li class="flex items-start gap-2"><svg class="w-5 h-5 text-yellow-500 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20l9-5-9-5-9 5 9 5z" fill="#fef9c3"/><path d="M12 12V4M12 12l9 5-9 5-9-5 9-5z" stroke="#facc15"/></svg>Format digital interaktif & mudah dicari</li>
+          <li class="flex items-start gap-2"><svg class="w-5 h-5 text-purple-500 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4" fill="#ede9fe" stroke="#a78bfa"/><path d="M8 12h8M12 8v8" stroke="#a78bfa"/></svg>Bisa diakses gratis kapan saja & di mana saja</li>
+        </ul>
+        <a href="/perpustakaan/buku-sekolah" class="mt-auto px-5 py-2 rounded-full font-semibold bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md transition-all duration-200 hover:scale-105 hover:shadow-xl hover:from-cyan-400 hover:to-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-300 btn-baca-sekarang" data-kategori="buku_sekolah">Baca Sekarang</a>
+      </div>
+      <!-- Card 2: Koleksi Buku Referensi Islam Digital -->
+      <div class="bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center transition-all duration-300 border-b-4 border-green-400 hover:scale-105 hover:-rotate-x-3 hover:rotate-y-3 hover:shadow-[0_8px_32px_0_rgba(34,197,94,0.17),0_2px_12px_0_rgba(34,197,94,0.13)] hover:border-b-[6px] hover:border-green-500 hover:bg-gradient-to-br hover:from-white hover:to-green-50 group relative overflow-hidden" data-aos="zoom-in" data-aos-delay="200">
+        <div class="icon-card">
+          <img src="/images/Koleksi Buku Referensi Islam.ico" alt="Koleksi Buku Referensi Islam Digital" />
+        </div>
+        <div class="font-bold text-lg mt-4 mb-2 text-green-700">Koleksi Buku Referensi Islam Digital</div>
+        <ul class="mb-4 text-base text-gray-700 text-left space-y-2">
+          <li class="flex items-start gap-2"><svg class="w-5 h-5 text-green-500 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="#d1fae5"/><path d="M7 13l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Kitab klasik & modern (tafsir, hadits, fiqih, dsb)</li>
+          <li class="flex items-start gap-2"><svg class="w-5 h-5 text-yellow-500 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20l9-5-9-5-9 5 9 5z" fill="#fef9c3"/><path d="M12 12V4M12 12l9 5-9 5-9-5 9-5z" stroke="#facc15"/></svg>Buku motivasi, sejarah, & kisah inspiratif Islam</li>
+          <li class="flex items-start gap-2"><svg class="w-5 h-5 text-blue-500 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2" fill="#e0f2fe" stroke="#38bdf8"/><path d="M16 3v4M8 3v4" stroke="#38bdf8" stroke-width="2"/></svg>Pencarian mudah & koleksi terus bertambah</li>
+          <li class="flex items-start gap-2"><svg class="w-5 h-5 text-purple-500 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4" fill="#ede9fe" stroke="#a78bfa"/><path d="M8 12h8M12 8v8" stroke="#a78bfa"/></svg>Bisa dibaca gratis di semua perangkat</li>
+        </ul>
+        <a href="/perpustakaan/buku-islam" class="mt-auto px-5 py-2 rounded-full font-semibold bg-gradient-to-r from-green-500 to-emerald-400 text-white shadow-md transition-all duration-200 hover:scale-105 hover:shadow-xl hover:from-emerald-400 hover:to-green-500 focus:outline-none focus:ring-4 focus:ring-green-200 btn-baca-sekarang" data-kategori="buku_islam">Baca Sekarang</a>
+      </div>
+      <!-- Card 3: Koleksi Buku Anak Digital -->
+      <div class="bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center transition-all duration-300 border-b-4 border-pink-400 hover:scale-105 hover:-rotate-x-3 hover:rotate-y-3 hover:shadow-[0_8px_32px_0_rgba(224,64,251,0.17),0_2px_12px_0_rgba(224,64,251,0.13)] hover:border-b-[6px] hover:border-pink-500 hover:bg-gradient-to-br hover:from-white hover:to-pink-50 group relative overflow-hidden" data-aos="zoom-in" data-aos-delay="300">
+        <div class="icon-card">
+          <img src="/images/Koleksi Buku Anak Digital.ico" alt="Koleksi Buku Anak Digital"/>
+        </div>
+        <div class="font-bold text-lg mt-4 mb-2 text-pink-700">Koleksi Buku Anak Digital</div>
+        <ul class="mb-4 text-base text-gray-700 text-left space-y-2">
+          <li class="flex items-start gap-2"><svg class="w-5 h-5 text-green-500 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="#d1fae5"/><path d="M7 13l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Cerita anak edukatif & penuh warna</li>
+          <li class="flex items-start gap-2"><svg class="w-5 h-5 text-yellow-500 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20l9-5-9-5-9 5 9 5z" fill="#fef9c3"/><path d="M12 12V4M12 12l9 5-9 5-9-5 9-5z" stroke="#facc15"/></svg>Buku aktivitas & komik digital seru</li>
+          <li class="flex items-start gap-2"><svg class="w-5 h-5 text-blue-500 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2" fill="#e0f2fe" stroke="#38bdf8"/><path d="M16 3v4M8 3v4" stroke="#38bdf8" stroke-width="2"/></svg>Ilustrasi menarik & mudah dipahami anak</li>
+          <li class="flex items-start gap-2"><svg class="w-5 h-5 text-purple-500 mt-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4" fill="#ede9fe" stroke="#a78bfa"/><path d="M8 12h8M12 8v8" stroke="#a78bfa"/></svg>Menumbuhkan minat baca sejak dini</li>
+        </ul>
+        <a href="/perpustakaan/buku-anak" class="mt-auto px-5 py-2 rounded-full font-semibold bg-gradient-to-r from-pink-500 to-purple-400 text-white shadow-md transition-all duration-200 hover:scale-105 hover:shadow-xl hover:from-purple-400 hover:to-pink-500 focus:outline-none focus:ring-4 focus:ring-pink-200 btn-baca-sekarang" data-kategori="buku_anak">Baca Sekarang</a>
+      </div>
+    </div>
+  </section>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+    const supabase = createClient('https://jcfizceoycwdvpqpwhrj.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA');
+    let categories = [];
+    let ebooks = [];
+    const kategoriList = document.getElementById('kategori-list');
+
+    // Tidak ada tracking klik pada card kategori utama
+    if (kategoriList) {
+      async function fetchCategoriesAndEbooks() {
+        const { data: cats, error: catErr } = await supabase.from('ebook_categories').select('*').order('nama', { ascending: true });
+        if (catErr) {
+          kategoriList.innerHTML = '<div class="text-center text-red-500">Gagal memuat kategori.</div>';
+          return;
+        }
+        categories = cats;
+        // Fetch semua buku
+        const { data: books, error: bookErr } = await supabase.from('ebooks').select('*');
+        if (bookErr) {
+          kategoriList.innerHTML = '<div class="text-center text-red-500">Gagal memuat buku.</div>';
+          return;
+        }
+        ebooks = books;
+        renderCategoriesAndEbooks();
+      }
+      function renderCategoriesAndEbooks() {
+        kategoriList.innerHTML = '';
+        if (categories.length === 0) {
+          kategoriList.innerHTML = '<div class="text-center text-gray-400">Belum ada kategori.</div>';
+          return;
+        }
+        categories.forEach(cat => {
+          const section = document.createElement('section');
+          section.className = 'mb-12';
+          section.innerHTML = `
+            <h2 class="text-2xl font-bold mb-4">${cat.nama}</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+              ${ebooks.filter(b => b.kategori_id === cat.id).length === 0
+                ? '<div class="col-span-3 text-center text-gray-400">Belum ada buku pada kategori ini.</div>'
+                : ebooks.filter(b => b.kategori_id === cat.id).map(buku => `
+                  <div class="bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center">
+                    <img src="${buku.cover || '/default-cover.png'}" alt="Cover Buku" class="w-32 h-44 object-cover rounded mb-2" />
+                    <div class="font-bold mt-2 text-center">${buku.judul}</div>
+                    <div class="text-sm text-gray-500 mb-1">${buku.penulis}${buku.tahun ? ', ' + buku.tahun : ''}</div>
+                    ${buku.penerbit ? `<div class='text-xs text-gray-400 mb-1'>Penerbit: ${buku.penerbit}</div>` : ''}
+                    ${buku.deskripsi ? `<div class='text-xs text-gray-500 mb-2 italic'>${buku.deskripsi}</div>` : ''}
+                    <a href="${buku.link}" target="_blank" class="px-4 py-2 bg-blue-500 text-white rounded-full font-semibold mt-auto">Baca Sekarang</a>
+                  </div>
+                `).join('')}
+            </div>
+          `;
+          kategoriList.appendChild(section);
+        });
+      }
+      fetchCategoriesAndEbooks();
+    }
+  </script>
+  <script type="module" src="/perpus-button.js"></script>
+</Layout>

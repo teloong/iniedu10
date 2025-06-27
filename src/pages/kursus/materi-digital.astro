@@ -1,0 +1,48 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Konten Pembelajaran Digital">
+  <section class="max-w-3xl mx-auto mt-12 bg-white rounded-2xl shadow-lg p-8">
+    <h1 class="text-2xl font-bold text-center mb-6 text-blue-700">Konten Pembelajaran Digital</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Video Pembelajaran -->
+      <div class="rounded-2xl bg-gradient-to-br from-blue-100 to-cyan-50 p-4 md:p-6 flex flex-col items-center shadow group hover:shadow-2xl hover:scale-105 hover:ring-4 hover:ring-blue-300 transition-all duration-300 cursor-pointer">
+        <div class="icon-card">
+  <img src="/images/Video Pembelajaran.ico" alt="Video Pembelajaran" class="w-12 h-12 mb-3" />
+</div>
+        <a href="/video-pembelajaran" class="block">
+        <div class="font-semibold text-lg mb-1 text-blue-700 text-center">Video Pembelajaran</div>
+        <div class="text-gray-600 text-center text-base">Belajar lewat video interaktif & mudah dipahami.</div>
+        </a>
+      </div>
+      <!-- Infografis -->
+      <div class="rounded-2xl bg-gradient-to-br from-yellow-100 to-orange-50 p-6 flex flex-col items-center shadow group hover:shadow-2xl hover:scale-105 hover:ring-4 hover:ring-yellow-300 transition-all duration-300 cursor-pointer">
+        <div class="icon-card">
+  <img src="/images/Infografis.ico" alt="Infografis" class="w-12 h-12 mb-3" />
+</div>
+        <div class="font-semibold text-lg mb-1 text-yellow-700">Infografis</div>
+        <div class="text-gray-600 text-center text-base">Materi visual yang ringkas & menarik untuk dipelajari.</div>
+      </div>
+      <!-- Artikel -->
+      <div class="rounded-2xl bg-gradient-to-br from-pink-100 to-purple-50 p-6 flex flex-col items-center shadow group hover:shadow-2xl hover:scale-105 hover:ring-4 hover:ring-pink-300 transition-all duration-300 cursor-pointer">
+        <div class="icon-card">
+  <img src="/images/Artikel.ico" alt="Artikel" class="w-12 h-12 mb-3" />
+</div>
+        <div class="font-semibold text-lg mb-1 text-pink-700">Artikel</div>
+        <div class="text-gray-600 text-center text-base">Baca artikel edukatif untuk memperluas wawasan.</div>
+      </div>
+      <!-- Latihan Soal -->
+      <div class="rounded-2xl bg-gradient-to-br from-green-100 to-teal-50 p-6 flex flex-col items-center shadow group hover:shadow-2xl hover:scale-105 hover:ring-4 hover:ring-green-300 transition-all duration-300 cursor-pointer">
+        <div class="icon-card">
+  <img src="/images/Latihan Soal.ico" alt="Latihan Soal" class="w-12 h-12 mb-3" />
+</div>
+        <div class="font-semibold text-lg mb-1 text-green-700">Latihan Soal</div>
+        <div class="text-gray-600 text-center text-base">Uji pemahamanmu dengan soal interaktif & pembahasan.</div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<!-- Proteksi akses materi, hanya untuk user yang sudah membeli kursus ini -->
+

@@ -1,0 +1,293 @@
+---
+import Layout from "../layouts/Layout.astro";
+import AdminSidebar from "../components/AdminSidebar.astro";
+import "../styles/global.css";
+---
+
+<Layout title="Blog">
+<div class="min-h-screen bg-gray-50 flex">
+  <div class="sticky top-0 h-screen hidden md:block">
+    <AdminSidebar active="blog" />
+  </div>
+  <main class="flex-1 overflow-x-auto">
+    <div class="max-w-4xl mx-auto px-4 py-8">
+      <!-- Card Judul Blog -->
+      <div class="bg-white rounded-2xl shadow-lg p-4 mb-4">
+        <textarea
+          id="blog-title"
+          class="w-full border-none focus:ring-0 text-lg font-semibold bg-transparent outline-none resize-none"
+          placeholder="Judul Blog"
+          required
+        ></textarea>
+      </div>
+      <!-- Card Isi Blog -->
+      <div class="bg-white rounded-2xl shadow-lg p-4 mb-8">
+        <form id="blog-form" class="flex flex-col gap-4">
+          <div
+            id="blog-success-alert"
+            class="hidden text-green-600 font-semibold mb-2"
+          >
+          </div>
+          <textarea
+            id="blog-content"
+            class="border rounded p-2 min-h-[200px]"
+            placeholder="Isi Blog"
+          ></textarea>
+          <input
+            type="text"
+            id="blog-author"
+            class="border rounded p-2"
+            placeholder="Penulis"
+            required
+          />
+          <input
+            type="text"
+            id="blog-author-role"
+            class="border rounded p-2"
+            placeholder="Jabatan/Pekerjaan Penulis (opsional)"
+          />
+          <div class="flex flex-col gap-2">
+            <input
+              type="url"
+              id="blog-author-photo"
+              class="border rounded p-2"
+              placeholder="URL Foto Profil Penulis (opsional)"
+            />
+            <input
+              type="file"
+              id="blog-author-photo-file"
+              accept="image/*"
+              class="border rounded p-2"
+            />
+            <small class="text-xs text-gray-400"
+              >Pilih file untuk upload ke Cloudinary, atau isi URL manual di
+              atas.</small
+            >
+          </div>
+          <input
+            type="url"
+            id="blog-image"
+            class="border rounded p-2"
+            placeholder="URL Gambar (opsional)"
+          />
+          <input
+            type="text"
+            id="blog-source"
+            class="border rounded p-2"
+            placeholder="Sumber (opsional, misal: Kompas.com)"
+          />
+          <button
+            id="blog-submit-btn"
+            type="submit"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded transition-all"
+          >Tambah Blog</button>
+          <!-- TinyMCE CDN -->
+          <script src="https://cdn.tiny.cloud/1/v9bwvtv7kitkkrsjydby5qu1so5f4p6p0e0mq0odw8e107dl/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+          <script type="module" src="/cloudinary-upload.js"></script>
+          <!-- Script handler eksternal -->
+          <script type="module" src="/admin-blog.js"></script>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+</Layout>
+
+<script type="module">
+  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+  const supabaseUrl = "https://jcfizceoycwdvpqpwhrj.supabase.co";
+  const supabaseKey =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA";
+  const supabase = createClient(supabaseUrl, supabaseKey);
+  const edgeUrl =
+    "https://jcfizceoycwdvpqpwhrj.functions.supabase.co/insert_blog"; // Ganti jika endpoint berubah
+
+  function getEditingId() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("edit");
+  }
+  let editingId = getEditingId();
+
+  (async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (!session || session.user.email !== "lemindes@gmail.com") {
+      window.location.href = "/admin-login";
+      return;
+    }
+
+    // Prefill form jika mode edit
+    editingId = getEditingId();
+    const submitBtn = document.getElementById("blog-submit-btn");
+    if (editingId) {
+      const { data, error } = await supabase
+        .from("blog")
+        .select("*")
+        .eq("id", editingId)
+        .single();
+      if (!error && data) {
+        document.getElementById("blog-title").value = data.title || "";
+        document.getElementById("blog-content").value = data.content || "";
+        document.getElementById("blog-author").value = data.author || "";
+        document.getElementById("blog-author-role").value =
+          data.author_role || "";
+        document.getElementById("blog-author-photo").value =
+          data.author_photo || "";
+        document.getElementById("blog-image").value = data.image || "";
+        document.getElementById("blog-source").value = data.source || "";
+        // Ubah label tombol submit menjadi 'Update Blog'
+        if (submitBtn) submitBtn.textContent = "Update Blog";
+      }
+    } else {
+      // Jika bukan mode edit, pastikan label tombol submit kembali ke 'Tambah Blog'
+      if (submitBtn) submitBtn.textContent = "Tambah Blog";
+    }
+
+    // Submit handler
+    document.getElementById("blog-form").onsubmit = async function (e) {
+      e.preventDefault();
+      // Sinkronkan isi editor TinyMCE ke textarea
+      // @ts-ignore
+      if (window.tinymce) tinymce.triggerSave();
+      const title = document.getElementById("blog-title").value.trim();
+      const content = document.getElementById("blog-content").value.trim();
+      const author = document.getElementById("blog-author").value.trim();
+      const author_role = document
+        .getElementById("blog-author-role")
+        .value.trim();
+      const author_photo = document
+        .getElementById("blog-author-photo")
+        .value.trim();
+      const image = document.getElementById("blog-image").value.trim();
+      const source = document.getElementById("blog-source").value.trim();
+      const alertBox = document.getElementById("blog-success-alert");
+      alertBox.classList.add("hidden");
+      if (!title || !content || !author) {
+        alertBox.textContent = "Judul, penulis, dan isi blog wajib diisi";
+        alertBox.classList.remove("hidden");
+        alertBox.classList.add("text-red-600");
+        return;
+      }
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (!session) {
+        alertBox.textContent = "Session login admin tidak ditemukan!";
+        alertBox.classList.remove("hidden");
+        alertBox.classList.add("text-red-600");
+        return;
+      }
+      // Selalu update editingId sebelum submit (antisipasi reload atau navigasi)
+      editingId = getEditingId();
+      let method = editingId ? "PUT" : "POST";
+      let payload = editingId
+        ? {
+            id: editingId,
+            title,
+            content,
+            author,
+            author_role,
+            author_photo,
+            image,
+            source,
+          }
+        : { title, content, author, author_role, author_photo, image, source };
+
+      // DEBUG: log id, payload, dan method
+      ('[Blog Submit] editingId:', editingId);
+      ('[Blog Submit] method:', method);
+      ('[Blog Submit] payload:', payload);
+
+      let res, resJson;
+      try {
+        res = await fetch(edgeUrl, {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify(payload),
+        });
+        resJson = await res.json();
+        if (!res.ok) {
+          alertBox.textContent = "Gagal menyimpan blog: " + (resJson && resJson.error ? resJson.error : res.status);
+          alertBox.classList.remove("hidden");
+          alertBox.classList.add("text-red-600");
+          ("[Blog Submit] Backend error:", resJson);
+          return;
+        }
+        if (resJson && resJson.error) {
+          alertBox.textContent = "Gagal menyimpan blog: " + resJson.error;
+          alertBox.classList.remove("hidden");
+          alertBox.classList.add("text-red-600");
+          ("[Blog Submit] Backend error:", resJson);
+          return;
+        }
+        alertBox.textContent = editingId
+          ? "Artikel berhasil diubah!"
+          : "Artikel berhasil ditambah!";
+        alertBox.classList.remove("hidden");
+        alertBox.classList.remove("text-red-600");
+        alertBox.classList.add("text-green-600");
+        if (editingId) {
+          // Redirect ke daftar blog setelah update sukses (tunggu 1.5 detik)
+          setTimeout(() => {
+            window.location.href = "/admin-daftar-blog";
+          }, 1500);
+        } else {
+          document.getElementById("blog-form").reset();
+        }
+      } catch (err) {
+        alertBox.textContent = "Gagal menghubungi server: " + err;
+        alertBox.classList.remove("hidden");
+        alertBox.classList.add("text-red-600");
+        ("[Blog Submit] Network/JS error:", err);
+        return;
+      }
+    };
+
+
+    // Sembunyikan alert jika user mulai mengetik lagi
+    [
+      "blog-title",
+      "blog-content",
+      "blog-author",
+      "blog-image",
+      "blog-source",
+    ].forEach((id) => {
+      document.getElementById(id).addEventListener("input", () => {
+        document.getElementById("blog-success-alert").classList.add("hidden");
+      });
+    });
+  })();
+  // ====== Script Upload Foto Penulis ke Cloudinary ======
+  const CLOUDINARY_CLOUD_NAME = "dr8gr1uy1"; // Ganti dengan cloud_name Anda
+  const CLOUDINARY_UNSIGNED_PRESET = "foto-penulis"; // Ganti dengan upload preset unsigned Anda
+
+  const fileInput = document.getElementById("blog-author-photo-file");
+  if (fileInput) {
+    fileInput.addEventListener("change", async function (e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", CLOUDINARY_UNSIGNED_PRESET);
+      // Optional: tampilkan loading
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await res.json();
+      if (data.secure_url) {
+        document.getElementById("blog-author-photo").value = data.secure_url;
+        alert("Upload foto berhasil!");
+      } else {
+        alert("Upload gagal: " + (data.error?.message || "Unknown error"));
+      }
+    });
+  }
+</script>
