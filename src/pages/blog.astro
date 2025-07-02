@@ -32,11 +32,6 @@ title: "Blog";
 
 {/* ================= Script Load Blog dari Supabase ================= */}
 <script type="module">
-  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-  const supabase = createClient(
-    "https://jcfizceoycwdvpqpwhrj.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA"
-  );
   async function loadBlogs() {
     const wrapper = document.getElementById("blog-list-wrapper");
     wrapper.innerHTML = "";
@@ -46,16 +41,17 @@ title: "Blog";
     loading.textContent = "Loading...";
     wrapper.appendChild(loading);
 
-    const { data, error } = await supabase
-      .from("blog")
-      .select("*")
-      .order("created_at", { ascending: false });
-    loading.remove();
-    if (error) {
-      wrapper.innerHTML = `<div class='col-span-full text-center text-red-600'>Gagal load blog: ${error.message}</div>`;
+    let data = [];
+    try {
+      const res = await fetch("https://iniedu.id/blog.php");
+      data = await res.json();
+    } catch (err) {
+      loading.remove();
+      wrapper.innerHTML = `<div class='col-span-full text-center text-red-600'>Gagal load blog: ${err.message}</div>`;
       return;
     }
-    if (!data || data.length === 0) {
+    loading.remove();
+    if (!Array.isArray(data) || data.length === 0) {
       wrapper.innerHTML = `<div class='col-span-full text-center text-gray-400'>Belum ada artikel blog.</div>`;
       return;
     }

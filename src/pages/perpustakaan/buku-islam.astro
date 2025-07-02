@@ -28,56 +28,43 @@ import Layout from "../../layouts/Layout.astro";
       <!-- Buku akan tampil di sini secara dinamis dari Supabase -->
     </div>
     <script type="module">
-      import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-      const supabase = createClient(
-        "https://jcfizceoycwdvpqpwhrj.supabase.co",
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA"
-      );
       const grid = document.getElementById("ebook-islam-list");
       let allBooks = [];
       let allThemes = [];
       let selectedThemeId = null;
+
       async function fetchAndRenderIslamBooks() {
-        // Ambil kategori "islam"
-        const { data: cats, error: catErr } = await supabase
-          .from("ebook_categories")
-          .select("*");
-        if (catErr || !cats) {
-          grid.innerHTML =
-            '<div class="col-span-3 text-center text-red-500">Gagal memuat kategori.</div>';
-          return;
+        try {
+          const response = await fetch(
+            `https://iniedu.id/get_ebooks.php?kategori=islam`
+          );
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+
+          if (data.error) {
+            throw new Error(data.error);
+          }
+
+          allThemes = data.themes || [];
+          allBooks = data.books || [];
+
+          renderThemes(allThemes);
+
+          if (allBooks.length === 0) {
+            grid.innerHTML =
+              '<div class="col-span-5 text-center text-gray-400">Belum ada buku dalam kategori ini.</div>';
+            return;
+          }
+
+          renderBooks(allBooks);
+        } catch (error) {
+          console.error("Error fetching books:", error);
+          grid.innerHTML = `<div class="col-span-5 text-center text-red-500">Gagal memuat buku. ${error.message}</div>`;
         }
-        const cat = cats.find((c) => c.nama.toLowerCase().includes("islam"));
-        if (!cat) {
-          grid.innerHTML =
-            '<div class="col-span-3 text-center text-gray-400">Kategori buku islam belum tersedia.</div>';
-          return;
-        }
-        // Ambil semua tema di kategori ini
-        const { data: themes, error: themeErr } = await supabase
-          .from("ebook_themes")
-          .select("*")
-          .eq("category_id", cat.id);
-        allThemes = themes || [];
-        renderThemes(allThemes);
-        // Ambil semua buku kategori ini
-        const { data: books, error: bookErr } = await supabase
-          .from("ebooks")
-          .select("*")
-          .eq("kategori_id", cat.id);
-        if (bookErr) {
-          grid.innerHTML =
-            '<div class="col-span-3 text-center text-red-500">Gagal memuat buku.</div>';
-          return;
-        }
-        if (!books || books.length === 0) {
-          grid.innerHTML =
-            '<div class="col-span-3 text-center text-gray-400">Belum ada buku.</div>';
-          return;
-        }
-        allBooks = books;
-        renderBooks(books);
       }
+
       function renderThemes(themes) {
         const temaDiv = document.getElementById("tema-list");
         if (!themes || themes.length === 0) {
@@ -87,10 +74,11 @@ import Layout from "../../layouts/Layout.astro";
         temaDiv.innerHTML = themes
           .map(
             (t) =>
-              `<button data-id="${t.id}" class="tema-btn px-4 py-2 rounded-full border border-green-400 bg-white text-green-700 font-semibold shadow hover:bg-green-50 transition ${selectedThemeId === t.id ? "ring-2 ring-green-400" : ""}">${t.name}</button>`
+              `<button data-id="${t.id}" class="tema-btn px-4 py-2 rounded-full border border-green-400 bg-white text-green-700 font-semibold shadow hover:bg-green-50 transition ${selectedThemeId == t.id ? "ring-2 ring-green-400" : ""}">${t.name}</button>`
           )
           .join("");
       }
+
       function renderBooks(books) {
         grid.innerHTML = "";
         books.forEach((buku) => {
@@ -98,54 +86,34 @@ import Layout from "../../layouts/Layout.astro";
           div.className =
             "bg-white rounded-xl shadow p-4 flex flex-col items-center min-w-[240px] h-full";
           div.innerHTML = `
-            <img src="${buku.cover || "/default-cover.png"}" alt="Cover Buku" class="w-32 h-44 object-cover rounded mb-2" />
-            <div class="font-bold mt-2 text-center">${buku.judul}</div>
-            <div class="text-sm text-gray-500 mb-1">${buku.penulis}${buku.tahun ? ", " + buku.tahun : ""}</div>
+            <img src="${buku.cover_image_url || "/default-cover.png"}" alt="Cover Buku" class="w-32 h-44 object-cover rounded mb-2" />
+            <div class="font-bold mt-2 text-center">${buku.title}</div>
+            <div class="text-sm text-gray-500 mb-1">${buku.author}${buku.tahun ? ", " + buku.tahun : ""}</div>
             ${buku.penerbit ? `<div class='text-xs text-gray-400 mb-1'>Penerbit: ${buku.penerbit}</div>` : ""}
-            ${buku.deskripsi ? `<div class='text-xs text-gray-500 mb-2 italic'>${buku.deskripsi}</div>` : ""}
-            <a href="${buku.link}" target="_blank" class="px-4 py-2 bg-green-600 text-white rounded-full font-semibold mt-auto">Baca Sekarang</a>
+            ${buku.description ? `<div class='text-xs text-gray-500 mb-2 italic'>${buku.description}</div>` : ""}
+            <a href="${buku.file_url}" target="_blank" class="px-4 py-2 bg-green-600 text-white rounded-full font-semibold mt-auto">Baca Sekarang</a>
           `;
-          // Tracking klik Baca Sekarang
-          setTimeout(() => {
-            const btn = div.querySelector("a");
-            if (btn) {
-              btn.addEventListener("click", async (e) => {
-                // Tracking ke Supabase
-                try {
-                  await supabase.from("perpustakaan_clicks").insert({
-                    kategori: "buku_islam",
-                    ebook_id: buku.id,
-                    judul: buku.judul,
-                    clicked_at: new Date().toISOString(),
-                  });
-                } catch (err) {
-                  // Optional: log error
-                  "Gagal tracking klik eBook:", err;
-                }
-                // Tidak perlu preventDefault, biarkan link tetap terbuka
-              });
-            }
-          }, 0);
           grid.appendChild(div);
         });
       }
+
       fetchAndRenderIslamBooks();
+
       // Filter by tema
       document.getElementById("tema-list").addEventListener("click", (e) => {
         if (e.target.classList.contains("tema-btn")) {
           const id = e.target.getAttribute("data-id");
-          selectedThemeId = selectedThemeId === id ? null : id;
+          selectedThemeId = selectedThemeId == id ? null : id;
           renderThemes(allThemes);
-          if (selectedThemeId) {
-            const filtered = allBooks.filter(
-              (b) => b.tema_id === selectedThemeId
-            );
-            renderBooks(filtered);
-          } else {
-            renderBooks(allBooks);
-          }
+
+          const booksToRender = selectedThemeId
+            ? allBooks.filter((b) => b.tema_id == selectedThemeId)
+            : allBooks;
+
+          renderBooks(booksToRender);
         }
       });
+
       // Real-time search
       const searchInput = document.getElementById("ebook-search");
       if (searchInput) {
@@ -153,10 +121,11 @@ import Layout from "../../layouts/Layout.astro";
           const q = searchInput.value.trim().toLowerCase();
           const filtered = allBooks.filter(
             (buku) =>
-              (buku.judul && buku.judul.toLowerCase().includes(q)) ||
-              (buku.penulis && buku.penulis.toLowerCase().includes(q)) ||
+              (buku.title && buku.title.toLowerCase().includes(q)) ||
+              (buku.author && buku.author.toLowerCase().includes(q)) ||
               (buku.penerbit && buku.penerbit.toLowerCase().includes(q)) ||
-              (buku.deskripsi && buku.deskripsi.toLowerCase().includes(q)) ||
+              (buku.description &&
+                buku.description.toLowerCase().includes(q)) ||
               (buku.tahun && String(buku.tahun).toLowerCase().includes(q))
           );
           renderBooks(filtered);

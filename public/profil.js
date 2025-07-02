@@ -1,67 +1,63 @@
+// Mengambil elemen div untuk menampilkan info profil
 const profileDiv = document.getElementById('profile-info');
+
+// Mengambil data pengguna dari localStorage yang diatur oleh sistem login PHP
 const userId = localStorage.getItem('user_id');
 const userNama = localStorage.getItem('user_nama');
-const userEmail = localStorage.getItem('user_email'); // Pastikan email juga disimpan saat login
+const userEmail = localStorage.getItem('user_email');
 
+// Fungsi sederhana untuk mendapatkan nama dari email jika nama lengkap tidak ada
 function getNamaFromEmail(email) {
-  if (!email) return '-';
+  if (!email || email.indexOf('@') === -1) return 'Pengguna';
   return email.split('@')[0];
 }
 
+// Cek apakah pengguna sudah login dengan memeriksa localStorage
 if (!userId) {
-  profileDiv.innerHTML = '<div class="text-red-600">User belum login atau data user tidak valid.</div>';
-  setTimeout(() => window.location.href = "/login", 1200);
+  // Jika tidak ada user_id, tampilkan pesan dan redirect ke halaman login
+  profileDiv.innerHTML = '<div class="text-red-600">Sesi tidak ditemukan. Anda akan diarahkan ke halaman login.</div>';
+  setTimeout(() => window.location.href = "/login", 1500);
 } else {
-  const namaFinal = userNama && userNama !== '-' ? userNama : getNamaFromEmail(userEmail);
+  // Jika login, tampilkan informasi profil
+  const namaFinal = userNama && userNama !== 'null' && userNama.trim() !== '' ? userNama : getNamaFromEmail(userEmail);
+  
   profileDiv.innerHTML = `
-    <div class="mb-2"><b>Nama:</b> ${namaFinal} </div>
-    <button id="logout-btn" class="mt-4 px-6 py-2 rounded bg-red-500 hover:bg-red-600 text-white font-bold transition-all">Logout</button>
+    <div class="space-y-2 text-left">
+      <p><strong>Nama:</strong> ${namaFinal}</p>
+      <p><strong>Email:</strong> ${userEmail || '-'}</p>
+    </div>
+    <button id="logout-btn" class="mt-6 px-6 py-2 rounded bg-red-500 hover:bg-red-600 text-white font-bold transition-all">Logout</button>
   `;
-  document.getElementById('logout-btn').onclick = () => {
-    localStorage.removeItem('user_id');
-    localStorage.removeItem('user_nama');
-    localStorage.removeItem('user_email');
-    window.location.href = "/login";
-  };
-}
 
-let isLoggingOut = false;
+  // Tambahkan event listener untuk tombol logout
+  const logoutButton = document.getElementById('logout-btn');
+  if (logoutButton) {
+    logoutButton.onclick = async () => {
+      try {
+        // Panggil endpoint logout di server untuk menghancurkan sesi
+        const response = await fetch('https://iniedu.id/logout.php', {
+          method: 'POST',
+          credentials: 'include' // Penting untuk mengirim cookie sesi
+        });
+        const result = await response.json();
 
-onAuthStateChanged(auth, async (user) => {
-  if (isLoggingOut) return; // Jangan tampilkan alert jika sedang logout
-  if (user && user.email) {
-    await renderProfile(user);
-    // Subscribe realtime ke tabel users milik user login
-    const channel = supabase.channel('public:users')
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'users',
-        filter: `uid=eq.${user.uid}`
-      }, payload => {
-        ('Realtime perubahan profil user:', payload);
-        renderProfile(user);
-      })
-      .subscribe();
-  } else {
-    profileDiv.innerHTML = '<div class="text-red-600">User belum login atau data user tidak valid.</div>';
-    setTimeout(() => {
-      window.location.href = "/login";
-    }, 1200);
-  }
-});
+        if (result.success) {
+          console.log('Sesi server berhasil dihancurkan.');
+        } else {
+          console.error('Gagal menghancurkan sesi server.');
+        }
+      } catch (error) {
+        console.error('Error saat logout di server:', error);
+      } finally {
+        // Hapus semua data sesi dari localStorage, terlepas dari hasil server
+        localStorage.removeItem('user_id');
+        localStorage.removeItem('user_nama');
+        localStorage.removeItem('user_email');
+        localStorage.removeItem('selectedCourse'); // Hapus juga data kursus yang mungkin nyangkut
 
-// Ubah handler logout
-function setLogoutHandler() {
-  const btn = document.getElementById('logout-btn');
-  if (btn) {
-    btn.onclick = async () => {
-      isLoggingOut = true;
-      await auth.signOut();
-      window.location.href = "/login";
+        // Arahkan ke halaman login setelah semuanya selesai
+        window.location.href = "/login";
+      }
     };
   }
 }
-// Panggil setLogoutHandler setiap kali renderProfile
-// Tambahkan di akhir renderProfile:
-// setLogoutHandler();

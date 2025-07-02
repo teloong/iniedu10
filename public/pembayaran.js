@@ -1,93 +1,93 @@
-('DEBUG: pembayaran.js aktif');
-
-function initPembayaran() {
-  ("DEBUG: initPembayaran terpanggil");
+document.addEventListener('DOMContentLoaded', async function() {
   const form = document.getElementById('formPembayaran');
-  if (!form) {
-    alert('ERROR: formPembayaran tidak ditemukan di halaman!');
-    ('ERROR: formPembayaran tidak ditemukan di halaman!');
-    ("DEBUG: formPembayaran belum ditemukan, polling ulang...");
-    setTimeout(initPembayaran, 100);
+  if (!form) return;
+
+  const emailInput = document.getElementById('email');
+  const namaLengkapInput = document.getElementById('nama_lengkap');
+  const submitBtn = form.querySelector('button[type="submit"]');
+  let currentUserId = null;
+
+  // 1. Ambil data sesi pengguna dari server
+  try {
+    const response = await fetch('https://iniedu.id/get_user_session.php', { credentials: 'include' });
+    const userData = await response.json();
+
+    if (userData.success && userData.isLoggedIn) {
+      // Pengguna login, isi form
+      emailInput.value = userData.email;
+      emailInput.readOnly = true;
+      if (userData.nama_lengkap) {
+        namaLengkapInput.value = userData.nama_lengkap;
+      }
+      currentUserId = userData.user_id;
+      // Tombol submit diaktifkan oleh skrip inline di pembayaran.astro
+    } else {
+      // Pengguna tidak login, nonaktifkan form dan arahkan ke login
+      const redirectUrl = `/login?redirect_to=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+      document.getElementById('pembayaran-info').innerHTML = `<p class="text-red-500">Anda harus login untuk melanjutkan. <a href="${redirectUrl}" class="font-bold underline">Login di sini</a>.</p>`;
+
+      emailInput.readOnly = true;
+      namaLengkapInput.readOnly = true;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Login Dulu';
+      submitBtn.onclick = (e) => {
+          e.preventDefault();
+          window.location.href = redirectUrl;
+      };
+      return; // Hentikan eksekusi lebih lanjut
+    }
+  } catch (error) {
+    console.error('Gagal mengambil data sesi:', error);
+    document.getElementById('pembayaran-info').innerHTML = '<p class="text-red-500">Gagal memuat data sesi Anda. Coba refresh halaman.</p>';
+    submitBtn.disabled = true;
     return;
   }
-  ('DEBUG: formPembayaran ditemukan, memasang event listener submit...');
-  ("DEBUG: Elemen form ditemukan:", form);
-  const emailInput = document.getElementById('email');
-  const submitBtn = form.querySelector('button[type="submit"]');
-  ("DEBUG: Tombol submit ditemukan:", submitBtn);
-  submitBtn.disabled = true; // Disable tombol submit sampai login terdeteksi
 
-  let currentUser = null;
-
-  if (window.firebase && window.firebase.auth) {
-    ("DEBUG: Firebase Auth ditemukan, memasang event listener onAuthStateChanged...");
-    window.firebase.auth().onAuthStateChanged(function(user) {
-      ("DEBUG: onAuthStateChanged terpanggil", user);
-      if (!user) {
-        alert('Anda harus login terlebih dahulu untuk melakukan pembayaran!');
-        window.location.href = '/login';
-      } else {
-        currentUser = user;
-        emailInput.value = user.email;
-        emailInput.readOnly = true;
-        submitBtn.disabled = false; // Enable tombol submit setelah login terdeteksi
-        ("DEBUG: User login terdeteksi, tombol submit di-enable");
-      }
-    });
-  }
-
-  ("DEBUG: Memasang event listener submit pada form...");
+  // 2. Tambahkan event listener untuk submit form
   form.addEventListener('submit', async function(e) {
     e.preventDefault();
-    ("DEBUG: Form submit tertangkap");
-    
-    // Cek login ulang langsung dari Firebase Auth
-    const user = window.firebase.auth().currentUser;
-    if (!user) {
-      alert('Anda harus login terlebih dahulu!');
-      window.location.href = '/login';
-      return;
-    }
-    const user_uid = user.uid;
-    const email = user.email;
-    const namaLengkap = document.getElementById('namaLengkap').value;
-    const kursus = form.getAttribute('data-nama-kursus');
-    const harga = parseInt(form.getAttribute('data-harga'));
-    const waktu = new Date().toISOString();
-    const supabaseUrl = 'https://jcfizceoycwdvpqpwhrj.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA';
-    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Memproses...';
 
-    ("DEBUG: Akan insert ke Supabase", {
-      user_uid, namaLengkap, email, kursus, harga, waktu
-    });
+    const payload = {
+        // user_id diambil dari sesi di backend, tidak perlu dikirim dari sini
+        email: emailInput.value,
+        nama_lengkap: namaLengkapInput.value,
+        id_kursus: document.getElementById('id_kursus').value,
+        nama_kursus: document.getElementById('nama_kursus').value,
+        amount: parseInt(document.getElementById('harga').value, 10)
+    };
+
+    // Validasi frontend (user_id sudah divalidasi di backend melalui sesi)
+    if (!payload.id_kursus) {
+        alert('Error: Data sesi atau kursus tidak lengkap. Silakan coba lagi dari halaman kursus.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Konfirmasi Pembelian';
+        return;
+    }
 
     try {
-      const { data, error } = await supabase.from('pembelian_kursus').insert([
-        {
-          user_uid,
-          nama_lengkap: namaLengkap,
-          email,
-          nama_kursus: kursus,
-          harga,
-          status_pembayaran: 'PAID',
-          waktu_pembelian: waktu
-        }
-      ]);
+      const res = await fetch('https://iniedu.id/create_invoice.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // PENTING: Kirim cookies sesi ke server
+        body: JSON.stringify(payload)
+      });
 
-      if (error) {
-        alert('Gagal menyimpan data: ' + (error.message || JSON.stringify(error)));
-        ('DEBUG: Error insert Supabase', error);
-        return;
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        window.location.href = data.invoice_url;
+      } else {
+        alert('Gagal membuat invoice: ' + (data.message || 'Terjadi kesalahan di server.'));
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Konfirmasi Pembelian';
       }
-      alert('Pembayaran berhasil!');
-      ('DEBUG: Insert sukses Supabase', data);
-      // Redirect atau reset form jika perlu
     } catch (err) {
-      alert('Gagal (exception): ' + (err.message || err));
-      ('DEBUG: Exception insert Supabase', err);
+      console.error('Fetch error:', err);
+      alert('Gagal terhubung ke server. Silakan coba lagi nanti.');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Konfirmasi Pembelian';
     }
   });
-}
-
-document.addEventListener('DOMContentLoaded', initPembayaran);
+});

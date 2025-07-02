@@ -1,25 +1,26 @@
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+// Refactor: fetch & CRUD video pakai backend PHP (bukan Supabase)
+const VIDEOS_API_URL = "https://iniedu.id/admin-video.php"; // Ganti sesuai lokasi videos.php di hosting Anda
 
-// Ganti sesuai project Supabase Anda
-const supabaseUrl = 'https://jcfizceoycwdvpqpwhrj.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA';
-export const supabase = createClient(supabaseUrl, supabaseKey);
-
-// Fetch data awal videos
+// Fetch data awal videos dari backend PHP
 export async function fetchVideos() {
-  const { data, error } = await supabase
-    .from('videos')
-    .select('*')
-    .order('id', { ascending: false });
-  return { data, error };
+  try {
+    const res = await fetch(VIDEOS_API_URL, { method: "GET" });
+    if (!res.ok) throw new Error("Gagal fetch data video");
+    const data = await res.json();
+    return { data, error: null };
+  } catch (error) {
+    return { data: null, error };
+  }
 }
 
-// Subscribe realtime perubahan videos
+// Dummy subscribeVideos: polling sederhana (jika ingin realtime, bisa pakai WebSocket atau polling interval)
 export function subscribeVideos(onChange) {
-  return supabase
-    .channel('public:videos')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'videos' }, payload => {
-      onChange(payload);
-    })
-    .subscribe();
+  // Polling setiap 10 detik
+  const interval = setInterval(async () => {
+    const { data } = await fetchVideos();
+    onChange(data);
+  }, 10000);
+  return {
+    unsubscribe: () => clearInterval(interval)
+  };
 }

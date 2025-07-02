@@ -16,271 +16,219 @@ import Layout from "../layouts/Layout.astro";
         <div
           class="bg-white rounded-2xl shadow-xl p-8 border-b-4 border-blue-400 w-full max-w-xs mx-auto flex flex-col items-center"
         >
-          <svg
-            width="44"
-            height="44"
-            viewBox="0 0 44 44"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            class="mb-4"
+          <p>Lengkapi data berikut untuk konfirmasi pembelian kursus Anda.</p>
+          <svg width="44" height="44" viewBox="0 0 44 44"> </svg>
+
+          <div
+            id="info-message"
+            class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+            role="alert"
           >
-            <circle cx="22" cy="22" r="22" fill="#22c55e" opacity=".13"
-            ></circle>
-            <rect x="10" y="16" width="24" height="14" rx="4" fill="#22c55e"
-            ></rect>
-            <rect x="14" y="20" width="16" height="4" rx="2" fill="#fff"></rect>
-            <rect x="26" y="23" width="4" height="2" rx="1" fill="#16a34a"
-            ></rect>
-            <rect x="14" y="23" width="6" height="2" rx="1" fill="#a7f3d0"
-            ></rect>
-            <rect
-              x="12"
-              y="18"
-              width="20"
-              height="2"
-              rx="1"
-              fill="#16a34a"
-              opacity=".4"></rect>
-          </svg>
-          <h1 class="text-lg font-bold mb-2 text-blue-700 text-center">
-            Pembayaran Kursus
-          </h1>
-          <p class="mb-4 text-gray-600 text-center text-sm">
-            Lengkapi data berikut untuk konfirmasi pembelian kursus Anda.
-          </p>
-          <div id="pembayaran-info" class="mb-3 text-gray-700 text-center">
           </div>
-          <form id="form-pembayaran" class="space-y-3 w-full">
-            <div>
-              <label class="block text-gray-600 mb-1">Nama Kursus</label>
-              <div
-                id="nama_kursus_display"
-                class="w-full border rounded px-3 py-2 bg-gray-50 text-gray-700 cursor-default select-none flex items-center"
-                style="min-height:2.5rem;"
+
+          <form id="payment-form">
+            <div class="mb-4">
+              <label
+                for="nama_kursus"
+                class="block text-gray-700 text-sm font-bold mb-2"
+                >Nama Kursus</label
               >
-              </div>
-              <input type="hidden" id="nama_kursus" name="nama_kursus" />
+              <input
+                type="text"
+                id="nama_kursus"
+                name="nama_kursus"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
+                readonly
+              />
             </div>
-            <div>
-              <label class="block text-gray-600 mb-1">ID Kursus</label>
-              <div
-                id="id_kursus_display"
-                class="w-full border rounded px-3 py-2 bg-gray-50 text-gray-700 cursor-default select-none flex items-center"
-                style="min-height:2.5rem;"
+            <div class="mb-4">
+              <label
+                for="id_kursus"
+                class="block text-gray-700 text-sm font-bold mb-2"
+                >ID Kursus</label
               >
-              </div>
-              <input type="hidden" id="id_kursus" name="id_kursus" />
+              <input
+                type="text"
+                id="id_kursus"
+                name="id_kursus"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
+                readonly
+              />
             </div>
-            <div>
-              <label class="block text-gray-600 mb-1">Harga</label>
-              <div
-                id="harga_display"
-                class="w-full border rounded px-3 py-2 bg-gray-50 text-gray-700 cursor-default select-none flex items-center"
-                style="min-height:2.5rem;"
+            <div class="mb-4">
+              <label
+                for="harga"
+                class="block text-gray-700 text-sm font-bold mb-2">Harga</label
               >
-              </div>
-              <input type="hidden" id="harga" name="harga" />
+              <input
+                type="text"
+                id="harga"
+                name="harga"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
+                readonly
+              />
             </div>
-            <div>
-              <label class="block text-gray-600 mb-1">Nama Lengkap</label>
+            <div class="mb-4">
+              <label
+                for="nama_lengkap"
+                class="block text-gray-700 text-sm font-bold mb-2"
+                >Nama Lengkap</label
+              >
               <input
                 type="text"
                 id="nama_lengkap"
                 name="nama_lengkap"
-                class="w-full border rounded px-3 py-2"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                placeholder="Nama sesuai identitas"
                 required
+                autocomplete="new-password"
               />
             </div>
-            <div>
-              <label class="block text-gray-600 mb-1">Email</label>
-              <div
-                id="email_display"
-                class="w-full border rounded px-3 py-2 bg-gray-50 text-gray-700 cursor-default select-none flex items-center"
-                style="min-height:2.5rem;"
+            <div class="mb-6">
+              <label
+                for="email"
+                class="block text-gray-700 text-sm font-bold mb-2">Email</label
               >
-              </div>
-              <input type="hidden" id="email" name="email" />
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                placeholder="contoh@email.com"
+                required
+                autocomplete="new-password"
+              />
             </div>
-            <button
-              type="submit"
-              id="submit-btn"
-              class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mt-4"
-              disabled>Konfirmasi Pembelian</button
-            >
+            <div class="flex items-center justify-center">
+              <button
+                id="submitBtn"
+                type="submit"
+                class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors duration-300"
+                disabled
+              >
+                Memuat...
+              </button>
+            </div>
           </form>
-          <div id="pembayaran-status" class="mt-4"></div>
         </div>
-        <script type="module">
-          // Ambil data kursus dari query string
-          const params = new URLSearchParams(window.location.search);
-          // Set display value dan hidden input value
-          document.getElementById("id_kursus_display").innerText =
-            params.get("id_kursus") || "";
-          document.getElementById("id_kursus").value =
-            params.get("id_kursus") || "";
-
-          document.getElementById("harga_display").innerText =
-            "Memuat harga...";
-          document.getElementById("harga").value = "";
-          document.getElementById("nama_kursus_display").innerText =
-            "Memuat nama kursus...";
-          document.getElementById("nama_kursus").value = "";
-          const idKursus = params.get("id_kursus");
-          if (idKursus) {
-            // Supabase fetch kursus
-            import(
-              "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm"
-            ).then(({ createClient }) => {
-              const supabaseUrl = "https://jcfizceoycwdvpqpwhrj.supabase.co";
-              const supabaseKey =
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA";
-              const supabase = createClient(supabaseUrl, supabaseKey);
-              supabase
-                .from("kursus")
-                .select("nama_kursus,harga")
-                .eq("id", idKursus)
-                .single()
-                .then(({ data, error }) => {
-                  const submitBtn = document.getElementById("submit-btn");
-                  if (error || !data) {
-                    document.getElementById("harga_display").innerText =
-                      "Gagal mengambil harga";
-                    document.getElementById("harga").value = "";
-                    document.getElementById("nama_kursus_display").innerText =
-                      "Gagal mengambil nama kursus";
-                    document.getElementById("nama_kursus").value = "";
-                    if (submitBtn) submitBtn.disabled = true;
-                  } else {
-                    document.getElementById("harga_display").innerText =
-                      data.harga;
-                    document.getElementById("harga").value = data.harga;
-                    document.getElementById("nama_kursus_display").innerText =
-                      data.nama_kursus;
-                    document.getElementById("nama_kursus").value =
-                      data.nama_kursus;
-                    if (submitBtn) submitBtn.disabled = false;
-                  }
-                });
-            });
-          } else {
-            document.getElementById("harga_display").innerText = "";
-            document.getElementById("harga").value = "";
-            document.getElementById("nama_kursus_display").innerText = "";
-            document.getElementById("nama_kursus").value = "";
-          }
-
-          // Firebase Modular Auth
-          import {
-            initializeApp,
-            getApps,
-          } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-          import {
-            getAuth,
-            onAuthStateChanged,
-          } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-          const firebaseConfig = window.firebaseConfig || {
-            apiKey: "AIzaSyAlxYWD4bCwpoKEErXDX1_4AZC9wzQTkwA",
-            authDomain: "iniedu.firebaseapp.com",
-            projectId: "iniedu",
-            storageBucket: "iniedu.appspot.com",
-            messagingSenderId: "743403637628",
-            appId: "1:743403637628:web:15b40396e94c8b91ce32f9",
-            measurementId: "G-P2NBXXWM7T",
-          };
-          let app;
-          if (!getApps().length) {
-            app = initializeApp(firebaseConfig);
-          } else {
-            app = getApps()[0];
-          }
-          const auth = getAuth(app);
-          onAuthStateChanged(auth, (user) => {
-            if (!user) {
-              window.location.href = "/login";
-            } else {
-              document.getElementById("nama_lengkap").value =
-                user.displayName || "";
-              document.getElementById("email_display").innerText =
-                user.email || "";
-              document.getElementById("email").value = user.email || "";
-            }
-          });
-
-          // Supabase Insert
-          import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-          const supabaseUrl = "https://jcfizceoycwdvpqpwhrj.supabase.co";
-          const supabaseKey =
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA";
-          const supabase = createClient(supabaseUrl, supabaseKey);
-
-          document
-            .getElementById("form-pembayaran")
-            .addEventListener("submit", async (e) => {
-              e.preventDefault();
-              const user = auth.currentUser;
-              if (!user) {
-                document.getElementById("pembayaran-status").innerHTML =
-                  '<span class="text-red-600">User belum login!</span>';
-                return;
-              }
-              // Ambil data dari form
-              const nama_kursus = document.getElementById("nama_kursus").value;
-              const nama_lengkap =
-                document.getElementById("nama_lengkap").value;
-              const email = user.email;
-              const amount = parseInt(document.getElementById("harga").value);
-              document.getElementById("pembayaran-status").innerHTML =
-                '<span class="text-blue-600">Membuat invoice, mohon tunggu...</span>';
-              try {
-                const res = await fetch(
-                  "https://jcfizceoycwdvpqpwhrj.functions.supabase.co/create_invoice",
-                  {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                      name: nama_lengkap, // diambil dari input
-                      email: email,
-                      amount: amount,
-                      nama_kursus: nama_kursus, // diambil dari hasil fetch database
-                      user_uid: user.uid, // KIRIM UID KE BACKEND
-                      id_kursus: parseInt(idKursus) // KIRIM ID KURSUS SEBAGAI INTEGER KE BACKEND
-                    }),
-                  }
-                );
-                if (res.ok) {
-                  const data = await res.json();
-                  if (data && data.invoice_url) {
-                    window.location.href = data.invoice_url;
-                  } else {
-                    document.getElementById("pembayaran-status").innerHTML =
-                      '<span class="text-red-600">Gagal membuat invoice. Silakan coba lagi.</span>';
-                  }
-                } else {
-                  let pesan = "Gagal membuat invoice. Silakan coba lagi.";
-                  try {
-                    const errData = await res.json();
-                    if (
-                      res.status === 409 ||
-                      (errData &&
-                        errData.error &&
-                        errData.error.includes("sudah pernah membeli"))
-                    ) {
-                      pesan =
-                        "<span class='text-red-600'>Kamu sudah pernah membeli kursus ini.</span>";
-                    } else if (errData && errData.error) {
-                      pesan = `<span class='text-red-600'>${errData.error}</span>`;
-                    }
-                  } catch {}
-                  document.getElementById("pembayaran-status").innerHTML =
-                    pesan;
-                }
-              } catch (err) {
-                document.getElementById("pembayaran-status").innerHTML =
-                  '<span class="text-red-600">Terjadi kesalahan saat membuat invoice.</span>';
-              }
-            });
-        </script>
       </section>
     </Layout>
   </body>
+
+  <script is:inline>
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("payment-form");
+      const submitBtn = document.getElementById("submitBtn");
+      const infoDiv = document.getElementById("info-message");
+      const namaLengkapInput = document.getElementById("nama_lengkap");
+      const emailInput = document.getElementById("email");
+      const base_api_url = "https://iniedu.id";
+
+      const disableForm = (message) => {
+        infoDiv.textContent = message;
+        infoDiv.classList.remove("hidden");
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Tidak Tersedia";
+        submitBtn.classList.add("cursor-not-allowed", "bg-gray-400");
+      };
+
+      // 1. Ambil detail kursus dari localStorage
+      const selectedCourseString = localStorage.getItem("selectedCourse");
+      if (!selectedCourseString) {
+        disableForm(
+          "ID Kursus tidak valid. Silakan pilih kursus dari halaman kursus."
+        );
+        return;
+      }
+
+      const selectedCourse = JSON.parse(selectedCourseString);
+      const { id, nama, harga } = selectedCourse;
+
+      if (!id || !nama || !harga) {
+        disableForm("Data kursus tidak lengkap. Silakan coba lagi.");
+        return;
+      }
+
+      // 2. Isi form dengan detail kursus
+      document.getElementById("nama_kursus").value = nama;
+      document.getElementById("id_kursus").value = id;
+      document.getElementById("harga").value = harga;
+      infoDiv.classList.add("hidden");
+
+      // 3. Cek sesi pengguna dan isi data pengguna
+      fetch(`${base_api_url}/get_user_session.php`, { credentials: "include" })
+        .then((response) => {
+          if (!response.ok) {
+            console.log(
+              "Sesi pengguna tidak ditemukan, pembelian sebagai tamu. Menjadwalkan pembersihan form..."
+            );
+            setTimeout(() => {
+              namaLengkapInput.value = '';
+              emailInput.value = '';
+              console.log('Form dibersihkan untuk tamu.');
+            }, 100); // Jeda untuk melawan autofill browser
+            emailInput.readOnly = false;
+            return null;
+          }
+          return response.json();
+        })
+        .then((userData) => {
+          if (userData && userData.user_id) {
+            namaLengkapInput.value = userData.nama_lengkap || "";
+            emailInput.value = userData.email || "";
+            emailInput.readOnly = true;
+          }
+        })
+        .catch((error) => {
+          console.error("Gagal mengambil sesi pengguna:", error);
+          // Jika gagal menghubungi server, anggap sebagai tamu dan bersihkan form
+          setTimeout(() => {
+            namaLengkapInput.value = '';
+            emailInput.value = '';
+            console.log('Form dibersihkan setelah gagal fetch.');
+          }, 100); // Jeda untuk melawan autofill browser
+          emailInput.readOnly = false;
+        })
+        .finally(() => {
+          // 4. Aktifkan tombol submit setelah semua data dimuat
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Konfirmasi Pembelian";
+          submitBtn.classList.remove("cursor-not-allowed", "bg-gray-400");
+        });
+
+      // 5. Event listener untuk form submission
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Memproses...";
+
+        const formData = new FormData(form);
+
+        try {
+          const response = await fetch(`${base_api_url}/create_invoice.php`, {
+            method: "POST",
+            credentials: "include",
+            body: formData,
+          });
+
+          const result = await response.json();
+
+          if (response.ok && result.success) {
+            localStorage.removeItem("selectedCourse"); // Hapus data kursus setelah berhasil
+            window.location.href = result.invoice_url;
+          } else {
+            throw new Error(
+              result.message || "Terjadi kesalahan saat membuat invoice."
+            );
+          }
+        } catch (error) {
+          console.error("Payment error:", error);
+          infoDiv.textContent = `Error: ${error.message}`;
+          infoDiv.classList.remove("hidden");
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Konfirmasi Pembelian";
+        }
+      });
+    });
+  </script>
 </html>

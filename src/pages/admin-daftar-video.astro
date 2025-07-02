@@ -5,18 +5,7 @@ import '../styles/global.css';
 ---
 <Layout title="Daftar Video">
 <!-- Proteksi login (hanya jalan di browser) -->
-<script type="module">
-  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-  const supabaseUrl = 'https://jcfizceoycwdvpqpwhrj.supabase.co';
-  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA';
-  const supabase = createClient(supabaseUrl, supabaseKey);
-  (async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session || session.user.email !== "lemindes@gmail.com") {
-      window.location.href = "/admin-login";
-    }
-  })();
-</script>
+
 
   <div class="min-h-screen bg-gray-50 flex">
     <div class="sticky top-0 h-screen hidden md:block">
@@ -54,25 +43,41 @@ import '../styles/global.css';
   </div>
 </Layout>
 <script type="module">
-  import { supabase, fetchVideos, subscribeVideos } from '/videos.js';
-
   // Proteksi akses admin
-  (async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session || session.user.email !== "lemindes@gmail.com") {
-      window.location.href = "/admin-login";
-    }
-  })();
+(async () => {
+  const token = localStorage.getItem('adminAuthToken');
+  // (Opsional) Anda bisa tambahkan validasi JWT di sini jika ingin
+  if (!token) window.location.href = "/admin-login";
+})();
 
-  // Simpan data hasil fetch untuk kebutuhan filter
-  let allVideos = [];
+// Simpan data hasil fetch untuk kebutuhan filter
+let allVideos = [];
 
-  // Pagination state
-  let currentPage = 1;
-  const pageSize = 20;
-  let filteredVideos = null;
+// Pagination state
+let currentPage = 1;
+const pageSize = 20;
+let filteredVideos = null;
 
-  function renderVideos(filtered = null, page = 1) {
+// Fetch videos dari backend PHP
+async function fetchVideos() {
+  const token = localStorage.getItem('adminAuthToken');
+  const res = await fetch('https://iniedu.id/admin-video.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({ action: 'fetch' })
+  });
+  const data = await res.json();
+  if (data.success && Array.isArray(data.videos)) {
+    return { data: data.videos, error: null };
+  } else {
+    return { data: [], error: data.message || 'Gagal memuat data video.' };
+  }
+}
+
+function renderVideos(filtered = null, page = 1) {
     const tbody = document.getElementById("video-list");
     const videos = filtered !== null ? filtered : (filteredVideos !== null ? filteredVideos : allVideos);
     const total = videos.length;
@@ -133,85 +138,82 @@ import '../styles/global.css';
   }
 
   // Fetch dan render awal
-  async function fetchAndRenderVideos() {
-    const { data, error } = await fetchVideos();
-    const tbody = document.getElementById("video-list");
-    if (error) {
-      tbody.innerHTML = '<tr><td colspan="6" class="text-center text-red-600">Gagal memuat data video.</td></tr>';
+async function fetchAndRenderVideos() {
+  const { data, error } = await fetchVideos();
+  const tbody = document.getElementById("video-list");
+  if (error) {
+    tbody.innerHTML = '<tr><td colspan="6" class="text-center text-red-600">Gagal memuat data video.</td></tr>';
+    return;
+  }
+  allVideos = data || [];
+  renderVideos(null, 1);
+}
+
+// Event search
+// dan event tombol hapus/edit
+// (tanpa subscription Supabase)
+document.addEventListener("DOMContentLoaded", async () => {
+  await fetchAndRenderVideos();
+  document.getElementById("video-success-alert").classList.add("hidden");
+  // Event delegation untuk tombol hapus
+  document
+    .getElementById("video-list")
+    .addEventListener("click", function (e) {
+      if (e.target.classList.contains("btn-hapus-video")) {
+        document
+          .getElementById("video-success-alert")
+          .classList.add("hidden");
+        const id = e.target.getAttribute("data-id");
+        window.hapusVideo(id);
+      }
+      if (e.target.classList.contains("btn-edit-video")) {
+        document
+          .getElementById("video-success-alert")
+          .classList.add("hidden");
+      }
+    });
+  // Fitur search
+  const searchInput = document.getElementById("search-input");
+  searchInput.addEventListener("input", function () {
+    const q = this.value.trim().toLowerCase();
+    if (!q) {
+      filteredVideos = null;
+      renderVideos(null, 1);
       return;
     }
-    allVideos = data || [];
-    renderVideos(null, 1);
+    filteredVideos = allVideos.filter(v =>
+      (v.title || "").toLowerCase().includes(q) ||
+      (v.kelas ? String(v.kelas).toLowerCase() : "").includes(q) ||
+      (v.mapel || "").toLowerCase().includes(q)
+    );
+    renderVideos(filteredVideos, 1);
+  });
+});
+
+// Fungsi hapus video via backend PHP
+window.hapusVideo = async function (id) {
+  const token = localStorage.getItem('adminAuthToken');
+  const res = await fetch('https://iniedu.id/admin-video.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({ action: 'delete', id })
+  });
+  const data = await res.json();
+  if (data.success) {
+    const alertBox = document.getElementById("video-success-alert");
+    alertBox.textContent = "Video berhasil dihapus!";
+    alertBox.classList.remove("hidden");
+    // Hapus baris video dari tabel tanpa reload
+    const row = document
+      .querySelector(`button.btn-hapus-video[data-id="${id}"]`)
+      .closest("tr");
+    if (row) row.remove();
+  } else {
+    alert("Gagal menghapus video: " + (data.message || ''));
   }
+};
 
-  // Subscribe realtime perubahan videos
-  subscribeVideos(() => {
-    fetchAndRenderVideos();
-  });
-
-  // Event search
-  document.addEventListener("DOMContentLoaded", async () => {
-    await fetchAndRenderVideos();
-    document.getElementById("video-success-alert").classList.add("hidden");
-    // Event delegation untuk tombol hapus
-    document
-      .getElementById("video-list")
-      .addEventListener("click", function (e) {
-        if (e.target.classList.contains("btn-hapus-video")) {
-          document
-        }
-      });
-    // Fitur search
-    const searchInput = document.getElementById("search-input");
-    searchInput.addEventListener("input", function () {
-      const q = this.value.trim().toLowerCase();
-      if (!q) {
-        filteredVideos = null;
-        renderVideos(null, 1);
-        return;
-      }
-      filteredVideos = allVideos.filter(v =>
-        (v.title || "").toLowerCase().includes(q) ||
-        (v.kelas ? String(v.kelas).toLowerCase() : "").includes(q) ||
-        (v.mapel || "").toLowerCase().includes(q)
-      );
-      renderVideos(filteredVideos, 1);
-    });
-  });
-
-  window.hapusVideo = async function (id) {
-    const { error } = await supabase.from("videos").delete().eq("id", id);
-    if (!error) {
-      const alertBox = document.getElementById("video-success-alert");
-      alertBox.textContent = "Video berhasil dihapus!";
-      alertBox.classList.remove("hidden");
-      // Hapus baris video dari tabel tanpa reload
-      const row = document
-        .querySelector(`button.btn-hapus-video[data-id="${id}"]`)
-        .closest("tr");
-      if (row) row.remove();
-    }
-  };
-
-  document.addEventListener("DOMContentLoaded", async () => {
-    await renderVideos();
-    document.getElementById("video-success-alert").classList.add("hidden");
-    // Event delegation untuk tombol hapus
-    document
-      .getElementById("video-list")
-      .addEventListener("click", function (e) {
-        if (e.target.classList.contains("btn-hapus-video")) {
-          document
-            .getElementById("video-success-alert")
-            .classList.add("hidden");
-          const id = e.target.getAttribute("data-id");
-          window.hapusVideo(id);
-        }
-        if (e.target.classList.contains("btn-edit-video")) {
-          document
-            .getElementById("video-success-alert")
-            .classList.add("hidden");
-        }
-      });
-  });
 </script>

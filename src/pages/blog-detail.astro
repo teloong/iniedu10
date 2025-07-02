@@ -53,11 +53,6 @@ import "../styles/blog-detail-link.css";
         <div id="comments-list"></div>
       </div>
       <script type="module">
-        import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-        const supabase = createClient(
-          "https://jcfizceoycwdvpqpwhrj.supabase.co",
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA"
-        );
         function getQueryId() {
           const url = new URL(window.location.href);
           return url.searchParams.get("id");
@@ -105,86 +100,112 @@ import "../styles/blog-detail-link.css";
             loading.textContent = "ID artikel tidak ditemukan.";
             return;
           }
-          const { data, error } = await supabase
-            .from("blog")
-            .select("*")
-            .eq("id", id)
-            .single();
-          if (error || !data) {
-            loading.textContent = "Artikel blog tidak ditemukan.";
+          try {
+            // Ambil data dari endpoint PHP
+            const res = await fetch(`https://iniedu.id/blog.php?id=${id}`);
+            let rawData = await res.json();
+            // Jika hasil berupa array, cari blog yang id-nya sesuai
+            let data;
+            if (Array.isArray(rawData)) {
+              data = rawData.find((item) => item.id === id);
+            } else {
+              data = rawData;
+            }
+
+            if (!data || data.error) {
+              loading.textContent = "Artikel blog tidak ditemukan.";
+              return;
+            }
+            loading.remove();
+
+            // Fungsi untuk auto-link URL polos
+            function autoLink(text) {
+              // Deteksi URL polos (http/https)
+              return text.replace(
+                /(https?:\/\/[\w\-._~:/?#[\]@!$&'()*+,;=%]+)(?![^<]*>|[^<>]*<\/a>)/g,
+                function (url) {
+                  return `<a href="${url}" target="_blank" rel="noopener" class="text-blue-600 underline break-all">${url}</a>`;
+                }
+              );
+            }
+            container.innerHTML = `
+              <div class="flex flex-wrap items-center gap-4 text-gray-500 text-sm mb-2">
+                <span>${formatWIBDate(Date.now())}</span> <!-- Tampilkan waktu real time WIB -->
+              </div>
+              <div class="flex items-center gap-4 mb-6">
+                <img
+                  src="${
+                    data.author_photo &&
+                    data.author_photo.includes("cloudinary.com")
+                      ? data.author_photo.replace(
+                          "/upload/",
+                          "/upload/w_200,h_200,c_fill,q_auto,f_auto/"
+                        )
+                      : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                          data.author || "A"
+                        )}&background=2563eb&color=fff&size=256`
+                  }"
+                  alt="Penulis"
+                  class="w-20 h-20 rounded-full object-cover shadow"
+                />
+
+                <div>
+                  <div class="font-bold text-blue-800">${data.author || "-"}</div>
+                  <div class="text-xs text-gray-500">${data.author_role || "Penulis Blog IniEdu"}</div>
+                </div>
+              </div>
+              <h1 class="text-2xl md:text-3xl font-bold mb-4 max-w-2xl mx-auto break-words">${data.title}</h1>
+              <div class="mb-2">
+                ${data.image ? `<img src="${data.image}" alt="Sampul Artikel" class="w-full rounded-xl shadow mb-1" />` : ""}
+                <div class="text-xs text-gray-400 break-all">
+                  ${
+                    data.source
+                      ? data.source.match(/^https?:\/\//i)
+                        ? `Sumber: <a href="${data.source}" target="_blank" rel="noopener" class="text-blue-600 underline break-all">${data.source}</a>`
+                        : `Sumber: ${data.source}`
+                      : ""
+                  }
+                </div>
+              </div>
+              <article class="max-w-2xl mx-auto mb-8 text-gray-800 whitespace-pre-line break-words text-base leading-relaxed blog-detail-content">${autoLink(data.content.replace(/\n/g, "<br/>"))}</article>
+            `;
+            loadComments();
+          } catch (e) {
+            loading.textContent = "Gagal mengambil data blog.";
             return;
           }
-          loading.remove();
-          // Fungsi untuk auto-link URL polos
-          function autoLink(text) {
-            // Deteksi URL polos (http/https)
-            return text.replace(/(https?:\/\/[\w\-._~:/?#[\]@!$&'()*+,;=%]+)(?![^<]*>|[^<>]*<\/a>)/g, function(url) {
-              return `<a href="${url}" target="_blank" rel="noopener" class="text-blue-600 underline break-all">${url}</a>`;
-            });
-          }
-          container.innerHTML = `
-            <div class="flex flex-wrap items-center gap-4 text-gray-500 text-sm mb-2">
-              <span>${formatWIBDate(Date.now())}</span> <!-- Tampilkan waktu real time WIB -->
-            </div>
-            <div class="flex items-center gap-4 mb-6">
-              <img
-                src="${
-                  data.author_photo && data.author_photo.includes("cloudinary.com")
-                    ? data.author_photo.replace(
-                        "/upload/",
-                        "/upload/w_200,h_200,c_fill,q_auto,f_auto/"
-                      )
-                    : `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                        data.author || "A"
-                      )}&background=2563eb&color=fff&size=256`
-                }"
-                alt="Penulis"
-                class="w-20 h-20 rounded-full object-cover shadow"
-              />
-
-              <div>
-                <div class="font-bold text-blue-800">${data.author || "-"}</div>
-                <div class="text-xs text-gray-500">${data.author_role || "Penulis Blog IniEdu"}</div>
-              </div>
-            </div>
-            <h1 class="text-2xl md:text-3xl font-bold mb-4 max-w-2xl mx-auto break-words">${data.title}</h1>
-            <div class="mb-2">
-              ${data.image ? `<img src="${data.image}" alt="Sampul Artikel" class="w-full rounded-xl shadow mb-1" />` : ""}
-              <div class="text-xs text-gray-400 break-all">
-                ${data.source ? (data.source.match(/^https?:\/\//i)
-                  ? `Sumber: <a href="${data.source}" target="_blank" rel="noopener" class="text-blue-600 underline break-all">${data.source}</a>`
-                  : `Sumber: ${data.source}`
-                ) : ''}
-              </div>
-            </div>
-            <article class="max-w-2xl mx-auto mb-8 text-gray-800 whitespace-pre-line break-words text-base leading-relaxed blog-detail-content">${autoLink(data.content.replace(/\n/g, "<br/>"))}</article>
-          `;
-          loadComments();
         }
         async function loadComments() {
           const id = getQueryId();
           const commentsList = document.getElementById("comments-list");
-          const { data, error } = await supabase
-            .from("blog_comment")
-            .select("*")
-            .eq("blog_id", id);
-          if (error) {
-            return;
+          try {
+            const res = await fetch(
+              `https://iniedu.id/get_comments.php?blog_id=${id}`
+            );
+            const data = await res.json();
+            commentsList.innerHTML = "";
+            if (data && data.length > 0) {
+              data.forEach((comment) => {
+                const commentHTML = `
+                  <div class="flex gap-3 items-start mb-4">
+                    <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(comment.nama)}&background=94a3b8&color=fff" alt="Komentator" class="w-9 h-9 rounded-full object-cover border">
+                    <div>
+                      <div class="font-semibold text-gray-800">${comment.nama}</div>
+                      <div class="text-xs text-gray-500 mb-1">${formatWIBDate(comment.created_at)}</div>
+                      <div class="bg-gray-100 rounded px-3 py-2">${comment.komentar}</div>
+                    </div>
+                  </div>
+                `;
+                commentsList.insertAdjacentHTML("beforeend", commentHTML);
+              });
+            } else {
+              commentsList.innerHTML =
+                '<div class="text-gray-400">Belum ada komentar.</div>';
+            }
+          } catch (error) {
+            commentsList.innerHTML =
+              '<div class="text-red-500">Gagal memuat komentar.</div>';
           }
-          commentsList.innerHTML = "";
-          data.forEach((comment) => {
-            const commentHTML = `
-              <div class="flex gap-3 items-start mb-4">
-                <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(comment.nama)}&background=94a3b8&color=fff" alt="Komentator" class="w-9 h-9 rounded-full object-cover border">
-                <div>
-                  <div class="font-semibold text-gray-800">${comment.nama}</div>
-                  <div class="text-xs text-gray-500 mb-1">${formatWIBDate(comment.created_at)}</div>
-                  <div class="bg-gray-100 rounded px-3 py-2">${comment.komentar}</div>
-                </div>
-              </div>
-            `;
-            commentsList.insertAdjacentHTML("beforeend", commentHTML);
-          });
         }
         document
           .getElementById("comment-form")
@@ -198,18 +219,24 @@ import "../styles/blog-detail-link.css";
               return;
             }
             const id = getQueryId();
-            const { data, error } = await supabase
-              .from("blog_comment")
-              .insert([{ blog_id: id, nama, email, komentar }]);
-            if (error) {
-              alert("Gagal kirim komentar: " + error.message);
-              error;
-              return;
+            try {
+              const res = await fetch("https://iniedu.id/add_comment.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ blog_id: id, nama, email, komentar }),
+              });
+              const result = await res.json();
+              if (result.status !== "success") {
+                alert("Gagal kirim komentar!");
+                return;
+              }
+              loadComments();
+              document.getElementById("nama").value = "";
+              document.getElementById("email").value = "";
+              document.getElementById("komentar").value = "";
+            } catch (err) {
+              alert("Gagal kirim komentar!");
             }
-            loadComments();
-            document.getElementById("nama").value = "";
-            document.getElementById("email").value = "";
-            document.getElementById("komentar").value = "";
           });
         document.addEventListener("DOMContentLoaded", loadBlogDetail);
       </script>

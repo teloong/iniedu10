@@ -31,3 +31,6 @@ serviceAccountKey.json
 
 # VSCode settings (opsional, jika tidak ingin share workspace config)
 .vscode/
+
+# jwt library
+public_html/

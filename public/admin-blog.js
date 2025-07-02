@@ -41,64 +41,57 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-// Supabase & handler form blog
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-const supabaseUrl = "https://jcfizceoycwdvpqpwhrj.supabase.co";
-const supabaseKey =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA";
-const supabase = createClient(supabaseUrl, supabaseKey);
-const edgeUrl =
-  "https://jcfizceoycwdvpqpwhrj.functions.supabase.co/insert_blog"; // Ganti jika endpoint berubah
 
+// Handler form blog ke backend PHP
 let editingId = null;
 
-(async () => {
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  if (!session || session.user.email !== "lemindes@gmail.com") {
-    window.location.href = "/admin-login";
-    return;
-  }
-
-  // Prefill form jika mode edit
+// Prefill form jika mode edit (ambil data dari URL param, fetch ke blog.php)
+document.addEventListener("DOMContentLoaded", function () {
   const params = new URLSearchParams(window.location.search);
-  editingId = params.get("edit");
+  editingId = params.get("id"); // Ganti dari 'edit' ke 'id'
   if (editingId) {
-    const { data, error } = await supabase
-      .from("blog")
-      .select("*")
-      .eq("id", editingId)
-      .single();
-    if (!error && data) {
-      // Prefill judul blog (TinyMCE), tunggu hingga editor siap
-      function prefillTitleTinyMCE() {
-        if (window.tinymce && tinymce.get('blog-title')) {
-          tinymce.get('blog-title').setContent(data.title || "");
-        } else {
-          setTimeout(prefillTitleTinyMCE, 100);
-        }
+    // Ubah teks tombol submit
+    const submitButton = document.querySelector('#blog-form button[type="submit"]');
+    if(submitButton) submitButton.textContent = 'Update Artikel';
+
+    const token = localStorage.getItem('adminAuthToken');
+    fetch(`https://iniedu.id/admin_blog.php?id=${editingId}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
       }
-      prefillTitleTinyMCE();
-      // Prefill isi blog (TinyMCE), tunggu hingga editor siap
-      function prefillContentTinyMCE() {
-        if (window.tinymce && tinymce.get('blog-content')) {
-          tinymce.get('blog-content').setContent(data.content || "");
-        } else {
-          setTimeout(prefillContentTinyMCE, 100);
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data && !data.error) {
+          // Prefill judul blog (TinyMCE), tunggu hingga editor siap
+          function prefillTitleTinyMCE() {
+            if (window.tinymce && tinymce.get('blog-title')) {
+              tinymce.get('blog-title').setContent(data.title || "");
+            } else {
+              setTimeout(prefillTitleTinyMCE, 100);
+            }
+          }
+          prefillTitleTinyMCE();
+          // Prefill isi blog (TinyMCE), tunggu hingga editor siap
+          function prefillContentTinyMCE() {
+            if (window.tinymce && tinymce.get('blog-content')) {
+              tinymce.get('blog-content').setContent(data.content || "");
+            } else {
+              setTimeout(prefillContentTinyMCE, 100);
+            }
+          }
+          prefillContentTinyMCE();
+          // Prefill field lain
+          document.getElementById("blog-author").value = data.author || "";
+          document.getElementById("blog-author-role").value = data.author_role || "";
+          document.getElementById("blog-author-photo").value = data.author_photo || "";
+          document.getElementById("blog-image").value = data.image || "";
+          document.getElementById("blog-source").value = data.source || "";
         }
-      }
-      prefillContentTinyMCE();
-      // Prefill field lain
-      document.getElementById("blog-author").value = data.author || "";
-      document.getElementById("blog-author-role").value = data.author_role || "";
-      document.getElementById("blog-author-photo").value = data.author_photo || "";
-      document.getElementById("blog-image").value = data.image || "";
-      document.getElementById("blog-source").value = data.source || "";
-    }
+      });
   }
 
-  // Submit handler
+  // Handler submit form
   document.getElementById("blog-form").onsubmit = async function (e) {
     e.preventDefault();
     // Ambil judul blog tanpa HTML dari TinyMCE judul
@@ -113,16 +106,11 @@ let editingId = null;
     if (window.tinymce && tinymce.get('blog-content')) {
       content = tinymce.get('blog-content').getContent();
     } else {
-      content = "";
       content = document.getElementById("blog-content").value.trim();
     }
     const author = document.getElementById("blog-author").value.trim();
-    const author_role = document
-      .getElementById("blog-author-role")
-      .value.trim();
-    const author_photo = document
-      .getElementById("blog-author-photo")
-      .value.trim();
+    const author_role = document.getElementById("blog-author-role").value.trim();
+    const author_photo = document.getElementById("blog-author-photo").value.trim();
     const image = document.getElementById("blog-image").value.trim();
     const source = document.getElementById("blog-source").value.trim();
     const alertBox = document.getElementById("blog-success-alert");
@@ -133,18 +121,9 @@ let editingId = null;
       alertBox.classList.add("text-red-600");
       return;
     }
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    if (!session) {
-      alertBox.textContent = "Session login admin tidak ditemukan!";
-      alertBox.classList.remove("hidden");
-      alertBox.classList.add("text-red-600");
-      return;
-    }
-    let method = editingId ? "PUT" : "POST";
     let payload = editingId
       ? {
+          action: "update",
           id: editingId,
           title,
           content,
@@ -152,18 +131,30 @@ let editingId = null;
           author_role,
           author_photo,
           image,
-          source,
+          source
         }
-      : { title, content, author, author_role, author_photo, image, source };
+      : {
+          action: "insert",
+          title,
+          content,
+          author,
+          author_role,
+          author_photo,
+          image,
+          source
+        };
+    let method = editingId ? "PUT" : "POST";
+    let url = editingId ? `https://iniedu.id/admin_blog.php?id=${editingId}` : "https://iniedu.id/admin_blog.php";
     let res, resJson;
     try {
-      res = await fetch(edgeUrl, {
+      const token = localStorage.getItem('adminAuthToken');
+      res = await fetch(url, {
         method,
-        headers: {
+        headers: { 
           "Content-Type": "application/json",
-          Authorization: `Bearer ${session.access_token}`,
+          'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(payload)
       });
       resJson = await res.json();
       if (!res.ok) {
@@ -172,14 +163,12 @@ let editingId = null;
           (resJson && resJson.error ? resJson.error : res.status);
         alertBox.classList.remove("hidden");
         alertBox.classList.add("text-red-600");
-        ("[Blog Submit] Backend error:", resJson);
         return;
       }
       if (resJson && resJson.error) {
         alertBox.textContent = "Gagal menyimpan blog: " + resJson.error;
         alertBox.classList.remove("hidden");
         alertBox.classList.add("text-red-600");
-       ("[Blog Submit] Backend error:", resJson);
         return;
       }
       alertBox.textContent = editingId
@@ -190,7 +179,6 @@ let editingId = null;
       // Reset judul blog (TinyMCE)
       if (window.tinymce && tinymce.get('blog-title')) {
         tinymce.get('blog-title').setContent('');
-        // Trigger event supaya UI TinyMCE update
         tinymce.get('blog-title').fire('change');
         tinymce.get('blog-title').fire('blur');
       }
@@ -204,7 +192,6 @@ let editingId = null;
       alertBox.textContent = "Gagal menghubungi server: " + err;
       alertBox.classList.remove("hidden");
       alertBox.classList.add("text-red-600");
-      ("[Blog Submit] Network/JS error:", err);
       return;
     }
   };
@@ -221,7 +208,7 @@ let editingId = null;
       document.getElementById("blog-success-alert").classList.add("hidden");
     });
   });
-})();
+});
 
 // Import modul upload Cloudinary modular
 defineImportCloudinary();

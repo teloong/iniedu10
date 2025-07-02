@@ -1,10 +1,12 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import AdminSidebar from "../components/AdminSidebar.astro";
+
 import "../styles/global.css";
 ---
 
 <Layout title="Blog">
+
 <div class="min-h-screen bg-gray-50 flex">
   <div class="sticky top-0 h-screen hidden md:block">
     <AdminSidebar active="blog" />
@@ -94,13 +96,9 @@ import "../styles/global.css";
 </Layout>
 
 <script type="module">
-  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-  const supabaseUrl = "https://jcfizceoycwdvpqpwhrj.supabase.co";
-  const supabaseKey =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpjZml6Y2VveWN3ZHZwcXB3aHJqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg1NzUzNzUsImV4cCI6MjA2NDE1MTM3NX0.Au9FzSYvpaX7SkaVrgJvIgK9fZu5Dq4cU_NI5iwY6aA";
-  const supabase = createClient(supabaseUrl, supabaseKey);
-  const edgeUrl =
-    "https://jcfizceoycwdvpqpwhrj.functions.supabase.co/insert_blog"; // Ganti jika endpoint berubah
+  // Refactor: gunakan endpoint PHP backend untuk CRUD blog
+    const BLOG_API_URL = "https://iniedu.id/admin_blog.php"; // Endpoint KHUSUS untuk admin
+  // Jika di lokal: "http://localhost/iniedu/blog.php"
 
   function getEditingId() {
     const params = new URLSearchParams(window.location.search);
@@ -108,39 +106,43 @@ import "../styles/global.css";
   }
   let editingId = getEditingId();
 
+  // Proteksi Halaman (disamakan dengan halaman admin lainnya)
   (async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    if (!session || session.user.email !== "lemindes@gmail.com") {
-      window.location.href = "/admin-login";
-      return;
+    const token = localStorage.getItem('adminAuthToken');
+    if (!token) {
+      // Redirect ke login dengan menyertakan halaman saat ini sebagai tujuan
+      window.location.href = `/admin-login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+      return; // Hentikan eksekusi skrip lebih lanjut
     }
 
     // Prefill form jika mode edit
     editingId = getEditingId();
     const submitBtn = document.getElementById("blog-submit-btn");
     if (editingId) {
-      const { data, error } = await supabase
-        .from("blog")
-        .select("*")
-        .eq("id", editingId)
-        .single();
-      if (!error && data) {
-        document.getElementById("blog-title").value = data.title || "";
-        document.getElementById("blog-content").value = data.content || "";
-        document.getElementById("blog-author").value = data.author || "";
-        document.getElementById("blog-author-role").value =
-          data.author_role || "";
-        document.getElementById("blog-author-photo").value =
-          data.author_photo || "";
-        document.getElementById("blog-image").value = data.image || "";
-        document.getElementById("blog-source").value = data.source || "";
-        // Ubah label tombol submit menjadi 'Update Blog'
-        if (submitBtn) submitBtn.textContent = "Update Blog";
+      // Fetch blog by ID dari backend PHP
+      try {
+        const token = localStorage.getItem('adminAuthToken');
+        const res = await fetch(BLOG_API_URL + `?id=${editingId}`, {
+          method: "GET",
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const data = await res.json();
+        if (data && data.id) {
+          document.getElementById("blog-title").value = data.title || "";
+          document.getElementById("blog-content").value = data.content || "";
+          document.getElementById("blog-author").value = data.author || "";
+          document.getElementById("blog-author-role").value = data.author_role || "";
+          document.getElementById("blog-author-photo").value = data.author_photo || "";
+          document.getElementById("blog-image").value = data.image || "";
+          document.getElementById("blog-source").value = data.source || "";
+          if (submitBtn) submitBtn.textContent = "Update Blog";
+        }
+      } catch (e) {
+        // Gagal fetch, biarkan kosong
       }
     } else {
-      // Jika bukan mode edit, pastikan label tombol submit kembali ke 'Tambah Blog'
       if (submitBtn) submitBtn.textContent = "Tambah Blog";
     }
 
@@ -169,20 +171,12 @@ import "../styles/global.css";
         alertBox.classList.add("text-red-600");
         return;
       }
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (!session) {
-        alertBox.textContent = "Session login admin tidak ditemukan!";
-        alertBox.classList.remove("hidden");
-        alertBox.classList.add("text-red-600");
-        return;
-      }
       // Selalu update editingId sebelum submit (antisipasi reload atau navigasi)
       editingId = getEditingId();
       let method = editingId ? "PUT" : "POST";
       let payload = editingId
         ? {
+            action: "update",
             id: editingId,
             title,
             content,
@@ -192,36 +186,32 @@ import "../styles/global.css";
             image,
             source,
           }
-        : { title, content, author, author_role, author_photo, image, source };
-
-      // DEBUG: log id, payload, dan method
-      ('[Blog Submit] editingId:', editingId);
-      ('[Blog Submit] method:', method);
-      ('[Blog Submit] payload:', payload);
-
+        : {
+            action: "insert",
+            title,
+            content,
+            author,
+            author_role,
+            author_photo,
+            image,
+            source
+          };
       let res, resJson;
       try {
-        res = await fetch(edgeUrl, {
+        const token = localStorage.getItem('adminAuthToken');
+        res = await fetch(BLOG_API_URL, {
           method,
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${session.access_token}`,
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify(payload),
         });
         resJson = await res.json();
-        if (!res.ok) {
+        if (!res.ok || (resJson && resJson.error)) {
           alertBox.textContent = "Gagal menyimpan blog: " + (resJson && resJson.error ? resJson.error : res.status);
           alertBox.classList.remove("hidden");
           alertBox.classList.add("text-red-600");
-          ("[Blog Submit] Backend error:", resJson);
-          return;
-        }
-        if (resJson && resJson.error) {
-          alertBox.textContent = "Gagal menyimpan blog: " + resJson.error;
-          alertBox.classList.remove("hidden");
-          alertBox.classList.add("text-red-600");
-          ("[Blog Submit] Backend error:", resJson);
           return;
         }
         alertBox.textContent = editingId
@@ -231,7 +221,6 @@ import "../styles/global.css";
         alertBox.classList.remove("text-red-600");
         alertBox.classList.add("text-green-600");
         if (editingId) {
-          // Redirect ke daftar blog setelah update sukses (tunggu 1.5 detik)
           setTimeout(() => {
             window.location.href = "/admin-daftar-blog";
           }, 1500);
@@ -242,10 +231,10 @@ import "../styles/global.css";
         alertBox.textContent = "Gagal menghubungi server: " + err;
         alertBox.classList.remove("hidden");
         alertBox.classList.add("text-red-600");
-        ("[Blog Submit] Network/JS error:", err);
         return;
       }
     };
+
 
 
     // Sembunyikan alert jika user mulai mengetik lagi

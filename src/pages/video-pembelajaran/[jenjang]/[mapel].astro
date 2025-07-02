@@ -1,0 +1,123 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+
+// Definisikan tipe data untuk konsistensi dan keamanan tipe
+type Mapel = {
+  nama: string;
+  slug: string;
+};
+
+type MapelData = {
+  sd: Mapel[];
+  smp: Mapel[];
+  sma: Mapel[];
+};
+
+export function getStaticPaths() {
+  // Data untuk mata pelajaran per jenjang
+  const mapelData: MapelData = {
+    sd: [
+      { nama: "Bahasa Indonesia", slug: "bahasa-indonesia" },
+      { nama: "Matematika", slug: "matematika" },
+      { nama: "IPA", slug: "ipa" },
+      { nama: "IPAS", slug: "ipas" },
+      { nama: "Bahasa Inggris", slug: "bahasa-inggris" },
+      { nama: "Bahasa Arab", slug: "bahasa-arab" },
+      { nama: "Bahasa Jawa", slug: "bahasa-jawa" },
+      { nama: "PAI", slug: "pai" },
+      { nama: "PKN", slug: "pkn" },
+      { nama: "Seni Musik", slug: "seni-musik" },
+      { nama: "Seni Tari", slug: "seni-tari" },
+      { nama: "Seni Rupa", slug: "seni-rupa" },
+      { nama: "Seni Teater", slug: "seni-teater" },
+    ],
+    smp: [
+      { nama: "Bahasa Indonesia", slug: "bahasa-indonesia" },
+      { nama: "Matematika", slug: "matematika" },
+      { nama: "IPA", slug: "ipa" },
+      { nama: "IPS", slug: "ips" },
+      { nama: "Bahasa Inggris", slug: "bahasa-inggris" },
+      { nama: "Bahasa Arab", slug: "bahasa-arab" },
+      { nama: "Bahasa Jawa", slug: "bahasa-jawa" },
+      { nama: "PAI", slug: "pai" },
+      { nama: "PPKn", slug: "ppkn" },
+      { nama: "Seni Musik", slug: "seni-musik" },
+      { nama: "Seni Tari", slug: "seni-tari" },
+      { nama: "Seni Rupa", slug: "seni-rupa" },
+      { nama: "Seni Teater", slug: "seni-teater" },
+      { nama: "Informatika", slug: "informatika" },
+      { nama: "PJOK", slug: "pjok" },
+    ],
+    sma: [
+      { nama: "Bahasa Indonesia", slug: "bahasa-indonesia" },
+      { nama: "Matematika", slug: "matematika" },
+      { nama: "IPA", slug: "ipa" },
+      { nama: "IPS", slug: "ips" },
+      { nama: "Bahasa Inggris", slug: "bahasa-inggris" },
+      { nama: "Bahasa Arab", slug: "bahasa-arab" },
+      { nama: "Bahasa Jawa", slug: "bahasa-jawa" },
+      { nama: "PAI", slug: "pai" },
+      { nama: "PPKn", slug: "ppkn" },
+      { nama: "Seni Musik", slug: "seni-musik" },
+      { nama: "Seni Tari", slug: "seni-tari" },
+      { nama: "Seni Rupa", slug: "seni-rupa" },
+      { nama: "Seni Teater", slug: "seni-teater" },
+      { nama: "Informatika", slug: "informatika" },
+      { nama: "PJOK", slug: "pjok" },
+      { nama: "Biologi", slug: "biologi" },
+      { nama: "Ekonomi", slug: "ekonomi" },
+      { nama: "Fisika", slug: "fisika" },
+      { nama: "Geografi", slug: "geografi" },
+      { nama: "Kimia", slug: "kimia" },
+      { nama: "Sejarah", slug: "sejarah" },
+      { nama: "Sosiologi", slug: "sosiologi" },
+    ],
+  };
+
+  // Gunakan Object.entries dan flatMap untuk iterasi yang aman secara tipe dan lebih ringkas
+  return Object.entries(mapelData).flatMap(([jenjang, mapels]) =>
+    mapels.map((mapel) => ({
+      params: { jenjang, mapel: mapel.slug },
+    }))
+  );
+}
+
+const { jenjang, mapel } = Astro.params;
+
+// Logika untuk menentukan rentang kelas berdasarkan jenjang
+let kelasList: number[] = [];
+if (jenjang === "sd") {
+  kelasList = Array.from({ length: 6 }, (_, i) => i + 1);
+} else if (jenjang === "smp") {
+  kelasList = Array.from({ length: 3 }, (_, i) => i + 7);
+} else if (jenjang === "sma") {
+  kelasList = Array.from({ length: 3 }, (_, i) => i + 10);
+}
+
+// Membuat judul halaman yang rapi dengan tipe eksplisit
+const mapelName = mapel
+  ? mapel.split("-").map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")
+  : "";
+const jenjangName = jenjang ? jenjang.toUpperCase() : "";
+const pageTitle = `Pilih Kelas - ${jenjangName} ${mapelName}`;
+---
+
+<Layout title={pageTitle}>
+  <section class="max-w-4xl mx-auto mt-12">
+    <div class="bg-white rounded-2xl shadow-lg p-8">
+      <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6 text-center">
+        Pilih Kelas untuk Mata Pelajaran <span class="text-blue-600">{mapelName}</span> Jenjang <span class="text-blue-600">{jenjangName}</span>
+      </h1>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+        {kelasList.map((kelas) => (
+          <a
+            href={`/video-pembelajaran/${jenjang}/${mapel}/kelas-${kelas}`}
+            class="block text-center rounded-xl bg-gradient-to-br from-blue-100 to-cyan-100 p-6 font-semibold text-blue-800 shadow-md hover:scale-105 hover:shadow-xl transition-transform duration-300"
+          >
+            <span class="text-3xl font-bold">{kelas}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>

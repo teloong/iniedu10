@@ -1,0 +1,216 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+
+// Definisikan tipe data untuk konsistensi dan keamanan tipe
+type Mapel = {
+  nama: string;
+  slug: string;
+};
+
+type MapelData = {
+  sd: Mapel[];
+  smp: Mapel[];
+  sma: Mapel[];
+};
+
+export function getStaticPaths() {
+  const mapelData: MapelData = {
+    sd: [
+      { nama: "Bahasa Indonesia", slug: "bahasa-indonesia" },
+      { nama: "Matematika", slug: "matematika" },
+      { nama: "IPA", slug: "ipa" },
+      { nama: "IPAS", slug: "ipas" },
+      { nama: "Bahasa Inggris", slug: "bahasa-inggris" },
+      { nama: "Bahasa Arab", slug: "bahasa-arab" },
+      { nama: "Bahasa Jawa", slug: "bahasa-jawa" },
+      { nama: "PAI", slug: "pai" },
+      { nama: "PKN", slug: "pkn" },
+      { nama: "Seni Musik", slug: "seni-musik" },
+      { nama: "Seni Tari", slug: "seni-tari" },
+      { nama: "Seni Rupa", slug: "seni-rupa" },
+      { nama: "Seni Teater", slug: "seni-teater" },
+    ],
+    smp: [
+      { nama: "Bahasa Indonesia", slug: "bahasa-indonesia" },
+      { nama: "Matematika", slug: "matematika" },
+      { nama: "IPA", slug: "ipa" },
+      { nama: "IPS", slug: "ips" },
+      { nama: "Bahasa Inggris", slug: "bahasa-inggris" },
+      { nama: "Bahasa Arab", slug: "bahasa-arab" },
+      { nama: "Bahasa Jawa", slug: "bahasa-jawa" },
+      { nama: "PAI", slug: "pai" },
+      { nama: "PPKn", slug: "ppkn" },
+      { nama: "Seni Musik", slug: "seni-musik" },
+      { nama: "Seni Tari", slug: "seni-tari" },
+      { nama: "Seni Rupa", slug: "seni-rupa" },
+      { nama: "Seni Teater", slug: "seni-teater" },
+      { nama: "Informatika", slug: "informatika" },
+      { nama: "PJOK", slug: "pjok" },
+    ],
+    sma: [
+      { nama: "Bahasa Indonesia", slug: "bahasa-indonesia" },
+      { nama: "Matematika", slug: "matematika" },
+      { nama: "IPA", slug: "ipa" },
+      { nama: "IPS", slug: "ips" },
+      { nama: "Bahasa Inggris", slug: "bahasa-inggris" },
+      { nama: "Bahasa Arab", slug: "bahasa-arab" },
+      { nama: "Bahasa Jawa", slug: "bahasa-jawa" },
+      { nama: "PAI", slug: "pai" },
+      { nama: "PPKn", slug: "ppkn" },
+      { nama: "Seni Musik", slug: "seni-musik" },
+      { nama: "Seni Tari", slug: "seni-tari" },
+      { nama: "Seni Rupa", slug: "seni-rupa" },
+      { nama: "Seni Teater", slug: "seni-teater" },
+      { nama: "Informatika", slug: "informatika" },
+      { nama: "PJOK", slug: "pjok" },
+      { nama: "Biologi", slug: "biologi" },
+      { nama: "Ekonomi", slug: "ekonomi" },
+      { nama: "Fisika", slug: "fisika" },
+      { nama: "Geografi", slug: "geografi" },
+      { nama: "Kimia", slug: "kimia" },
+      { nama: "Sejarah", slug: "sejarah" },
+      { nama: "Sosiologi", slug: "sosiologi" },
+    ],
+  };
+
+  return Object.entries(mapelData).flatMap(([jenjang, mapels]) => {
+    let kelasRange: number[] = [];
+    if (jenjang === "sd") kelasRange = Array.from({ length: 6 }, (_, i) => i + 1);
+    else if (jenjang === "smp") kelasRange = Array.from({ length: 3 }, (_, i) => i + 7);
+    else if (jenjang === "sma") kelasRange = Array.from({ length: 3 }, (_, i) => i + 10);
+
+    return mapels.flatMap((mapel) =>
+      kelasRange.map((kelas) => ({
+        params: { slug: `${jenjang}/${mapel.slug}/kelas-${kelas}` },
+      }))
+    );
+  });
+}
+
+const { slug } = Astro.params;
+const pathParts = slug?.split("/") || [];
+const [jenjang, mapelSlug, kelasSlug] = pathParts;
+
+// Ekstrak nomor kelas dari slug kelas (misal: 'kelas-1' -> 1)
+const kelas = kelasSlug ? parseInt(kelasSlug.replace("kelas-", "")) : null;
+
+// Konversi slug mapel menjadi judul yang rapi (misal: 'bahasa-indonesia' -> 'Bahasa Indonesia')
+const mapelName = mapelSlug
+  ? mapelSlug
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ")
+  : "";
+const jenjangName = jenjang ? jenjang.toUpperCase() : "";
+
+const pageTitle = `Video Pembelajaran ${jenjangName} - ${mapelName} Kelas ${kelas}`;
+---
+
+<Layout title={pageTitle}>
+  <section class="max-w-5xl mx-auto mt-12">
+    <div class="bg-white rounded-2xl shadow-lg p-8">
+      <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2 text-center">
+        {pageTitle}
+      </h1>
+      <p id="video-message" class="text-center text-red-500 font-semibold mb-6">
+      </p>
+      <div
+        id="video-list"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+      >
+      </div>
+    </div>
+  </section>
+
+  <script define:vars={{ kelas, mapel: mapelSlug }}>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const videoList = document.getElementById("video-list");
+      const videoMessage = document.getElementById("video-message");
+
+      if (!videoList || !videoMessage) return;
+
+      if (!kelas || !mapel) {
+        videoMessage.textContent = "Parameter tidak valid untuk memuat video.";
+        return;
+      }
+
+      try {
+        const response = await fetch("https://iniedu.id/akses_video.php", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ kelas, mapel }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Gagal memuat video. Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (
+          data.error ||
+          (Array.isArray(data.videos) && data.videos.length === 0)
+        ) {
+          videoMessage.textContent =
+            data.error || "Belum ada video untuk kategori ini.";
+          videoList.innerHTML = "";
+          return;
+        }
+
+        const videos = data.videos;
+        videoMessage.textContent = "";
+        videoList.innerHTML = videos
+          .map((video) => {
+            let videoId = null;
+            if (video.url) {
+              if (video.url.includes('youtu.be/')) {
+                const urlParts = video.url.split('youtu.be/');
+                if (urlParts[1]) videoId = urlParts[1].substring(0, 11);
+              } else if (video.url.includes('v=')) {
+                const urlParts = video.url.split('v=');
+                if (urlParts[1]) videoId = urlParts[1].substring(0, 11);
+              }
+            }
+
+            if (!videoId) {
+              return `
+                <div class="rounded-2xl overflow-hidden shadow-lg bg-gray-50">
+                  <div class="aspect-w-16 aspect-h-9 bg-gray-200 flex items-center justify-center p-2">
+                     <p class="text-center text-sm text-red-600">Format URL video tidak didukung.</p>
+                  </div>
+                  <div class="p-4">
+                    <h3 class="font-bold text-lg text-gray-800">${video.title || "Tanpa Judul"}</h3>
+                  </div>
+                </div>
+              `;
+            }
+
+            return `
+              <div class="rounded-2xl overflow-hidden shadow-lg bg-gray-50 transform hover:scale-105 transition-transform duration-300">
+                <div class="aspect-w-16 aspect-h-9">
+                  <iframe
+                    src="https://www.youtube.com/embed/${videoId}"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    class="w-full h-full"
+                  ></iframe>
+                </div>
+                <div class="p-4">
+                  <h3 class="font-bold text-lg text-gray-800">${video.title || "Tanpa Judul"}</h3>
+                </div>
+              </div>
+            `;
+          })
+          .join("");
+      } catch (error) {
+        videoMessage.textContent = error.message;
+        videoList.innerHTML = "";
+      }
+    });
+  </script>
+</Layout>
