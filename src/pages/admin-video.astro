@@ -1,10 +1,10 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import AdminLayout from "../layouts/AdminLayout.astro";
 import AdminSidebar from '../components/AdminSidebar.astro';
 import JwtAuth from '../components/JwtAuth.astro';
 import '../styles/global.css';
 ---
-<Layout title="Video Pembelajaran">
+<AdminLayout title="Video Pembelajaran">
   <div class="min-h-screen bg-gray-50 flex">
     <div class="sticky top-0 h-screen hidden md:block">
       <AdminSidebar active="videopembelajaran" />
@@ -53,7 +53,7 @@ import '../styles/global.css';
       </section>
     </main>
   </div>
-</Layout>
+</AdminLayout>
 <script>
   // URL Backend PHP
   const API_URL = 'https://iniedu.id/admin-video.php';

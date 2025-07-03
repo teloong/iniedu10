@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       return; // Hentikan eksekusi lebih lanjut
     }
   } catch (error) {
-    console.error('Gagal mengambil data sesi:', error);
+
     document.getElementById('pembayaran-info').innerHTML = '<p class="text-red-500">Gagal memuat data sesi Anda. Coba refresh halaman.</p>';
     submitBtn.disabled = true;
     return;
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         submitBtn.textContent = 'Konfirmasi Pembelian';
       }
     } catch (err) {
-      console.error('Fetch error:', err);
+
       alert('Gagal terhubung ke server. Silakan coba lagi nanti.');
       submitBtn.disabled = false;
       submitBtn.textContent = 'Konfirmasi Pembelian';

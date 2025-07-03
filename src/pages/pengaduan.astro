@@ -1,34 +1,99 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
 ---
 
-<Layout title="Pengaduan">
-  <section class="max-w-2xl mx-auto mt-12 bg-gradient-to-br from-red-50 to-white rounded-3xl shadow-2xl p-8 md:p-12 border border-red-100">
-    <div class="flex flex-col items-center mb-8">
-      <div class="bg-red-500 rounded-full p-4 shadow-lg mb-3">
-        <svg width="38" height="38" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill="#ef4444"/><path d="M8.5 12.5L11 15L16 10" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<Layout title="Layanan Pengaduan | IniEdu">
+  <main class="bg-gray-50">
+    <!-- Header Section -->
+    <section class="bg-white pt-20 pb-12">
+      <div class="max-w-4xl mx-auto px-6 text-center">
+        <Icon name="mdi:alert-octagon-outline" class="w-16 h-16 text-red-500 mx-auto mb-4" />
+        <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">Layanan Pengaduan</h1>
+        <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+          Kami berkomitmen untuk menjaga lingkungan belajar yang aman dan positif. Jika Anda menemukan masalah teknis, konten yang tidak pantas, atau perilaku yang melanggar, silakan laporkan melalui formulir di bawah ini.
+        </p>
       </div>
-      <h1 class="text-3xl md:text-4xl font-extrabold text-red-700 mb-2 text-center">Pengaduan</h1>
-      <div class="text-gray-500 font-medium text-center text-base md:text-lg max-w-md">Laporkan masalah, pelanggaran, atau konten tidak pantas di platform IniEdu melalui form atau kontak berikut.</div>
-    </div>
-    <div class="flex flex-col gap-6 md:gap-10">
-      <div class="flex items-start gap-4">
-        <span class="bg-red-100 p-3 rounded-full"><svg width="26" height="26" fill="none" viewBox="0 0 24 24"><path d="M21 8.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8.5" stroke="#ef4444" stroke-width="2"/><path d="M3 7l9 6 9-6" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/></svg></span>
-        <div>
-          <div class="font-semibold text-red-700">Email Pengaduan</div>
-          <div class="text-gray-700">pengaduan@iniedu.com</div>
+    </section>
+
+    <!-- Complaint Form Section -->
+    <section class="py-16 sm:py-20">
+      <div class="max-w-3xl mx-auto px-6">
+        <div class="bg-white p-8 sm:p-10 rounded-2xl shadow-lg border">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">Formulir Pengaduan Resmi</h2>
+          <form action="#" method="POST" class="space-y-6">
+            <div class="grid sm:grid-cols-2 gap-6">
+              <div>
+                <label for="name" class="block text-sm font-medium text-gray-700">Nama Anda</label>
+                <input type="text" name="name" id="name" required placeholder="Nama Lengkap" class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+              </div>
+              <div>
+                <label for="email" class="block text-sm font-medium text-gray-700">Email Anda</label>
+                <input type="email" name="email" id="email" required placeholder="Untuk kami hubungi kembali" class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
+              </div>
+            </div>
+            <div>
+              <label for="complaint_type" class="block text-sm font-medium text-gray-700">Jenis Pengaduan</label>
+              <select id="complaint_type" name="complaint_type" required class="mt-1 block w-full px-4 py-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500">
+                <option>Pilih Kategori</option>
+                <option>Masalah Teknis (Bug/Error)</option>
+                <option>Konten Tidak Pantas atau Menyinggung</option>
+                <option>Pelanggaran Hak Cipta</option>
+                <option>Perilaku Pengguna Lain</option>
+                <option>Masalah Pembayaran atau Akses</option>
+                <option>Lainnya</option>
+              </select>
+            </div>
+            <div>
+              <label for="description" class="block text-sm font-medium text-gray-700">Deskripsi Lengkap</label>
+              <textarea name="description" id="description" rows="6" required placeholder="Jelaskan masalah yang Anda hadapi sedetail mungkin. Sertakan link, nama pengguna, atau informasi lain yang relevan." class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"></textarea>
+            </div>
+             <div>
+              <label for="attachment" class="block text-sm font-medium text-gray-700">Lampiran (Opsional)</label>
+              <input type="file" name="attachment" id="attachment" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100"/>
+              <p class="mt-1 text-xs text-gray-500">Unggah tangkapan layar atau bukti lain (JPG, PNG, PDF maks 2MB).</p>
+            </div>
+            <div>
+              <button type="submit" class="w-full bg-red-600 text-white font-bold text-lg px-8 py-3 rounded-lg hover:bg-red-700 transition-colors duration-300 shadow-md transform hover:scale-105">
+                Kirim Pengaduan
+              </button>
+            </div>
+          </form>
         </div>
       </div>
-      <div class="flex items-start gap-4">
-        <span class="bg-red-100 p-3 rounded-full"><svg width="26" height="26" fill="none" viewBox="0 0 24 24"><path d="M6.5 7.5A2.5 2.5 0 0 1 9 5h6a2.5 2.5 0 0 1 2.5 2.5v9A2.5 2.5 0 0 1 15 19h-6a2.5 2.5 0 0 1-2.5-2.5v-9Z" stroke="#ef4444" stroke-width="2"/><path d="M9 9h6M9 13h6" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/></svg></span>
-        <div>
-          <div class="font-semibold text-red-700">WhatsApp Pengaduan</div>
-          <div class="text-gray-700">0858-4875-0006</div>
+    </section>
+
+    <!-- Process Section -->
+    <section class="bg-white py-16 sm:py-20">
+      <div class="max-w-5xl mx-auto px-6">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl sm:text-4xl font-bold text-gray-900">Bagaimana Prosesnya?</h2>
+          <p class="mt-4 text-lg text-gray-600">Kami menangani setiap laporan dengan serius. Berikut adalah alur penanganan pengaduan Anda.</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8 text-center">
+          <div class="flex flex-col items-center">
+            <div class="bg-red-100 p-5 rounded-full mb-4">
+              <Icon name="mdi:email-receive-outline" class="w-10 h-10 text-red-600" />
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">1. Laporan Diterima</h3>
+            <p class="text-gray-600">Tim kami menerima laporan Anda dan akan mengirimkan konfirmasi otomatis ke email Anda.</p>
+          </div>
+          <div class="flex flex-col items-center">
+            <div class="bg-red-100 p-5 rounded-full mb-4">
+              <Icon name="mdi:shield-search" class="w-10 h-10 text-red-600" />
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">2. Investigasi</h3>
+            <p class="text-gray-600">Kami akan melakukan investigasi mendalam berdasarkan informasi dan bukti yang Anda berikan.</p>
+          </div>
+          <div class="flex flex-col items-center">
+            <div class="bg-red-100 p-5 rounded-full mb-4">
+              <Icon name="mdi:gavel" class="w-10 h-10 text-red-600" />
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">3. Tindakan & Resolusi</h3>
+            <p class="text-gray-600">Kami akan mengambil tindakan yang sesuai dan memberi tahu Anda hasilnya jika diperlukan.</p>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="mt-10 text-center text-gray-400 text-sm">
-      Setiap pengaduan akan kami tindaklanjuti secara profesional dan rahasia.
-    </div>
-  </section>
+    </section>
+  </main>
 </Layout>

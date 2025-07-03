@@ -159,13 +159,10 @@ import Layout from "../layouts/Layout.astro";
       fetch(`${base_api_url}/get_user_session.php`, { credentials: "include" })
         .then((response) => {
           if (!response.ok) {
-            console.log(
-              "Sesi pengguna tidak ditemukan, pembelian sebagai tamu. Menjadwalkan pembersihan form..."
-            );
             setTimeout(() => {
               namaLengkapInput.value = '';
               emailInput.value = '';
-              console.log('Form dibersihkan untuk tamu.');
+
             }, 100); // Jeda untuk melawan autofill browser
             emailInput.readOnly = false;
             return null;
@@ -180,12 +177,12 @@ import Layout from "../layouts/Layout.astro";
           }
         })
         .catch((error) => {
-          console.error("Gagal mengambil sesi pengguna:", error);
+
           // Jika gagal menghubungi server, anggap sebagai tamu dan bersihkan form
           setTimeout(() => {
             namaLengkapInput.value = '';
             emailInput.value = '';
-            console.log('Form dibersihkan setelah gagal fetch.');
+
           }, 100); // Jeda untuk melawan autofill browser
           emailInput.readOnly = false;
         })
@@ -222,7 +219,7 @@ import Layout from "../layouts/Layout.astro";
             );
           }
         } catch (error) {
-          console.error("Payment error:", error);
+
           infoDiv.textContent = `Error: ${error.message}`;
           infoDiv.classList.remove("hidden");
           submitBtn.disabled = false;

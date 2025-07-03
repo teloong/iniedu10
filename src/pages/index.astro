@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import HeroSection from "../components/HeroSection.astro";
+import VisiMisiSection from "../components/VisiMisiSection.astro";
 import AccordionSection from "../components/AccordionSection.astro";
 import SambutanSection from "../components/SambutanSection.astro";
 import FaqSection from "../components/FaqSection.astro";
@@ -11,12 +12,13 @@ import "../styles/glass-droplet.css";
 
 <Layout title="Beranda | Iniedu">
   <HeroSection />
+  <VisiMisiSection />
   <AccordionSection />
   <SambutanSection />
   <FaqSection>
     <FaqContent />
     <div
-      class="faq-image-container"
+      class="faq-image-container hidden lg:block"
       data-aos="fade-left"
       data-aos-duration="800"
     >

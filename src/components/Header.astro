@@ -2,7 +2,7 @@
 // Header component untuk website IniEdu
 ---
 
-<header class="bg-white sticky top-0 z-50">
+<header id="main-header" class="sticky top-0 z-50 transition-all duration-300">
   <div class="container mx-auto px-4 py-3 flex items-center">
     <!-- Logo IniEdu -->
     <div class="flex items-center ml-6">
@@ -171,5 +171,35 @@
 
   mobileMenuButton?.addEventListener("click", () => {
     mobileMenu?.classList.toggle("hidden");
+  });
+</script>
+
+<script>
+  // Skrip untuk header transparan
+  document.addEventListener('DOMContentLoaded', () => {
+    const header = document.querySelector('#main-header');
+    if (!header) return;
+
+    const handleHeaderAppearance = () => {
+      const isMenuOpen = document.querySelector('#mobile-menu')?.classList.contains('hidden') === false;
+            if (window.scrollY > 50 || isMenuOpen) {
+                header.classList.add('bg-white/80', 'backdrop-blur-md', 'shadow-md');
+      } else {
+                header.classList.remove('bg-white/80', 'backdrop-blur-md', 'shadow-md');
+      }
+    };
+
+    // Cek saat scroll
+    window.addEventListener('scroll', handleHeaderAppearance, { passive: true });
+
+    // Cek juga saat tombol menu mobile diklik
+    const mobileMenuButton = document.getElementById("mobile-menu-button");
+    mobileMenuButton?.addEventListener('click', () => {
+      // Beri sedikit jeda agar perubahan kelas menu terdeteksi
+      setTimeout(handleHeaderAppearance, 50);
+    });
+
+    // Jalankan sekali saat halaman dimuat untuk mengatur kondisi awal
+    handleHeaderAppearance();
   });
 </script>

@@ -321,7 +321,7 @@ const title = "Kursus";
         }
         // Jika lolos, pengguna terautentikasi. Lanjutkan eksekusi skrip.
       } catch (error) {
-        console.error('Autentikasi gagal:', error.message);
+
         window.location.href = '/login?redirect=/kursus';
         return; // Hentikan eksekusi skrip lebih lanjut
       }
@@ -400,7 +400,7 @@ const title = "Kursus";
           });
         })
         .catch(error => {
-          console.error("Gagal memuat data kursus:", error);
+
           document.querySelectorAll('.btn-kursus').forEach(button => {
             button.textContent = 'Gagal Memuat';
             button.disabled = true;

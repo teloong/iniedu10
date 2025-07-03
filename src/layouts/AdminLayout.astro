@@ -1,0 +1,40 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+}
+
+const { title = "Admin IniEdu" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Halaman Dasbor Admin IniEdu" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <style>
+      /* Mencegah FOUC (Flash of Unstyled Content) pada halaman admin */
+      body {
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+      }
+      body.loaded {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <slot />
+    <script is:inline>
+      // Menambahkan kelas 'loaded' setelah DOM siap untuk efek fade-in
+      document.addEventListener('DOMContentLoaded', () => {
+        document.body.classList.add('loaded');
+      });
+    </script>
+  </body>
+</html>

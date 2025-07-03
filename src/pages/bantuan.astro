@@ -1,36 +1,158 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+
+const helpTopics = [
+  {
+    category: "Akun & Profil",
+    icon: "mdi:account-circle-outline",
+    faqs: [
+      {
+        question: "Bagaimana cara mendaftar akun baru?",
+        answer: "Anda dapat mendaftar dengan mengklik tombol 'Daftar' di pojok kanan atas halaman. Isi formulir dengan data diri Anda, dan jangan lupa untuk verifikasi email Anda setelahnya."
+      },
+      {
+        question: "Saya lupa kata sandi, apa yang harus saya lakukan?",
+        answer: "Pada halaman login, klik tautan 'Lupa Kata Sandi'. Masukkan alamat email Anda yang terdaftar, dan kami akan mengirimkan instruksi untuk mereset kata sandi Anda."
+      },
+      {
+        question: "Bagaimana cara mengubah profil saya?",
+        answer: "Setelah login, masuk ke 'Dashboard' Anda dan pilih menu 'Profil'. Di sana Anda dapat memperbarui informasi pribadi seperti nama, foto profil, dan kata sandi."
+      }
+    ]
+  },
+  {
+    category: "Pembelian & Kursus",
+    icon: "mdi:credit-card-outline",
+    faqs: [
+      {
+        question: "Metode pembayaran apa saja yang diterima?",
+        answer: "Kami menerima berbagai metode pembayaran, termasuk transfer bank, kartu kredit/debit, dan e-wallet (GoPay, OVO, Dana) melalui payment gateway Xendit yang aman."
+      },
+      {
+        question: "Bagaimana cara mengakses kursus setelah membeli?",
+        answer: "Setelah pembayaran berhasil, kursus akan langsung aktif dan dapat diakses melalui 'Dashboard' Anda di bagian 'Kursus Saya'. Anda bisa langsung mulai belajar."
+      },
+      {
+        question: "Apakah kursus memiliki masa aktif?",
+        answer: "Ya, setiap kursus memiliki masa aktif yang berbeda-beda. Informasi masa aktif dapat dilihat pada halaman detail masing-masing kursus sebelum Anda melakukan pembelian."
+      }
+    ]
+  },
+  {
+    category: "Masalah Teknis",
+    icon: "mdi:cogs",
+    faqs: [
+      {
+        question: "Video pembelajaran tidak bisa diputar, apa solusinya?",
+        answer: "Pastikan koneksi internet Anda stabil. Coba muat ulang halaman (refresh). Jika masih bermasalah, bersihkan cache browser Anda atau coba gunakan browser lain. Jika masalah berlanjut, hubungi kami melalui halaman 'Kontak'."
+      },
+      {
+        question: "Website tampil berantakan di browser saya.",
+        answer: "Kami merekomendasikan menggunakan versi terbaru dari browser modern seperti Google Chrome, Mozilla Firefox, atau Safari untuk pengalaman terbaik. Pastikan browser Anda sudah di-update."
+      }
+    ]
+  }
+];
 ---
 
-<Layout title="Bantuan">
-  <section class="max-w-2xl mx-auto mt-12 bg-gradient-to-br from-yellow-50 to-white rounded-3xl shadow-2xl p-8 md:p-12 border border-yellow-100">
-    <div class="flex flex-col items-center mb-12">
-      <div class="bg-yellow-400 rounded-full p-4 shadow-lg mb-3">
-        <svg width="38" height="38" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill="#facc15"/><path d="M12 8v4" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="16" r="1" fill="#fff"/></svg>
+<Layout title="Pusat Bantuan | IniEdu">
+  <main class="bg-gray-50">
+    <!-- Header & Search Section -->
+    <section class="bg-blue-600 text-white py-20">
+      <div class="max-w-3xl mx-auto px-6 text-center">
+        <Icon name="mdi:lifebuoy" class="w-20 h-20 mx-auto mb-4" />
+        <h1 class="text-4xl sm:text-5xl font-extrabold mb-4">Pusat Bantuan</h1>
+        <p class="text-lg text-blue-200 mb-8">
+          Ada pertanyaan? Kami di sini untuk membantu. Cari jawaban Anda di bawah ini.
+        </p>
+        <div class="relative">
+          <input
+            type="search"
+            id="help-search"
+            placeholder="Ketik pertanyaan Anda... (misal: lupa sandi)"
+            class="w-full pl-12 pr-4 py-4 text-lg text-gray-800 rounded-full border border-gray-300 focus:ring-4 focus:ring-blue-300 focus:outline-none"
+          />
+          <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+            <Icon name="mdi:magnify" class="w-7 h-7 text-gray-400" />
+          </div>
+        </div>
       </div>
-      <h1 class="text-3xl md:text-4xl font-extrabold text-yellow-700 mb-2 text-center">Pusat Bantuan</h1>
-      <div class="text-gray-500 font-medium text-center text-base md:text-lg max-w-md">Temukan jawaban atas pertanyaan umum atau hubungi tim support kami.</div>
-    </div>
-    <div class="space-y-8">
-      <div class="bg-white rounded-xl shadow p-6 border-l-4 border-yellow-400">
-        <div class="font-semibold text-yellow-700 mb-3 mt-1">Bagaimana cara mendaftar akun di IniEdu?</div>
-        <div class="text-gray-700 mb-1">Klik tombol "Daftar" di pojok kanan atas, isi data yang diperlukan, lalu ikuti petunjuk aktivasi melalui email.</div>
+    </section>
+
+    <!-- FAQ Categories Section -->
+    <section class="py-16 sm:py-20">
+      <div class="max-w-5xl mx-auto px-6">
+        {helpTopics.map(topic => (
+          <div class="mb-12" id={`category-${topic.category.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-')}`}>
+            <div class="flex items-center mb-6">
+              <Icon name={topic.icon} class="w-8 h-8 text-blue-600 mr-4" />
+              <h2 class="text-2xl sm:text-3xl font-bold text-gray-900">{topic.category}</h2>
+            </div>
+            <div class="space-y-4">
+              {topic.faqs.map(faq => (
+                <details class="group bg-white p-6 rounded-lg border shadow-sm cursor-pointer transition hover:border-blue-500">
+                  <summary class="flex items-center justify-between font-semibold text-gray-900 list-none">
+                    <span class="faq-question">{faq.question}</span>
+                    <div class="group-open:rotate-180 transition-transform duration-300">
+                      <Icon name="mdi:chevron-down" class="w-6 h-6" />
+                    </div>
+                  </summary>
+                  <p class="text-gray-700 mt-4 leading-relaxed faq-answer">
+                    {faq.answer}
+                  </p>
+                </details>
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
-      <div class="bg-white rounded-xl shadow p-6 border-l-4 border-yellow-400">
-        <div class="font-semibold text-yellow-700 mb-3 mt-1">Bagaimana cara mengakses video pembelajaran?</div>
-        <div class="text-gray-700 mb-1">Setelah login, pilih menu "Kursus" atau "Perpustakaan", lalu pilih kelas/mapel yang diinginkan. Video akan langsung bisa diputar di halaman tersebut.</div>
+    </section>
+
+    <!-- Still Need Help Section -->
+    <section class="bg-white py-16">
+      <div class="max-w-4xl mx-auto px-6 text-center">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Masih Butuh Bantuan?</h2>
+        <p class="text-lg text-gray-600 mb-8">
+          Tim kami siap membantu Anda lebih lanjut. Jangan ragu untuk menghubungi kami.
+        </p>
+        <a href="/kontak" class="inline-block bg-blue-600 text-white font-bold text-lg px-8 py-4 rounded-lg hover:bg-blue-700 transition-colors duration-300 shadow-md transform hover:scale-105">
+          Hubungi Tim Support
+        </a>
       </div>
-      <div class="bg-white rounded-xl shadow p-6 border-l-4 border-yellow-400">
-        <div class="font-semibold text-yellow-700 mb-3 mt-1">Siapa yang bisa saya hubungi jika mengalami kendala teknis?</div>
-        <div class="text-gray-700 mb-1">Silakan hubungi tim support melalui halaman <a href="/kontak" class="text-blue-600 underline">Kontak Kami</a> atau email ke <b>halo@iniedu.com</b>.</div>
-      </div>
-      <div class="bg-white rounded-xl shadow p-6 border-l-4 border-yellow-400">
-        <div class="font-semibold text-yellow-700 mb-3 mt-1">Bagaimana jika ingin melaporkan pelanggaran atau konten tidak pantas?</div>
-        <div class="text-gray-700 mb-1">Gunakan halaman <a href="/pengaduan" class="text-blue-600 underline">Pengaduan</a> untuk melaporkan masalah secara rahasia dan profesional.</div>
-      </div>
-    </div>
-    <div class="mt-10 text-center text-gray-400 text-sm">
-      Jika pertanyaan Anda belum terjawab, jangan ragu untuk menghubungi kami.
-    </div>
-  </section>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('help-search') as HTMLInputElement;
+      if (!searchInput) return;
+
+      searchInput.addEventListener('input', (e) => {
+        const searchTerm = (e.target as HTMLInputElement).value.toLowerCase();
+        
+        document.querySelectorAll('.faq-question').forEach(questionElement => {
+          const questionText = questionElement.textContent?.toLowerCase() || '';
+          const answerElement = questionElement.closest('details')?.querySelector('.faq-answer');
+          const answerText = answerElement?.textContent?.toLowerCase() || '';
+          const detailsElement = questionElement.closest('details');
+
+          if (detailsElement) {
+            if (questionText.includes(searchTerm) || answerText.includes(searchTerm)) {
+              detailsElement.style.display = 'block';
+            } else {
+              detailsElement.style.display = 'none';
+            }
+          }
+        });
+
+        // Show/hide category titles if all questions within are hidden
+        document.querySelectorAll('[id^="category-"]').forEach(categoryElement => {
+            const details = categoryElement.querySelectorAll('details');
+            const allHidden = Array.from(details).every(d => d.style.display === 'none');
+            (categoryElement as HTMLElement).style.display = allHidden ? 'none' : 'block';
+        });
+      });
+    });
+  </script>
 </Layout>

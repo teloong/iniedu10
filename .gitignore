@@ -23,9 +23,6 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
-# firebase
-serviceAccountKey.json
-
 # Cascade AI memory & plugin internal files
 .cascade/
 

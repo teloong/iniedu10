@@ -1,11 +1,11 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import AdminLayout from "../layouts/AdminLayout.astro";
 import AdminSidebar from "../components/AdminSidebar.astro";
 
 import "../styles/global.css";
 ---
 
-<Layout title="Daftar Blog">
+<AdminLayout title="Daftar Blog">
 
   <div class="min-h-screen bg-gray-50 flex">
     <div class="sticky top-0 h-screen hidden md:block">
@@ -99,7 +99,7 @@ import "../styles/global.css";
       } catch (err) {
         const tbody = document.getElementById("blog-list");
         if(tbody) tbody.innerHTML = `<tr><td colspan="9" class="text-center py-4 text-red-600">Gagal memuat data blog: ${err.message}</td></tr>`;
-        console.error("Error rendering blogs:", err);
+
       }
     }
 
@@ -109,27 +109,27 @@ import "../styles/global.css";
         return;
       }
 
-      console.log("--- Tombol Hapus Dideteksi (v.dataset) ---");
+
       event.preventDefault();
 
       // DEBUG: Tampilkan elemen yang ditemukan oleh .closest()
-      console.log("Elemen yang ditemukan:", deleteButton);
+
 
       // Coba ambil ID dengan .dataset (cara modern)
       const id = deleteButton.dataset.id;
-      console.log(`1. ID Blog diambil (via .dataset): ${id}`);
+
 
       if (!id) {
-        console.error("ID tetap tidak ditemukan. Sangat aneh. Cek elemen yang di-log di atas.");
+
         return;
       }
 
       if (!confirm("Apakah Anda yakin ingin menghapus blog ini secara permanen?")) {
-        console.log("Penghapusan dibatalkan oleh pengguna.");
+
         return;
       }
 
-      console.log("2. Memulai proses penghapusan...");
+
       try {
         const token = localStorage.getItem('adminAuthToken');
         if (!token) {
@@ -144,7 +144,7 @@ import "../styles/global.css";
         });
 
         const result = await response.json();
-        console.log("3. Respons dari server:", result);
+
 
         if (response.ok) {
           alert(result.message || 'Blog berhasil dihapus!');
@@ -153,7 +153,7 @@ import "../styles/global.css";
           alert(result.message || 'Gagal menghapus blog.');
         }
       } catch (error) {
-        console.error("--- ERROR FATAL SAAT MENGHAPUS ---", error);
+
         alert('Terjadi kesalahan fatal. Lihat console untuk detail.');
       }
     }
@@ -166,4 +166,4 @@ import "../styles/global.css";
   </script>
 
 
-</Layout>
+</AdminLayout>

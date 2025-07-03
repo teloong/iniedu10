@@ -1,13 +1,13 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import AdminLayout from "../layouts/AdminLayout.astro";
 import AdminSidebar from "../components/AdminSidebar.astro";
 import "../styles/global.css";
 ---
 
-<Layout title="Tambah E-Book Baru">
+<AdminLayout title="Admin Perpustakaan">
   <div class="min-h-screen bg-gray-50 flex">
     <div class="sticky top-0 h-screen hidden md:block">
-      <AdminSidebar active="daftar-ebook" />
+      <AdminSidebar active="perpustakaan" />
     </div>
     <main class="flex-1 overflow-x-auto">
       <div class="max-w-2xl mx-auto px-4 py-8">
@@ -132,10 +132,10 @@ import "../styles/global.css";
               required></select>
           </div>
           <div>
-            <label for="theme_id" class="block mb-1 font-semibold">Tema</label>
+            <label for="tema_id" class="block mb-1 font-semibold">Tema</label>
             <select
-              id="theme_id"
-              name="theme_id"
+              id="tema_id"
+              name="tema_id"
               class="w-full border rounded px-3 py-2"></select>
           </div>
           <button
@@ -167,7 +167,7 @@ import "../styles/global.css";
             categorySelect.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
           });
 
-          const themeSelect = document.getElementById("theme_id");
+          const themeSelect = document.getElementById("tema_id");
           themeSelect.innerHTML =
             '<option value="">Pilih Tema (Opsional)</option>';
           data.themes.forEach((theme) => {
@@ -175,7 +175,7 @@ import "../styles/global.css";
           });
         }
       } catch (error) {
-        console.error("Gagal memuat dropdown:", error);
+
       }
     }
 
@@ -266,4 +266,4 @@ import "../styles/global.css";
       .getElementById("add-ebook-form")
       .addEventListener("submit", handleFormSubmit);
   </script>
-</Layout>
+</AdminLayout>

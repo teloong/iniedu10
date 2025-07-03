@@ -1,75 +1,127 @@
 ---
-const cards = [
+// src/components/AccordionSection.astro
+// Data untuk kartu fitur
+const features = [
   {
     title: "FLEXIBILITY",
-    text: "Kamu boleh belajar di mana saja, diulang kapan saja, sesuai dengan ritmemu sendiri",
-    color: "#ed4747",
+    description:
+      "Kamu boleh belajar di mana saja, diulang kapan saja, sesuai dengan ritmemu sendiri",
+    icon: `<img src="/images/flexibility.ico" alt="Flexibility Icon" class="h-12 w-12">`,
   },
   {
     title: "MICROLEARNING",
-    text: "Konten digital pembelajaran yang padat, cocok untuk mengefektifkan waktumu",
-    color: "#ffb100",
+    description:
+      "Konten digital pembelajaran yang padat, cocok untuk mengefektifkan waktumu",
+    icon: `<img src="/images/microlearning.ico" alt="Microlearning Icon" class="h-12 w-12">`,
   },
   {
     title: "DIGITAL LIBRARY",
-    text: "Akses koleksi buku, modul, dan bacaan edukatif yang terus bertambah",
-    color: "#00b6b7",
+    description:
+      "Akses koleksi buku, modul, dan bacaan edukatif yang terus bertambah",
+    icon: `<img src="/images/digital-library.ico" alt="Digital Library Icon" class="h-12 w-12">`,
   },
   {
     title: "SELF-GROWTH",
-    text: "Topik pembelajaran yang mendukung pengembangan diri dan bersertifikat",
-    color: "#a36fc7",
+    description:
+      "Topik pembelajaran yang mendukung pengembangan diri dan bersertifikat",
+    icon: `<img src="/images/self-growth.ico" alt="Self Growth Icon" class="h-12 w-12">`,
   },
   {
     title: "DIVERSE TOPICS",
-    text: "Pilihan berbagai topik belajar yang relevan saat ini, eksplor kebutuhanmu",
-    color: "#90cba0",
+    description:
+      "Pilihan berbagai topik belajar yang relevan saat ini, eksplor kebutuhanmu",
+    icon: `<img src="/images/diverse topics.ico" alt="Diverse Topics Icon" class="h-12 w-12">`,
   },
   {
     title: "E-COURSES",
-    text: "Kursus-kursus yang akan dukung peningkatan kemampuanmu",
-    color: "#ffe156",
+    description: "Kursus-kursus yang akan dukung peningkatan kemampuanmu",
+    icon: `<img src="/images/e-courses.ico" alt="E Courses Icon" class="h-12 w-12">`,
   },
   {
     title: "QUALITY CONTENT",
-    text: "Seluruh konten telah dikurasi dan dikembangkan oleh orang-orang profesional di bidangnya",
-    color: "#e88a4e",
+    description:
+      "Seluruh konten telah dikurasi dan dikembangkan oleh orang-orang profesional di bidangnya",
+    icon: `<img src="/images/quality-content.ico" alt="Quality Content Icon" class="h-12 w-12">`,
   },
   {
     title: "COMMUNITY",
-    text: "Belajar tidak mesti sendiri, kamu dapat terhubung dan tumbuh bersama pembelajar lainnya",
-    color: "#f46b6b",
+    description:
+      "Belajar tidak mesti sendiri, kamu dapat terhubung dan tumbuh bersama pembelajar lainnya",
+    icon: `<img src="/images/community.ico" alt="Community Icon" class="h-12 w-12">`,
   },
 ];
 ---
 
-<section
-  class="py-10 md:py-16 px-4"
-  style="background:linear-gradient(120deg, #f0efff 0%, #e3f6fc 100%)"
->
-  <div class="max-w-7xl mx-auto">
-    <h2
-      class="text-2xl md:text-3xl font-black text-center mb-16 text-gray-900 tracking-tight"
-    >
-      Apa Yang Bisa Kamu Lakukan di IniEdu?
-    </h2>
+<style>
+  @font-face {
+    font-family: "MadimiOne-Regular"; /* Nama font yang akan kita gunakan */
+    src: url("/fonts/MadimiOne-Regular.ttf") format("truetype"); /* Path ke file font Anda */
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+  }
 
+  .font-madimi-one {
+    font-family: "MadimiOne-Regular", sans-serif; /* Terapkan font kustom */
+  }
+</style>
+
+<section id="features" class="bg-white">
+  <!-- Image with Text Overlay -->
+  <div class="relative w-full">
+    <!-- Background Image -->
+    <img
+      src="/images/laptop.webp"
+      alt="Laptop menampilkan antarmuka Iniedu"
+      class="w-full h-80 sm:h-auto object-cover"
+    />
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-blue-900/50"></div>
+
+    <!-- Centered Text -->
     <div
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-20"
+      class="absolute inset-0 flex items-center justify-center text-center p-4"
     >
+      <div data-aos="fade-up">
+        <h2
+          class="text-white text-2xl sm:text-4xl md:text-6xl font-extrabold uppercase tracking-wide leading-tight drop-shadow-lg font-madimi-one"
+        >
+          <span class="relative inline-block px-2">
+            Apa yang bisa
+            <span
+              class="absolute left-0 right-0 -bottom-2 h-1.5 bg-cyan-400 transform -skew-y-2"
+            ></span>
+          </span>
+          <br />
+          <span class="relative inline-block px-2 mt-2 sm:mt-4 md:mt-6">
+            kamu temukan di Iniedu?
+            <span
+              class="absolute left-0 right-0 -bottom-2 h-1.5 bg-cyan-400 transform -skew-y-2"
+            ></span>
+          </span>
+        </h2>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature Cards Section -->
+  <div class="container mx-auto px-4 py-16 md:py-24">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
       {
-        cards.map((card) => (
-          <div class="relative group" data-aos="fade-up">
+        features.map((feature, index) => (
+          <div
+            class="bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300 p-6 text-center border border-gray-100 flex flex-col items-center transform hover:-translate-y-2"
+            data-aos="fade-up"
+            data-aos-delay={index * 100}
+          >
             <div
-              class="absolute -inset-2 rounded-3xl transform -rotate-6 transition-transform duration-300 ease-in-out group-hover:rotate-0"
-              style={`background-color: ${card.color};`}
+              class="mb-4 h-16 w-16 flex items-center justify-center"
+              set:html={feature.icon}
             />
-            <div class="relative bg-white rounded-2xl shadow-lg p-6 min-h-[200px] flex flex-col justify-center text-center h-full">
-              <h3 class="font-black text-2xl uppercase text-gray-900 mb-3 tracking-tight">
-                {card.title}
-              </h3>
-              <p class="text-gray-600 text-base leading-relaxed">{card.text}</p>
-            </div>
+            <h3 class="text-base font-black text-blue-800 uppercase tracking-wider mb-2 font-madimi-one">{feature.title}</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">
+              {feature.description}
+            </p>
           </div>
         ))
       }

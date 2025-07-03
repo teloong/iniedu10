@@ -101,19 +101,11 @@ const { title = "IniEdu - Platform Pendidikan Online" } = Astro.props;
       html {
         margin: 0;
         padding: 0;
-        overflow-x: hidden;
       }
     </style>
-    <link
-      rel="preload"
-      as="image"
-      href="/lcp-3d-kelas-online.webp"
-      imagesrcset="/lcp-3d-kelas-online.webp 370w, /lcp-3d-kelas-online-240.webp 240w"
-      imagesizes="(max-width: 480px) 240px, 370px"
-    />
   </head>
 
-  <body class={`flex flex-col bg-gray-50 ${Astro.props.bodyClass ?? ""}`}>
+  <body class={`${Astro.props.bodyClass ?? ""}`}>
     <Header />
     <style>
       body.admin-dashboard header {
@@ -137,7 +129,7 @@ const { title = "IniEdu - Platform Pendidikan Online" } = Astro.props;
         >Profil</a
       >
     </div>
-    <main class="flex-grow p-0 m-0">
+    <main class="bg-gray-50 p-0 m-0">
       <slot />
     </main>
 

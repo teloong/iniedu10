@@ -1,83 +1,198 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+
+const features = [
+  {
+    title: "Kurikulum Berstandar Tinggi",
+    description:
+      "Materi kami disusun oleh para ahli di bidangnya, memastikan relevansi dengan kebutuhan industri dan akademis.",
+    icon: "mdi:school-outline",
+  },
+  {
+    title: "Teknologi Adaptif",
+    description:
+      "Platform kami menggunakan teknologi cerdas untuk menyesuaikan pengalaman belajar dengan kecepatan dan gaya setiap individu.",
+    icon: "mdi:cogs",
+  },
+  {
+    title: "Akses Tanpa Batas",
+    description:
+      "Belajar kapan saja, di mana saja. Kami mendobrak batasan geografis untuk memberikan pendidikan berkualitas bagi semua.",
+    icon: "mdi:earth",
+  },
+  {
+    title: "Komunitas Kolaboratif",
+    description:
+      "Terhubung dengan sesama pembelajar dan mentor dalam sebuah ekosistem yang mendukung pertumbuhan bersama.",
+    icon: "mdi:account-group-outline",
+  },
+];
 ---
 
-<Layout title="Tentang Kami | IniEdu">
-  <section class="relative py-20 bg-gradient-to-br from-blue-50 via-white to-blue-100 overflow-hidden">
-    <!-- Motif SVG Wave Background -->
-    <div class="absolute top-0 left-0 w-full h-32 pointer-events-none select-none z-0">
-      <svg viewBox="0 0 1440 150" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full"><path fill="#7f5cff22" d="M0 80C250 160 500 0 720 40C940 80 1190 0 1440 80V150H0V80Z"/></svg>
-    </div>
-    <div class="relative z-10 max-w-4xl mx-auto text-center">
-      <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-[#232b4d] drop-shadow-lg">Tentang <span class="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">IniEdu</span></h1>
-      <p class="mb-8 text-lg md:text-xl text-gray-700 max-w-2xl mx-auto">Platform pendidikan digital masa depan yang inklusif, adaptif, dan inovatif untuk seluruh masyarakat Indonesia. Kami hadir untuk membuka akses belajar berkualitas tinggi dari mana saja, kapan saja, dan untuk siapa saja.</p>
-      <img src="/lcp-3d-kelas-online.webp" alt="Ilustrasi Edukasi" width="320" height="320" class="mx-auto rounded-2xl shadow-2xl border-8 border-blue-200 mb-8" />
-    </div>
-  </section>
+<Layout title="Tentang Kami | IniEdu - Masa Depan Pendidikan Digital">
+  <main class="bg-gray-50 text-gray-800">
+    <!-- Hero Section -->
+    <section
+      class="relative bg-gradient-to-br from-blue-600 to-cyan-500 text-white py-24 sm:py-32"
+    >
+      <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
+      <div class="relative max-w-5xl mx-auto px-6 text-center z-10">
+        <h1
+          class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight mb-4 font-madimi-one drop-shadow-lg"
+        >
+          Membuka Potensi, Membangun Generasi.
+        </h1>
+        <p class="max-w-3xl mx-auto text-lg sm:text-xl text-blue-100">
+          IniEdu bukan sekadar platform belajar. Kami adalah gerakan untuk
+          mendemokratisasi pendidikan berkualitas melalui teknologi,
+          memberdayakan setiap individu untuk meraih masa depan yang lebih
+          cerah.
+        </p>
+      </div>
+    </section>
 
-  <!-- Sejarah & Visi Misi -->
-  <section class="max-w-5xl mx-auto mt-10 px-4 grid md:grid-cols-2 gap-10">
-    <div class="bg-white rounded-2xl shadow-xl p-8 border-l-4 border-blue-400 flex flex-col items-start">
-      <h2 class="text-2xl font-bold mb-2 text-blue-600 flex items-center gap-2"><svg width="28" height="28" fill="none" viewBox="0 0 28 28"><circle cx="14" cy="14" r="14" fill="#38bdf822"/><path d="M14 8a6 6 0 1 1 0 12a6 6 0 0 1 0-12zm0 0c4.418 0 8 3.582 8 4s-3.582 4-8 4-8-3.582-8-4 3.582-4 8-4z" stroke="#009fff" stroke-width="2" fill="none"/></svg> Visi</h2>
-      <p class="text-gray-700 mb-4">Menjadi pelopor pendidikan digital yang inklusif, adaptif, dan berdaya saing global untuk seluruh masyarakat Indonesia.</p>
-      <h2 class="text-2xl font-bold mb-2 text-cyan-600 flex items-center gap-2 mt-6"><svg width="28" height="28" fill="none" viewBox="0 0 28 28"><circle cx="14" cy="14" r="14" fill="#00ffe722"/><path d="M8 14h12M14 8v12" stroke="#00bcd4" stroke-width="2" stroke-linecap="round"/></svg> Misi</h2>
-      <ul class="list-disc ml-6 text-gray-700 space-y-2">
-        <li>Menyediakan materi dan pembelajaran berkualitas tinggi.</li>
-        <li>Mengembangkan fitur interaktif dan inovatif berbasis teknologi.</li>
-        <li>Mendorong pemerataan akses pendidikan di seluruh Indonesia.</li>
-        <li>Memberikan sertifikasi resmi yang diakui industri.</li>
-      </ul>
-    </div>
-    <div class="bg-gradient-to-br from-blue-100 via-white to-cyan-50 rounded-2xl shadow-xl p-8 flex flex-col justify-center items-start">
-      <h2 class="text-2xl font-bold mb-2 text-purple-600 flex items-center gap-2"><svg width="28" height="28" fill="none" viewBox="0 0 28 28"><circle cx="14" cy="14" r="14" fill="#e040fb22"/><path d="M14 8l4 8h-8l4-8z" stroke="#e040fb" stroke-width="2" stroke-linecap="round"/></svg> Sejarah Singkat</h2>
-      <p class="text-gray-700">IniEdu lahir dari keprihatinan akan kesenjangan akses pendidikan di Indonesia. Kami percaya bahwa teknologi dapat menjadi jembatan untuk pemerataan pendidikan berkualitas bagi semua kalangan, tanpa batasan ruang dan waktu.</p>
-      <div class="mt-6">
-        <h3 class="font-bold text-gray-800 mb-2">Nilai-nilai Kami:</h3>
-        <ul class="list-disc ml-6 text-gray-700 space-y-1">
-          <li>Inklusif & Adaptif</li>
-          <li>Inovatif & Kolaboratif</li>
-          <li>Berorientasi pada kualitas</li>
-        </ul>
+    <!-- Our Story Section -->
+    <section class="py-20 sm:py-24">
+      <div
+        class="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center"
+      >
+        <div data-aos="fade-right">
+          <img
+            src="/images/tentang-kami-story.svg"
+            alt="Tim IniEdu berdiskusi"
+            class="rounded-2xl shadow-2xl w-full h-auto object-cover border-4 border-white"
+            loading="lazy"
+          />
+        </div>
+        <div data-aos="fade-left">
+          <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+            Cerita di Balik <span class="text-blue-600">IniEdu</span>
+          </h2>
+          <p class="text-lg text-gray-600 mb-4">
+            IniEdu lahir dari sebuah pertanyaan sederhana: Mengapa akses
+            terhadap pendidikan berkualitas masih menjadi sebuah kemewahan? Dari
+            sana, kami memulai perjalanan untuk membangun sebuah
+            jembatan—jembatan digital yang menghubungkan para pencari ilmu
+            dengan pengetahuan, tanpa terhalang oleh jarak, waktu, dan biaya.
+          </p>
+          <p class="text-lg text-gray-600">
+            Kami adalah tim yang terdiri dari para pendidik, teknolog, dan
+            kreator yang percaya bahwa setiap orang berhak mendapatkan
+            kesempatan belajar terbaik.
+          </p>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Keunggulan Platform -->
-  <section class="max-w-6xl mx-auto mt-16 px-4">
-    <h2 class="text-3xl font-extrabold text-center mb-10 text-[#232b4d]">Mengapa Memilih <span class="bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent">IniEdu?</span></h2>
-    <div class="grid md:grid-cols-4 gap-8">
-      <div class="bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center border-l-4 border-blue-400">
-        <svg width="38" height="38" fill="none" viewBox="0 0 38 38" class="mb-2"><circle cx="19" cy="19" r="19" fill="#009fff22"/><path d="M13 26V14.5a6 6 0 1 1 12 0V26" stroke="#009fff" stroke-width="2" stroke-linecap="round"></path><rect x="11" y="26" width="16" height="4" rx="2" fill="#009fff"></rect></svg>
-        <div class="font-bold text-blue-700">Materi Berkualitas</div>
-        <div class="text-gray-600 text-center text-sm">Disusun oleh pengajar profesional & praktisi industri.</div>
+    <!-- Visi & Misi Section -->
+    <section class="bg-white py-20 sm:py-24">
+      <div class="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-10">
+        <div
+          class="p-8 rounded-2xl bg-blue-50 border-l-4 border-blue-500"
+          data-aos="zoom-in-up"
+        >
+          <div class="flex items-center gap-4 mb-3">
+            <Icon
+              name="mdi:rocket-launch-outline"
+              class="w-10 h-10 text-blue-600"
+            />
+            <h3 class="text-2xl font-bold text-gray-900">Visi Kami</h3>
+          </div>
+          <p class="text-gray-600">
+            Menjadi ekosistem pendidikan digital terdepan di Indonesia yang
+            mendorong lahirnya generasi pembelajar seumur hidup yang kreatif,
+            kritis, dan berdaya saing global.
+          </p>
+        </div>
+        <div
+          class="p-8 rounded-2xl bg-cyan-50 border-l-4 border-cyan-500"
+          data-aos="zoom-in-up"
+          data-aos-delay="100"
+        >
+          <div class="flex items-center gap-4 mb-3">
+            <Icon name="mdi:target-arrow" class="w-10 h-10 text-cyan-600" />
+            <h3 class="text-2xl font-bold text-gray-900">Misi Kami</h3>
+          </div>
+          <ul class="list-disc list-inside text-gray-600 space-y-2">
+            <li>
+              Menyediakan konten pembelajaran yang relevan, mendalam, dan
+              menyenangkan.
+            </li>
+            <li>
+              Mengintegrasikan teknologi AI untuk personalisasi pengalaman
+              belajar.
+            </li>
+            <li>Membangun komunitas yang suportif dan kolaboratif.</li>
+            <li>Menjalin kemitraan strategis dengan institusi dan industri.</li>
+          </ul>
+        </div>
       </div>
-      <div class="bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center border-l-4 border-yellow-400">
-        <svg width="38" height="38" fill="none" viewBox="0 0 38 38" class="mb-2"><circle cx="19" cy="19" r="19" fill="#ffb30022"/><path d="M19 13v8" stroke="#ffb300" stroke-width="2" stroke-linecap="round"></path><circle cx="19" cy="25" r="1.5" fill="#ffb300"></circle></svg>
-        <div class="font-bold text-yellow-700">Sertifikat Resmi</div>
-        <div class="text-gray-600 text-center text-sm">Setiap kursus dilengkapi sertifikat digital yang diakui industri.</div>
-      </div>
-      <div class="bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center border-l-4 border-pink-400">
-        <svg width="38" height="38" fill="none" viewBox="0 0 38 38" class="mb-2"><circle cx="19" cy="19" r="19" fill="#e040fb22"/><path d="M12 22l7-7 7 7" stroke="#e040fb" stroke-width="2" stroke-linecap="round"></path></svg>
-        <div class="font-bold text-pink-700">Interaktif & Kolaboratif</div>
-        <div class="text-gray-600 text-center text-sm">Belajar lebih seru dengan fitur diskusi, tugas, dan komunitas.</div>
-      </div>
-      <div class="bg-white rounded-2xl shadow-xl p-6 flex flex-col items-center border-l-4 border-cyan-400">
-        <svg width="38" height="38" fill="none" viewBox="0 0 38 38" class="mb-2"><circle cx="19" cy="19" r="19" fill="#00ffe722"/><path d="M19 19l7-7" stroke="#00bcd4" stroke-width="2" stroke-linecap="round"></path><circle cx="19" cy="25" r="1.5" fill="#00bcd4"></circle></svg>
-        <div class="font-bold text-cyan-700">Akses Fleksibel</div>
-        <div class="text-gray-600 text-center text-sm">Belajar kapan saja, di mana saja, tanpa batasan perangkat.</div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Ajakan Bergabung & Kontak -->
-  <section class="max-w-3xl mx-auto mt-16 px-4 text-center">
-    <h2 class="text-2xl font-bold mb-4 text-[#232b4d]">Bergabung Bersama Kami!</h2>
-    <p class="text-gray-700 mb-6">Jadilah bagian dari perubahan pendidikan digital Indonesia bersama IniEdu. Baik sebagai murid, pengajar, maupun partner, kami membuka kolaborasi untuk masa depan yang lebih baik.</p>
-    <a href="/kontak" class="inline-block px-8 py-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-semibold shadow-lg hover:scale-105 hover:shadow-xl transition-all duration-300">Hubungi Kami</a>
-  </section>
+    <!-- Features Section -->
+    <section class="py-20 sm:py-24">
+      <div class="max-w-6xl mx-auto px-6">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl sm:text-4xl font-bold text-gray-900">
+            Pilar Utama Platform Kami
+          </h2>
+          <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+            Empat pilar yang menjadi fondasi kami dalam membangun pengalaman
+            belajar terbaik.
+          </p>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {
+            features.map((feature, index) => (
+              <div
+                class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300 flex flex-col items-center text-center"
+                data-aos="fade-up"
+                data-aos-delay={index * 100}
+              >
+                <div class="bg-blue-100 p-4 rounded-full mb-5">
+                  <Icon name={feature.icon} class="w-8 h-8 text-blue-600" />
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">
+                  {feature.title}
+                </h3>
+                <p class="text-gray-600 flex-grow">{feature.description}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
 
-  <!-- Motif SVG Wave Background Bawah -->
-  <div class="absolute bottom-0 left-0 w-full h-20 pointer-events-none select-none z-0">
-    <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full"><path fill="#7f5cff22" d="M0 40C300 100 600 0 900 40C1200 80 1440 0 1440 40V80H0V40Z"/></svg>
-  </div>
+    <!-- CTA Section -->
+    <section class="bg-white">
+      <div class="max-w-4xl mx-auto px-6 py-20 text-center">
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+          Siap Memulai Perjalanan Belajarmu?
+        </h2>
+        <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+          Jelajahi ratusan kursus, temukan minat barumu, dan bergabunglah dengan
+          ribuan pembelajar lainnya yang telah memilih untuk bertumbuh bersama
+          IniEdu.
+        </p>
+        <a
+          href="/kursus"
+          class="inline-block bg-blue-600 text-white font-bold text-lg px-8 py-4 rounded-lg hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-lg"
+        >
+          Lihat Semua Kursus
+        </a>
+      </div>
+    </section>
+  </main>
 </Layout>
+
+<style>
+  .bg-grid-pattern {
+    background-image: linear-gradient(
+        rgba(255, 255, 255, 0.05) 1px,
+        transparent 1px
+      ),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 2rem 2rem;
+  }
+</style>

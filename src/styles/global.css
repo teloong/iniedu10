@@ -56,7 +56,8 @@
   body, html {
     margin: 0;
     padding: 0;
-    overflow-x: hidden !important;
+    overflow-x: hidden;
+
     /* height: 100%;  <-- hapus atau beri komentar */
 }
   /* Hapus semua garis dan elemen pseudo */
@@ -78,10 +79,7 @@
   overflow: visible !important;
 } */
 
-html, body {
-  overflow-x: hidden !important;
-  /* Jangan set overflow-y di sini agar scroll utama tetap normal */
-}
+
 
 /* Agar scrollbar area selalu stabil, mencegah flick navbar saat refresh */
 

@@ -1,36 +1,120 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+
+const jobOpenings = [
+  {
+    title: "Content Creator Pendidikan",
+    type: "Full-time",
+    location: "Remote",
+    description: "Membuat konten pembelajaran yang menarik dan berkualitas tinggi untuk berbagai mata pelajaran tingkat SD hingga SMA."
+  },
+  {
+    title: "Frontend Developer (Astro & Tailwind)",
+    type: "Full-time",
+    location: "Remote",
+    description: "Mengembangkan dan memelihara antarmuka website IniEdu, memastikan pengalaman pengguna yang cepat, responsif, dan modern."
+  },
+  {
+    title: "Digital Marketing Specialist",
+    type: "Freelance",
+    location: "Remote",
+    description: "Merancang dan mengeksekusi strategi pemasaran digital untuk meningkatkan jangkauan dan akuisisi pengguna baru."
+  }
+];
+
+const companyValues = [
+    {
+        icon: "mdi:lightbulb-on-outline",
+        title: "Inovasi Pendidikan",
+        description: "Kami terus mencari cara baru untuk membuat pembelajaran lebih efektif dan menyenangkan."
+    },
+    {
+        icon: "mdi:account-group-outline",
+        title: "Kerja Tim Kolaboratif",
+        description: "Kami percaya ide-ide hebat lahir dari diskusi dan kerja sama tim yang solid."
+    },
+    {
+        icon: "mdi:chart-line",
+        title: "Pertumbuhan Karir",
+        description: "Kami mendukung pengembangan profesional setiap anggota tim untuk tumbuh bersama."
+    }
+]
 ---
 
-<Layout title="Karir">
-  <section class="max-w-2xl mx-auto mt-12 bg-gradient-to-br from-indigo-50 to-white rounded-3xl shadow-2xl p-8 md:p-12 border border-indigo-100">
-    <div class="flex flex-col items-center mb-8">
-      <div class="bg-indigo-600 rounded-full p-4 shadow-lg mb-3">
-        <svg width="38" height="38" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill="#6366f1"/><path d="M8.5 12.5L11 15L16 10" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<Layout title="Bergabung dengan Tim IniEdu | Karir">
+  <main class="bg-gray-50">
+    <!-- Header Section -->
+    <section class="bg-white pt-20 pb-12">
+      <div class="max-w-4xl mx-auto px-6 text-center">
+        <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">Bangun Masa Depan Pendidikan Bersama Kami</h1>
+        <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+          Di IniEdu, kami percaya bahwa pendidikan berkualitas adalah kunci untuk membuka potensi setiap anak. Jadilah bagian dari tim yang bersemangat dan berdedikasi untuk menciptakan perubahan.
+        </p>
       </div>
-      <h1 class="text-3xl md:text-4xl font-extrabold text-indigo-700 mb-2 text-center">Karir di IniEdu</h1>
-      <div class="text-gray-500 font-medium text-center text-base md:text-lg max-w-md">Bergabunglah bersama kami untuk membangun masa depan pendidikan Indonesia yang lebih baik.</div>
-    </div>
-    <div class="space-y-8">
-      <div class="bg-white rounded-xl shadow p-6 border-l-4 border-indigo-400">
-        <div class="font-semibold text-indigo-700 mb-3 mt-1">Mengapa bergabung dengan IniEdu?</div>
-        <div class="text-gray-700 mb-1">Kami adalah tim yang berkomitmen pada inovasi pendidikan, lingkungan kerja kolaboratif, dan pengembangan diri.</div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="py-16 sm:py-20">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl sm:text-4xl font-bold text-gray-900">Mengapa Bergabung dengan Kami?</h2>
+                <p class="mt-4 text-lg text-gray-600">Kami bukan hanya tempat kerja, kami adalah sebuah misi.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                {companyValues.map(value => (
+                    <div class="text-center p-6 bg-white rounded-xl shadow-lg border">
+                        <div class="flex justify-center items-center mb-4">
+                            <div class="bg-indigo-100 p-4 rounded-full">
+                                <Icon name={value.icon} class="w-10 h-10 text-indigo-600" />
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">{value.title}</h3>
+                        <p class="text-gray-600">{value.description}</p>
+                    </div>
+                ))}
+            </div>
+        </div>
+    </section>
+
+    <!-- Job Openings Section -->
+    <section class="bg-white py-16 sm:py-20">
+      <div class="max-w-4xl mx-auto px-6">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl sm:text-4xl font-bold text-gray-900">Lowongan Saat Ini</h2>
+          <p class="mt-4 text-lg text-gray-600">Temukan peran yang sempurna untuk Anda dan mulailah perjalanan karir Anda bersama kami.</p>
+        </div>
+        <div class="space-y-6">
+          {jobOpenings.map(job => (
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition hover:shadow-md hover:border-indigo-300">
+              <div>
+                <h3 class="text-xl font-bold text-indigo-700">{job.title}</h3>
+                <div class="flex items-center gap-4 text-sm text-gray-500 mt-1">
+                  <span><Icon name="mdi:briefcase-outline" class="w-4 h-4 inline-block mr-1"/>{job.type}</span>
+                  <span><Icon name="mdi:map-marker-outline" class="w-4 h-4 inline-block mr-1"/>{job.location}</span>
+                </div>
+                <p class="text-gray-600 mt-3 max-w-xl">{job.description}</p>
+              </div>
+              <a href="mailto:karir@iniedu.com?subject=Lamaran Posisi: {job.title}" class="bg-indigo-600 text-white font-semibold px-6 py-2 rounded-lg whitespace-nowrap hover:bg-indigo-700 transition-colors duration-300">
+                Lamar Sekarang
+              </a>
+            </div>
+          ))}
+        </div>
       </div>
-      <div class="bg-white rounded-xl shadow p-6 border-l-4 border-indigo-400">
-        <div class="font-semibold text-indigo-700 mb-3 mt-1">Lowongan Tersedia</div>
-        <ul class="list-disc ml-6 text-gray-700 space-y-2">
-          <li>Content Creator Pendidikan (Full Time / Remote)</li>
-          <li>Front-End Developer (Full Time / Remote)</li>
-          <li>Marketing Digital Pendidikan (Freelance / Remote)</li>
-        </ul>
-      </div>
-      <div class="bg-white rounded-xl shadow p-6 border-l-4 border-indigo-400">
-        <div class="font-semibold text-indigo-700 mb-3 mt-1">Cara Melamar</div>
-        <div class="text-gray-700 mb-1">Kirimkan CV dan portofolio Anda ke <b>karir@iniedu.com</b> dengan subjek sesuai posisi yang dilamar. Kandidat terpilih akan dihubungi untuk proses selanjutnya.</div>
-      </div>
-    </div>
-    <div class="mt-10 text-center text-gray-400 text-sm">
-      Jika tidak menemukan posisi yang sesuai, Anda tetap dapat mengirimkan lamaran terbuka ke email di atas.
-    </div>
-  </section>
+    </section>
+
+    <!-- Open Application Section -->
+    <section class="py-16 sm:py-20">
+        <div class="max-w-4xl mx-auto px-6 text-center bg-indigo-50 p-10 rounded-2xl border border-indigo-200">
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">Tidak Menemukan Posisi yang Tepat?</h2>
+          <p class="text-lg text-gray-600 mb-8">
+            Kami selalu mencari talenta-talenta hebat. Jika Anda bersemangat tentang pendidikan dan teknologi, kirimkan CV dan portofolio Anda kepada kami.
+          </p>
+          <a href="mailto:karir@iniedu.com?subject=Lamaran Terbuka" class="inline-block bg-indigo-600 text-white font-bold text-lg px-8 py-4 rounded-lg hover:bg-indigo-700 transition-colors duration-300 shadow-md transform hover:scale-105">
+            Kirim Lamaran Terbuka
+          </a>
+        </div>
+      </section>
+  </main>
 </Layout>

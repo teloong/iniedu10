@@ -19,7 +19,6 @@ import Layout from "../layouts/Layout.astro";
       }
       // Jika semua pemeriksaan lolos, pengguna terautentikasi dan bisa melihat halaman.
     } catch (error) {
-      console.error("Autentikasi gagal:", error.message);
       window.location.href = "/login?redirect=/perpustakaan"; // Arahkan ke login jika gagal
     }
   })();
@@ -118,7 +117,7 @@ import Layout from "../layouts/Layout.astro";
                 <div class="icon-card w-16 h-16 mb-4">
                   <img src="${kategori.icon_path}" alt="${kategori.name}" class="w-full h-full object-contain" />
                 </div>
-                <div class="font-bold text-xl mt-4 mb-2 text-${colorTheme.text}">${kategori.name}</div>
+                <div class="font-bold text-xl h-14 flex items-center justify-center text-center text-${colorTheme.text}">${kategori.name}</div>
                 <ul class="mb-4 text-base text-gray-700 text-left space-y-2">
                   ${featuresHTML}
                 </ul>
@@ -138,7 +137,6 @@ import Layout from "../layouts/Layout.astro";
             "</p>";
         }
       } catch (error) {
-        console.error("Error fetching categories:", error);
         container.innerHTML =
           '<p class="col-span-full text-center text-red-500">Terjadi kesalahan saat menghubungi server.</p>';
       }

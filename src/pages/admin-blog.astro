@@ -1,11 +1,11 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import AdminLayout from "../layouts/AdminLayout.astro";
 import AdminSidebar from "../components/AdminSidebar.astro";
 
 import "../styles/global.css";
 ---
 
-<Layout title="Blog">
+<AdminLayout title="Admin Blog">
 
 <div class="min-h-screen bg-gray-50 flex">
   <div class="sticky top-0 h-screen hidden md:block">
@@ -93,7 +93,7 @@ import "../styles/global.css";
     </div>
   </main>
 </div>
-</Layout>
+</AdminLayout>
 
 <script type="module">
   // Refactor: gunakan endpoint PHP backend untuk CRUD blog

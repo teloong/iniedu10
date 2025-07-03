@@ -133,3 +133,17 @@ const menu = [
     </button>
   </div>
 </aside>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const logoutButton = document.getElementById('logout-button');
+    if (logoutButton) {
+      logoutButton.addEventListener('click', () => {
+        // Hapus token dari localStorage
+        localStorage.removeItem('jwt');
+        // Arahkan ke halaman login
+        window.location.href = '/admin-login';
+      });
+    }
+  });
+</script>

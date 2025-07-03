@@ -66,7 +66,7 @@ import Layout from "../layouts/Layout.astro";
         ) as HTMLElement | null;
 
         if (!emailInput || !passwordInput || !errorMessage) {
-          console.error("Elemen form tidak ditemukan!");
+
           return;
         }
 
@@ -103,7 +103,7 @@ import Layout from "../layouts/Layout.astro";
               data.message || "Login gagal. Silakan coba lagi.";
           }
         } catch (error) {
-          console.error("Error saat login:", error);
+
           errorMessage.textContent = "Terjadi kesalahan. Periksa koneksi Anda.";
         }
       });

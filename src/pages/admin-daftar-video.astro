@@ -1,9 +1,9 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import AdminLayout from "../layouts/AdminLayout.astro";
 import AdminSidebar from "../components/AdminSidebar.astro";
 import '../styles/global.css';
 ---
-<Layout title="Daftar Video">
+<AdminLayout title="Daftar Video">
 <!-- Proteksi login (hanya jalan di browser) -->
 
 
@@ -41,7 +41,7 @@ import '../styles/global.css';
       </div>
     </main>
   </div>
-</Layout>
+</AdminLayout>
 <script type="module">
   // Proteksi akses admin
 (async () => {

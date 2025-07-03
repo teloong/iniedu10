@@ -21,16 +21,18 @@ if (!userId) {
   // Jika login, tampilkan informasi profil
   const namaFinal = userNama && userNama !== 'null' && userNama.trim() !== '' ? userNama : getNamaFromEmail(userEmail);
   
+  // 1. Hanya masukkan informasi nama dan email ke dalam div profil
   profileDiv.innerHTML = `
     <div class="space-y-2 text-left">
       <p><strong>Nama:</strong> ${namaFinal}</p>
       <p><strong>Email:</strong> ${userEmail || '-'}</p>
     </div>
-    <button id="logout-btn" class="mt-6 px-6 py-2 rounded bg-red-500 hover:bg-red-600 text-white font-bold transition-all">Logout</button>
   `;
 
-  // Tambahkan event listener untuk tombol logout
+  // Cari tombol logout yang sudah ada dari file .astro
   const logoutButton = document.getElementById('logout-btn');
+
+  // Tambahkan event listener untuk tombol tersebut
   if (logoutButton) {
     logoutButton.onclick = async () => {
       try {
@@ -41,13 +43,12 @@ if (!userId) {
         });
         const result = await response.json();
 
-        if (result.success) {
-          console.log('Sesi server berhasil dihancurkan.');
-        } else {
-          console.error('Gagal menghancurkan sesi server.');
+        if (!result.success) {
+          // Opsional: tampilkan pesan error jika logout di server gagal
+          console.error('Server logout failed:', result.message);
         }
       } catch (error) {
-        console.error('Error saat logout di server:', error);
+        console.error('Error during logout:', error);
       } finally {
         // Hapus semua data sesi dari localStorage, terlepas dari hasil server
         localStorage.removeItem('user_id');

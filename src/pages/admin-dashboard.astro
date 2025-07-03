@@ -1,11 +1,11 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import AdminLayout from "../layouts/AdminLayout.astro";
 import AdminSidebar from "../components/AdminSidebar.astro";
 import JwtAuth from "../components/JwtAuth.astro";
 import "../styles/global.css";
 ---
 
-<Layout title="Dashboard Admin">
+<AdminLayout title="Dashboard Admin">
   <JwtAuth />
 
   <!-- TAMPILAN DASBOR (SESUAI VERSI LAMA YANG ANDA INGINKAN) -->
@@ -156,13 +156,13 @@ import "../styles/global.css";
       </div>
     </main>
   </div>
-</Layout>
+</AdminLayout>
 
 <script>
   document.addEventListener("auth-verified", async () => {
     const token = localStorage.getItem("adminAuthToken");
     if (!token) {
-      console.error("Admin token not found.");
+
       return;
     }
 
@@ -208,7 +208,7 @@ import "../styles/global.css";
         stats.ebooks_by_category["Buku Anak"] || "0"
       );
     } catch (error) {
-      console.error("Error fetching dashboard stats:", error);
+
       // Optionally, display an error message to the user on the page
     }
   });

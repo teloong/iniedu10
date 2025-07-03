@@ -37,8 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('https://iniedu.id/get_pembelian_user.php', { credentials: 'include' });
             if (!response.ok) {
                 // TES: Redirect dinonaktifkan sementara untuk melihat error sebenarnya.
-                console.error('Fetch GAGAL dengan status:', response.status, response.statusText);
-                console.error('Ini terjadi karena backend tidak mengenali sesi login Anda.');
+
                 // window.location.href = '/login?redirect=/dashboard';
                 throw new Error('Sesi tidak ditemukan atau tidak valid.');
             }
@@ -49,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(result.message || 'Gagal memuat data.');
             }
         } catch (error) {
-            console.error('Fetch error:', error);
             dashboardDiv.innerHTML = `<div class="text-red-500">Gagal memuat data pembelian. Silakan coba lagi nanti.</div>`;
         }
     }

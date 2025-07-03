@@ -1,48 +1,156 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+
+const sections = [
+  { id: "pengantar", title: "Pengantar", icon: "mdi:file-document-outline" },
+  { id: "akun", title: "Akun Pengguna", icon: "mdi:account-circle-outline" },
+  { id: "pembayaran", title: "Pembayaran & Akses", icon: "mdi:credit-card-outline" },
+  { id: "konten", title: "Hak & Kewajiban Konten", icon: "mdi:video-outline" },
+  { id: "larangan", title: "Aktivitas Terlarang", icon: "mdi:cancel" },
+  { id: "penangguhan", title: "Penangguhan & Penghentian", icon: "mdi:account-cancel-outline" },
+  { id: "privasi", title: "Kebijakan Privasi", icon: "mdi:shield-lock-outline" },
+  { id: "perubahan", title: "Perubahan Ketentuan", icon: "mdi:update" },
+  { id: "kontak", title: "Informasi Kontak", icon: "mdi:email-outline" },
+];
+
+const lastUpdated = "2 Juli 2025";
 ---
 
-<Layout title="Syarat & Ketentuan">
-  <section class="max-w-2xl mx-auto mt-12 bg-gradient-to-br from-blue-50 to-white rounded-3xl shadow-2xl p-8 md:p-12 border border-blue-100">
-    <div class="flex flex-col items-center mb-8">
-      <div class="bg-blue-600 rounded-full p-4 shadow-lg mb-3">
-        <svg width="38" height="38" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill="#2563eb"/><path d="M8.5 12.5L11 15L16 10" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<Layout title="Syarat & Ketentuan | IniEdu">
+  <main class="bg-gray-50 py-16 sm:py-20">
+    <div class="max-w-6xl mx-auto px-6">
+      <!-- Header -->
+      <div class="text-center mb-12">
+        <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-3">Syarat & Ketentuan</h1>
+        <p class="text-lg text-gray-600">Terakhir diperbarui: {lastUpdated}</p>
       </div>
-      <h1 class="text-3xl md:text-4xl font-extrabold text-blue-700 mb-2 text-center">Syarat & Ketentuan IniEdu</h1>
-      <div class="text-gray-500 font-medium text-center text-base md:text-lg max-w-md">Harap baca dan pahami sebelum menggunakan platform IniEdu.</div>
+
+      <div class="grid lg:grid-cols-4 gap-12">
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1 lg:sticky lg:top-24 h-fit">
+          <nav class="bg-white p-6 rounded-2xl shadow-md border">
+            <h3 class="font-bold text-lg mb-4">Daftar Isi</h3>
+            <ul class="space-y-2">
+              {sections.map(section => (
+                <li>
+                  <a href={`#${section.id}`} class="flex items-center gap-3 text-gray-600 hover:text-blue-600 transition-colors duration-200 text-nav">
+                    <Icon name={section.icon} class="w-5 h-5 flex-shrink-0" />
+                    <span>{section.title}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="lg:col-span-3 space-y-12">
+          <section id="pengantar" class="content-section scroll-mt-24">
+            <h2 class="text-2xl font-bold mb-4">1. Pengantar</h2>
+            <p>Selamat datang di IniEdu! Syarat dan Ketentuan ini mengatur akses dan penggunaan Anda terhadap platform, situs web, dan layanan kami. Dengan mendaftar atau menggunakan layanan kami, Anda setuju untuk terikat oleh ketentuan ini secara penuh. Jika Anda tidak setuju, mohon untuk tidak menggunakan layanan kami.</p>
+          </section>
+
+          <section id="akun" class="content-section scroll-mt-24">
+            <h2 class="text-2xl font-bold mb-4">2. Akun Pengguna</h2>
+            <ul class="list-disc list-outside space-y-2 pl-5">
+              <li>Anda harus berusia minimal 13 tahun untuk membuat akun.</li>
+              <li>Anda bertanggung jawab penuh atas keamanan akun dan kata sandi Anda. Segala aktivitas yang terjadi di bawah akun Anda adalah tanggung jawab Anda.</li>
+              <li>Informasi yang Anda berikan saat pendaftaran harus akurat, lengkap, dan terkini.</li>
+              <li>Satu pengguna hanya boleh memiliki satu akun, kecuali diizinkan secara tertulis oleh IniEdu.</li>
+            </ul>
+          </section>
+
+          <section id="pembayaran" class="content-section scroll-mt-24">
+            <h2 class="text-2xl font-bold mb-4">3. Pembayaran & Akses Kursus</h2>
+            <ul class="list-disc list-outside space-y-2 pl-5">
+              <li>Semua pembelian kursus bersifat final. Kami tidak menyediakan pengembalian dana (refund) kecuali ditentukan lain oleh hukum yang berlaku atau dalam promosi khusus.</li>
+              <li>Akses ke materi kursus diberikan setelah pembayaran berhasil diverifikasi.</li>
+              <li>Anda mendapatkan lisensi terbatas, non-eksklusif, dan tidak dapat dialihkan untuk mengakses konten kursus yang telah Anda bayar, hanya untuk tujuan pribadi dan non-komersial.</li>
+            </ul>
+          </section>
+
+          <section id="konten" class="content-section scroll-mt-24">
+            <h2 class="text-2xl font-bold mb-4">4. Hak & Kewajiban Terkait Konten</h2>
+            <ul class="list-disc list-outside space-y-2 pl-5">
+              <li>Seluruh konten yang disediakan oleh IniEdu, termasuk video, teks, dan materi lainnya, adalah milik IniEdu atau pemberi lisensinya dan dilindungi oleh undang-undang hak cipta.</li>
+              <li>Anda tidak diizinkan untuk mereproduksi, mendistribusikan, memodifikasi, atau membuat karya turunan dari konten kami tanpa izin tertulis.</li>
+              <li>Jika Anda mengunggah konten (misalnya di forum diskusi), Anda memberikan IniEdu lisensi non-eksklusif untuk menggunakan, menampilkan, dan mendistribusikan konten tersebut sehubungan dengan layanan kami.</li>
+            </ul>
+          </section>
+
+          <section id="larangan" class="content-section scroll-mt-24">
+            <h2 class="text-2xl font-bold mb-4">5. Aktivitas yang Dilarang</h2>
+            <p>Anda setuju untuk tidak melakukan hal-hal berikut:</p>
+            <ul class="list-disc list-outside space-y-2 pl-5 mt-2">
+              <li>Menggunakan platform untuk tujuan ilegal atau melanggar hukum.</li>
+              <li>Mengunggah konten yang bersifat memfitnah, cabul, SARA, atau melanggar hak orang lain.</li>
+              <li>Mencoba mengakses akun pengguna lain secara tidak sah atau mengganggu sistem keamanan kami.</li>
+              <li>Menggunakan robot, spider, atau cara otomatis lainnya untuk mengakses layanan kami untuk tujuan apa pun tanpa izin tertulis dari kami.</li>
+            </ul>
+          </section>
+
+          <section id="penangguhan" class="content-section scroll-mt-24">
+            <h2 class="text-2xl font-bold mb-4">6. Penangguhan dan Penghentian</h2>
+            <p>Kami berhak untuk menangguhkan atau menghentikan akun Anda secara permanen, tanpa pemberitahuan sebelumnya, jika kami meyakini bahwa Anda telah melanggar Syarat & Ketentuan ini atau terlibat dalam aktivitas yang merugikan platform atau komunitas kami.</p>
+          </section>
+
+          <section id="privasi" class="content-section scroll-mt-24">
+            <h2 class="text-2xl font-bold mb-4">7. Kebijakan Privasi</h2>
+            <p>Penggunaan Anda atas layanan kami juga tunduk pada <a href="/privasi" class="text-blue-600 hover:underline">Kebijakan Privasi</a> kami, yang menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi data pribadi Anda.</p>
+          </section>
+
+          <section id="perubahan" class="content-section scroll-mt-24">
+            <h2 class="text-2xl font-bold mb-4">8. Perubahan Ketentuan</h2>
+            <p>Kami dapat merevisi Syarat & Ketentuan ini dari waktu ke waktu. Versi terbaru akan selalu diposting di situs kami. Dengan terus menggunakan layanan setelah perubahan berlaku, Anda setuju untuk terikat oleh ketentuan yang telah direvisi.</p>
+          </section>
+
+          <section id="kontak" class="content-section scroll-mt-24">
+            <h2 class="text-2xl font-bold mb-4">9. Informasi Kontak</h2>
+            <p>Jika Anda memiliki pertanyaan tentang Syarat & Ketentuan ini, silakan hubungi kami melalui halaman <a href="/kontak" class="text-blue-600 hover:underline">Kontak Kami</a>.</p>
+          </section>
+        </div>
+      </div>
     </div>
-    <ul class="space-y-4">
-      <li class="flex gap-3 items-start">
-        <span class="mt-1 text-blue-600"><svg width="22" height="22" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#e0e7ff"/><path d="M8.5 12.5L11 15L16 10" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        <span class="text-gray-800 font-medium">Platform IniEdu hanya untuk keperluan pendidikan dan pembelajaran.</span>
-      </li>
-      <li class="flex gap-3 items-start">
-        <span class="mt-1 text-blue-600"><svg width="22" height="22" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#e0e7ff"/><path d="M8.5 12.5L11 15L16 10" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        <span class="text-gray-800 font-medium">Pengguna wajib menjaga kerahasiaan akun dan tidak membagikan data login kepada pihak lain.</span>
-      </li>
-      <li class="flex gap-3 items-start">
-        <span class="mt-1 text-blue-600"><svg width="22" height="22" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#e0e7ff"/><path d="M8.5 12.5L11 15L16 10" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        <span class="text-gray-800 font-medium">Dilarang mengunggah atau membagikan konten yang melanggar hukum, SARA, pornografi, atau hak cipta.</span>
-      </li>
-      <li class="flex gap-3 items-start">
-        <span class="mt-1 text-blue-600"><svg width="22" height="22" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#e0e7ff"/><path d="M8.5 12.5L11 15L16 10" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        <span class="text-gray-800 font-medium">Semua video pembelajaran yang diunggah harus sesuai dengan materi pendidikan dan tidak mengandung unsur negatif.</span>
-      </li>
-      <li class="flex gap-3 items-start">
-        <span class="mt-1 text-blue-600"><svg width="22" height="22" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#e0e7ff"/><path d="M8.5 12.5L11 15L16 10" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        <span class="text-gray-800 font-medium">Pihak pengelola berhak menghapus konten yang dianggap melanggar syarat & ketentuan tanpa pemberitahuan.</span>
-      </li>
-      <li class="flex gap-3 items-start">
-        <span class="mt-1 text-blue-600"><svg width="22" height="22" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#e0e7ff"/><path d="M8.5 12.5L11 15L16 10" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        <span class="text-gray-800 font-medium">Data pengguna dan aktivitas di platform ini akan dijaga kerahasiaannya sesuai dengan kebijakan privasi.</span>
-      </li>
-      <li class="flex gap-3 items-start">
-        <span class="mt-1 text-blue-600"><svg width="22" height="22" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#e0e7ff"/><path d="M8.5 12.5L11 15L16 10" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        <span class="text-gray-800 font-medium">Dengan menggunakan platform IniEdu, pengguna dianggap telah membaca dan menyetujui seluruh syarat & ketentuan ini.</span>
-      </li>
-    </ul>
-    <div class="mt-10 text-center text-gray-400 text-sm">
-      Terakhir diperbarui: 30 Mei 2025
-    </div>
-  </section>
+  </main>
 </Layout>
+
+<style>
+  .content-section p, .content-section ul {
+    @apply text-gray-700 leading-relaxed;
+  }
+
+  .content-section h2 {
+    @apply text-gray-900;
+  }
+
+  /* Active state for sidebar navigation on scroll */
+  .text-nav.active {
+    @apply text-blue-600 font-semibold;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const sections = document.querySelectorAll('.content-section');
+    const navLinks = document.querySelectorAll('.text-nav');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => {
+            link.classList.remove('active');
+            const href = link.getAttribute('href');
+            if (href && href.substring(1) === entry.target.id) {
+              link.classList.add('active');
+            }
+          });
+        }
+      });
+    }, { rootMargin: '-30% 0px -70% 0px' });
+
+    sections.forEach(section => {
+      observer.observe(section);
+    });
+  });
+</script>

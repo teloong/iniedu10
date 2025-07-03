@@ -1,44 +1,160 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+
+const sections = [
+  { id: "pengantar", title: "Pengantar", icon: "mdi:information-outline" },
+  { id: "data", title: "Data yang Kami Kumpulkan", icon: "mdi:database-search-outline" },
+  { id: "penggunaan-data", title: "Penggunaan Data Anda", icon: "mdi:chart-donut" },
+  { id: "berbagi-data", title: "Berbagi Informasi", icon: "mdi:share-variant-outline" },
+  { id: "cookie", title: "Cookie & Teknologi Serupa", icon: "mdi:cookie-outline" },
+  { id: "keamanan", title: "Keamanan Data", icon: "mdi:shield-check-outline" },
+  { id: "hak-anda", title: "Hak Privasi Anda", icon: "mdi:account-cog-outline" },
+  { id: "perubahan", title: "Perubahan Kebijakan", icon: "mdi:update" },
+  { id: "kontak", title: "Hubungi Kami", icon: "mdi:email-outline" },
+];
+
+const lastUpdated = "2 Juli 2025";
 ---
 
-<Layout title="Kebijakan Privasi">
-  <section class="max-w-2xl mx-auto mt-12 bg-gradient-to-br from-green-50 to-white rounded-3xl shadow-2xl p-8 md:p-12 border border-green-100">
-    <div class="flex flex-col items-center mb-8">
-      <div class="bg-green-600 rounded-full p-4 shadow-lg mb-3">
-        <svg width="38" height="38" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill="#16a34a"/><path d="M8.5 12.5L11 15L16 10" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<Layout title="Kebijakan Privasi | IniEdu">
+  <main class="bg-gray-50 py-16 sm:py-20">
+    <div class="max-w-6xl mx-auto px-6">
+      <!-- Header -->
+      <div class="text-center mb-12">
+        <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-3">Kebijakan Privasi</h1>
+        <p class="text-lg text-gray-600">Terakhir diperbarui: {lastUpdated}</p>
       </div>
-      <h1 class="text-3xl md:text-4xl font-extrabold text-green-700 mb-2 text-center">Kebijakan Privasi</h1>
-      <div class="text-gray-500 font-medium text-center text-base md:text-lg max-w-md">Privasi Anda sangat penting bagi kami. Mohon baca kebijakan berikut.</div>
+
+      <div class="grid lg:grid-cols-4 gap-12">
+        <!-- Sidebar -->
+        <aside class="lg:col-span-1 lg:sticky lg:top-24 h-fit">
+          <nav class="bg-white p-6 rounded-2xl shadow-md border">
+            <h3 class="font-bold text-lg mb-4">Navigasi Cepat</h3>
+            <ul class="space-y-2">
+              {sections.map(section => (
+                <li>
+                  <a href={`#${section.id}`} class="flex items-center gap-3 text-gray-600 hover:text-blue-600 transition-colors duration-200 text-nav">
+                    <Icon name={section.icon} class="w-5 h-5 flex-shrink-0" />
+                    <span>{section.title}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="lg:col-span-3 space-y-12">
+          <section id="pengantar" class="content-section scroll-mt-24">
+            <h2 class="text-2xl font-bold mb-4">1. Pengantar</h2>
+            <p>Di IniEdu, kami menghargai privasi Anda dan berkomitmen untuk melindungi data pribadi Anda. Kebijakan Privasi ini menjelaskan bagaimana kami mengumpulkan, menggunakan, mengungkapkan, dan menjaga informasi Anda saat Anda mengunjungi dan menggunakan platform kami.</p>
+          </section>
+
+          <section id="data" class="content-section scroll-mt-24">
+            <h2 class="text-2xl font-bold mb-4">2. Data yang Kami Kumpulkan</h2>
+            <p>Kami dapat mengumpulkan informasi tentang Anda dalam berbagai cara, termasuk:</p>
+            <ul class="list-disc list-outside space-y-2 pl-5 mt-2">
+              <li><strong>Data Pribadi:</strong> Informasi identitas pribadi seperti nama, alamat email, dan nomor telepon yang Anda berikan secara sukarela saat mendaftar.</li>
+              <li><strong>Data Turunan:</strong> Informasi yang dikumpulkan server kami secara otomatis, seperti alamat IP, jenis browser, waktu akses, dan halaman yang Anda lihat.</li>
+              <li><strong>Data Keuangan:</strong> Informasi terkait pembayaran Anda (misalnya, nomor kartu kredit) yang dikumpulkan oleh pemroses pembayaran pihak ketiga kami (misalnya, Xendit) untuk menyelesaikan transaksi. Kami tidak menyimpan data keuangan di server kami.</li>
+            </ul>
+          </section>
+
+          <section id="penggunaan-data" class="content-section scroll-mt-24">
+            <h2 class="text-2xl font-bold mb-4">3. Bagaimana Kami Menggunakan Data Anda</h2>
+            <p>Informasi Anda digunakan untuk:</p>
+            <ul class="list-disc list-outside space-y-2 pl-5 mt-2">
+              <li>Membuat dan mengelola akun Anda.</li>
+              <li>Menyediakan akses ke kursus dan layanan kami.</li>
+              <li>Memproses transaksi dan mengirimkan konfirmasi.</li>
+              <li>Mengirimkan email administratif, promosi, dan pembaruan.</li>
+              <li>Meningkatkan dan mempersonalisasi pengalaman belajar Anda.</li>
+              <li>Memantau dan menganalisis penggunaan untuk meningkatkan fungsionalitas platform.</li>
+            </ul>
+          </section>
+
+          <section id="berbagi-data" class="content-section scroll-mt-24">
+            <h2 class="text-2xl font-bold mb-4">4. Berbagi Informasi Anda</h2>
+            <p>Kami tidak akan membagikan informasi pribadi Anda kepada pihak ketiga kecuali dalam situasi berikut:</p>
+            <ul class="list-disc list-outside space-y-2 pl-5 mt-2">
+              <li><strong>Dengan Persetujuan Anda:</strong> Kami akan membagikan informasi dengan persetujuan Anda.</li>
+              <li><strong>Penyedia Layanan:</strong> Kami dapat berbagi informasi dengan vendor pihak ketiga yang menyediakan layanan atas nama kami, seperti pemrosesan pembayaran dan analisis data.</li>
+              <li><strong>Tuntutan Hukum:</strong> Jika diwajibkan oleh hukum atau untuk melindungi hak, properti, dan keselamatan kami atau orang lain.</li>
+            </ul>
+          </section>
+
+          <section id="cookie" class="content-section scroll-mt-24">
+            <h2 class="text-2xl font-bold mb-4">5. Cookie dan Teknologi Pelacakan</h2>
+            <p>Kami menggunakan cookie dan teknologi pelacakan serupa untuk mengakses atau menyimpan informasi. Ini membantu kami mempersonalisasi situs dan meningkatkan pengalaman Anda. Anda dapat menolak cookie melalui pengaturan browser Anda, namun ini dapat memengaruhi fungsionalitas beberapa bagian dari platform kami.</p>
+          </section>
+
+          <section id="keamanan" class="content-section scroll-mt-24">
+            <h2 class="text-2xl font-bold mb-4">6. Keamanan Data</h2>
+            <p>Kami menggunakan langkah-langkah keamanan administratif, teknis, dan fisik untuk membantu melindungi informasi pribadi Anda. Meskipun kami telah mengambil langkah-langkah yang wajar, tidak ada sistem keamanan yang sempurna atau tidak dapat ditembus.</p>
+          </section>
+
+          <section id="hak-anda" class="content-section scroll-mt-24">
+            <h2 class="text-2xl font-bold mb-4">7. Hak Privasi Anda</h2>
+            <p>Anda memiliki hak untuk:</p>
+            <ul class="list-disc list-outside space-y-2 pl-5 mt-2">
+              <li>Mengakses, meninjau, dan memperbarui informasi pribadi di pengaturan akun Anda.</li>
+              <li>Meminta penghapusan akun dan data pribadi Anda dengan menghubungi kami.</li>
+              <li>Berhenti menerima email promosi dari kami dengan mengikuti instruksi berhenti berlangganan di email tersebut.</li>
+            </ul>
+          </section>
+
+          <section id="perubahan" class="content-section scroll-mt-24">
+            <h2 class="text-2xl font-bold mb-4">8. Perubahan Kebijakan</h2>
+            <p>Kami dapat memperbarui Kebijakan Privasi ini dari waktu ke waktu. Kami akan memberitahu Anda tentang perubahan apa pun dengan memposting kebijakan baru di halaman ini dan memperbarui tanggal "Terakhir diperbarui".</p>
+          </section>
+
+          <section id="kontak" class="content-section scroll-mt-24">
+            <h2 class="text-2xl font-bold mb-4">9. Hubungi Kami</h2>
+            <p>Jika Anda memiliki pertanyaan atau komentar tentang Kebijakan Privasi ini, silakan hubungi kami melalui halaman <a href="/kontak" class="text-blue-600 hover:underline">Kontak Kami</a>.</p>
+          </section>
+        </div>
+      </div>
     </div>
-    <ul class="space-y-4">
-      <li class="flex gap-3 items-start">
-        <span class="mt-1 text-green-600"><svg width="22" height="22" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#bbf7d0"/><path d="M8.5 12.5L11 15L16 10" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        <span class="text-gray-800 font-medium">Data pribadi yang dikumpulkan hanya digunakan untuk keperluan pendidikan dan pengelolaan platform IniEdu.</span>
-      </li>
-      <li class="flex gap-3 items-start">
-        <span class="mt-1 text-green-600"><svg width="22" height="22" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#bbf7d0"/><path d="M8.5 12.5L11 15L16 10" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        <span class="text-gray-800 font-medium">Kami tidak membagikan data pribadi pengguna kepada pihak ketiga tanpa persetujuan.</span>
-      </li>
-      <li class="flex gap-3 items-start">
-        <span class="mt-1 text-green-600"><svg width="22" height="22" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#bbf7d0"/><path d="M8.5 12.5L11 15L16 10" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        <span class="text-gray-800 font-medium">Data pengguna disimpan dengan aman dan hanya dapat diakses oleh pihak berwenang di platform IniEdu.</span>
-      </li>
-      <li class="flex gap-3 items-start">
-        <span class="mt-1 text-green-600"><svg width="22" height="22" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#bbf7d0"/><path d="M8.5 12.5L11 15L16 10" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        <span class="text-gray-800 font-medium">Pengguna dapat meminta penghapusan data pribadi dengan menghubungi admin IniEdu.</span>
-      </li>
-      <li class="flex gap-3 items-start">
-        <span class="mt-1 text-green-600"><svg width="22" height="22" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#bbf7d0"/><path d="M8.5 12.5L11 15L16 10" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        <span class="text-gray-800 font-medium">Kami menggunakan cookie dan teknologi serupa untuk meningkatkan pengalaman pengguna di platform.</span>
-      </li>
-      <li class="flex gap-3 items-start">
-        <span class="mt-1 text-green-600"><svg width="22" height="22" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#bbf7d0"/><path d="M8.5 12.5L11 15L16 10" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        <span class="text-gray-800 font-medium">Dengan menggunakan platform IniEdu, pengguna dianggap telah membaca dan menyetujui kebijakan privasi ini.</span>
-      </li>
-    </ul>
-    <div class="mt-10 text-center text-gray-400 text-sm">
-      Terakhir diperbarui: 30 Mei 2025
-    </div>
-  </section>
+  </main>
 </Layout>
+
+<style>
+  .content-section p, .content-section ul {
+    @apply text-gray-700 leading-relaxed;
+  }
+
+  .content-section h2 {
+    @apply text-gray-900;
+  }
+
+  /* Active state for sidebar navigation on scroll */
+  .text-nav.active {
+    @apply text-blue-600 font-semibold;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const sections = document.querySelectorAll('.content-section');
+    const navLinks = document.querySelectorAll('.text-nav');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => {
+            link.classList.remove('active');
+            const href = link.getAttribute('href');
+            if (href && href.substring(1) === entry.target.id) {
+              link.classList.add('active');
+            }
+          });
+        }
+      });
+    }, { rootMargin: '-30% 0px -70% 0px' });
+
+    sections.forEach(section => {
+      observer.observe(section);
+    });
+  });
+</script>

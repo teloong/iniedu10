@@ -1,10 +1,10 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import AdminLayout from "../layouts/AdminLayout.astro";
 import AdminSidebar from "../components/AdminSidebar.astro";
 import "../styles/global.css";
 ---
 
-<Layout title="Daftar E-Book Perpustakaan">
+<AdminLayout title="Daftar Ebook Perpustakaan">
   <div class="min-h-screen bg-gray-50 flex">
     <div class="sticky top-0 h-screen hidden md:block">
       <AdminSidebar active="daftar-ebook" />
@@ -163,4 +163,4 @@ import "../styles/global.css";
     categoryFilter?.addEventListener("change", applyFilters);
     ebookGrid?.addEventListener("click", e => e.target.classList.contains('delete-btn') && handleDelete(e));
   </script>
-</Layout>
+</AdminLayout>

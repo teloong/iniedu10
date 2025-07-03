@@ -1,10 +1,10 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import AdminLayout from "../layouts/AdminLayout.astro";
 import AdminSidebar from "../components/AdminSidebar.astro";
 import "../styles/global.css";
 ---
 
-<Layout title="Statistik Grafik Kursus">
+<AdminLayout title="Statistik Grafik Kursus">
   <div class="min-h-screen bg-gray-50 flex">
     <div class="sticky top-0 h-screen hidden md:block">
       <AdminSidebar active="admin-charts" />
@@ -347,4 +347,4 @@ import "../styles/global.css";
       renderKategoriList(dummyMap);
     }
   </script>
-</Layout>
+</AdminLayout>

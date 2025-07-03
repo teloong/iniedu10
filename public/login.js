@@ -13,7 +13,7 @@ if (form) {
     const password = document.getElementById('password').value;
 
     try {
-      const res = await fetch('https://iniedu.id/login.php', {
+            const res = await fetch('https://iniedu.id/login.php', { // Diarahkan ke server produksi
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         credentials: 'include', // WAJIB untuk session/cookie

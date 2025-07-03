@@ -21,10 +21,15 @@ if (form) {
         body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}&nama=${encodeURIComponent(nama)}`
       });
       const data = await res.json();
+      // Tampilkan pesan dari server, baik sukses maupun gagal
+      messageDiv.textContent = data.message;
+      
+      // Jika sukses, ubah warna pesan menjadi hijau dan reset form
       if (data.success) {
-        window.location.href = '/login'; // Redirect ke login setelah daftar
+        messageDiv.style.color = 'green';
+        form.reset();
       } else {
-        messageDiv.textContent = data.message;
+        messageDiv.style.color = 'red';
       }
     } catch (err) {
       messageDiv.textContent = 'Terjadi error koneksi.';

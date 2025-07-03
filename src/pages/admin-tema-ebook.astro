@@ -1,11 +1,11 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import AdminLayout from "../layouts/AdminLayout.astro";
 import AdminSidebar from "../components/AdminSidebar.astro";
 import JwtAuth from "../components/JwtAuth.astro";
 import "../styles/global.css";
 ---
 
-<Layout title="Manajemen Tema E-Book">
+<AdminLayout title="Manajemen Tema E-Book">
   <JwtAuth />
   <div class="min-h-screen bg-gray-50 flex">
     <div class="sticky top-0 h-screen hidden md:block">
@@ -291,7 +291,7 @@ import "../styles/global.css";
           populateCategoryFilters();
           applyFilters();
         } catch (error) {
-          console.error("Error loading data:", error);
+
           const message =
             error instanceof Error
               ? error.message
@@ -323,7 +323,7 @@ import "../styles/global.css";
           closeModal();
           loadData(); // Refresh data
         } catch (error) {
-          console.error("Failed to save theme:", error);
+
           alert(`Error: ${error.message}`);
         }
       }
@@ -348,7 +348,7 @@ import "../styles/global.css";
 
           loadData(); // Refresh data
         } catch (error) {
-          console.error("Failed to delete theme:", error);
+
           alert(`Error: ${error.message}`);
         }
       }
@@ -377,4 +377,4 @@ import "../styles/global.css";
       loadData();
     });
   </script>
-</Layout>
+</AdminLayout>
