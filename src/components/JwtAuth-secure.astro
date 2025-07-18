@@ -1,0 +1,330 @@
+<!-- VERSI AMAN dari JwtAuth.astro - Perbaikan keamanan admin -->
+<script is:inline>
+  // Secure Admin Authentication Manager
+  class SecureAdminAuth {
+    constructor() {
+      this.tokenKey = 'admin_auth_token';
+      this.refreshKey = 'admin_refresh_token';
+      this.maxRetries = 3;
+      this.retryDelay = 1000;
+      this.refreshTimer = null;
+      this.currentToken = null;
+      this.init();
+    }
+
+    async init() {
+      // Wait for DOM to be ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => this.authenticate());
+      } else {
+        await this.authenticate();
+      }
+    }
+
+    async authenticate() {
+      try {
+        // Get token from secure storage (memory first, then sessionStorage as fallback)
+        const token = this.getToken();
+        
+        if (!token) {
+          this.redirectToLogin();
+          return;
+        }
+
+        // Verify token with server
+        const isValid = await this.verifyToken(token);
+        
+        if (!isValid) {
+          await this.attemptTokenRefresh();
+          return;
+        }
+
+        // Setup UI and auto-refresh
+        this.setupAuthenticatedUI();
+        this.setupTokenRefresh();
+        
+        // Dispatch auth verified event
+        document.dispatchEvent(new CustomEvent('admin-auth-verified', {
+          detail: { token: token }
+        }));
+
+      } catch (error) {
+        console.error('Authentication failed:', error);
+        this.handleAuthError(error);
+      }
+    }
+
+    getToken() {
+      // Priority: memory > sessionStorage > localStorage (fallback)
+      return this.currentToken || 
+             sessionStorage.getItem(this.tokenKey) || 
+             localStorage.getItem('adminAuthToken'); // Fallback untuk kompatibilitas
+    }
+
+    setToken(token) {
+      this.currentToken = token;
+      sessionStorage.setItem(this.tokenKey, token);
+      // Remove old localStorage token
+      localStorage.removeItem('adminAuthToken');
+    }
+
+    async verifyToken(token, retries = 0) {
+      try {
+        const response = await fetch("https://iniedu.id/check-auth.php", {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "X-Requested-With": "XMLHttpRequest"
+          },
+          credentials: 'include'
+        });
+
+        if (response.status === 401) {
+          return false;
+        }
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        
+        if (data.isLoggedIn && data.admin) {
+          this.updateAdminInfo(data.admin);
+          return true;
+        }
+
+        return false;
+
+      } catch (error) {
+        if (retries < this.maxRetries) {
+          await this.delay(this.retryDelay * (retries + 1));
+          return this.verifyToken(token, retries + 1);
+        }
+        throw error;
+      }
+    }
+
+    async attemptTokenRefresh() {
+      try {
+        const refreshToken = sessionStorage.getItem(this.refreshKey);
+        
+        if (!refreshToken) {
+          this.redirectToLogin();
+          return;
+        }
+
+        const response = await fetch("https://iniedu.id/refresh-token.php", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest"
+          },
+          credentials: 'include',
+          body: JSON.stringify({ refresh_token: refreshToken })
+        });
+
+        if (!response.ok) {
+          this.redirectToLogin();
+          return;
+        }
+
+        const data = await response.json();
+        
+        if (data.success && data.access_token) {
+          this.setToken(data.access_token);
+          this.setupAuthenticatedUI();
+          this.setupTokenRefresh();
+        } else {
+          this.redirectToLogin();
+        }
+
+      } catch (error) {
+        console.error('Token refresh failed:', error);
+        this.redirectToLogin();
+      }
+    }
+
+    setupTokenRefresh() {
+      // Clear existing timer
+      if (this.refreshTimer) {
+        clearInterval(this.refreshTimer);
+      }
+
+      // Refresh token every 13 minutes (2 minutes before expiry)
+      this.refreshTimer = setInterval(() => {
+        this.attemptTokenRefresh();
+      }, 13 * 60 * 1000);
+    }
+
+    updateAdminInfo(admin) {
+      const adminNameEl = document.getElementById("admin-name");
+      if (adminNameEl && admin.email) {
+        const username = admin.email.split('@')[0];
+        adminNameEl.textContent = this.sanitizeHTML(username);
+      }
+    }
+
+    setupAuthenticatedUI() {
+      const logoutButton = document.getElementById("logout-button");
+      if (logoutButton) {
+        // Remove existing listeners
+        logoutButton.replaceWith(logoutButton.cloneNode(true));
+        const newLogoutButton = document.getElementById("logout-button");
+        
+        newLogoutButton.addEventListener("click", (e) => {
+          e.preventDefault();
+          this.logout();
+        });
+      }
+    }
+
+    async logout() {
+      try {
+        // Clear timers
+        if (this.refreshTimer) {
+          clearInterval(this.refreshTimer);
+        }
+
+        // Logout from server
+        await fetch("https://iniedu.id/admin-logout.php", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest"
+          },
+          credentials: 'include'
+        });
+
+        // Log security event
+        await this.logSecurityEvent('admin_logout', { method: 'manual' });
+
+      } catch (error) {
+        console.error('Logout error:', error);
+      } finally {
+        // Clear all tokens and redirect
+        this.clearTokens();
+        window.location.href = "/admin-login";
+      }
+    }
+
+    clearTokens() {
+      this.currentToken = null;
+      sessionStorage.removeItem(this.tokenKey);
+      sessionStorage.removeItem(this.refreshKey);
+      localStorage.removeItem('adminAuthToken'); // Clean up old token
+    }
+
+    redirectToLogin() {
+      this.clearTokens();
+      const currentUrl = encodeURIComponent(window.location.pathname + window.location.search);
+      window.location.href = `/admin-login?redirect=${currentUrl}`;
+    }
+
+    handleAuthError(error) {
+      console.error('Auth error:', error);
+      this.logSecurityEvent('admin_auth_error', { error: error.message });
+      this.redirectToLogin();
+    }
+
+    async logSecurityEvent(eventType, details) {
+      try {
+        await fetch('https://iniedu.id/security-log.php', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            event_type: eventType,
+            details: details,
+            timestamp: new Date().toISOString(),
+            user_agent: navigator.userAgent,
+            url: window.location.href
+          })
+        });
+      } catch (err) {
+        console.warn('Failed to log security event:', err);
+      }
+    }
+
+    sanitizeHTML(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    delay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+  }
+
+  // Initialize secure admin authentication
+  new SecureAdminAuth();
+
+  // Security monitoring untuk admin pages
+  (function() {
+    'use strict';
+    
+    // Detect developer tools on admin pages
+    let devtoolsOpen = false;
+    
+    function detectDevTools() {
+      const threshold = 160;
+      if (window.outerHeight - window.innerHeight > threshold || 
+          window.outerWidth - window.innerWidth > threshold) {
+        if (!devtoolsOpen) {
+          devtoolsOpen = true;
+          // Log dan warning untuk admin
+          console.warn('Developer tools detected on admin page');
+          
+          // Optional: Show warning atau logout
+          if (confirm('Developer tools terdeteksi. Untuk keamanan, sesi admin akan diakhiri. Lanjutkan?')) {
+            // Continue
+          } else {
+            window.location.href = '/admin-login';
+          }
+        }
+      } else {
+        devtoolsOpen = false;
+      }
+    }
+    
+    // Monitor every 2 seconds
+    setInterval(detectDevTools, 2000);
+    
+    // Prevent right-click on admin pages
+    document.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+    });
+    
+    // Prevent common shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'F12' || 
+          (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+          (e.ctrlKey && e.key === 'u')) {
+        e.preventDefault();
+      }
+    });
+    
+  })();
+</script>
+
+<style>
+  /* Security styles untuk admin */
+  body {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* Re-enable selection for content areas */
+  input, textarea, [contenteditable] {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+  }
+</style>
