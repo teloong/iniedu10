@@ -1,0 +1,451 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+
+interface Props {
+  title: string;
+  bodyClass?: string;
+}
+
+const { title = "IniEdu - Platform Pendidikan Online" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <!-- SECURITY HEADERS -->
+    <meta http-equiv="Content-Security-Policy" 
+          content="default-src 'self'; 
+                   script-src 'self' 'unsafe-inline' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; 
+                   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
+                   font-src 'self' https://fonts.gstatic.com; 
+                   img-src 'self' data: https: blob:; 
+                   connect-src 'self' https://iniedu.id; 
+                   frame-src https://www.google.com/recaptcha/; 
+                   object-src 'none'; 
+                   base-uri 'self';">
+    
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
+    
+    <!-- HSTS Header (harus diimplementasi di server) -->
+    <!-- Strict-Transport-Security: max-age=31536000; includeSubDomains; preload -->
+    
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content={Astro.locals.csrfToken || 'placeholder-token'}>
+    
+    <!-- Preload font lokal Roboto Slab untuk mencegah FOUT -->
+    <link
+      rel="preload"
+      href="/fonts/roboto-slab-v35-latin-regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/roboto-slab-v35-latin-700.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/roboto-slab-v35-latin-900.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/roboto-slab-v35-latin-500.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/roboto-slab-v35-latin-600.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/roboto-slab-v35-latin-800.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    
+    <meta charset="UTF-8" />
+    <meta
+      name="description"
+      content="IniEdu - Platform Pendidikan Online Terbaik dengan Keamanan Tinggi"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Favicon dengan integrity check -->
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+    <link rel="apple-touch-icon" href="/images/favicon.ico" />
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+    
+    <!-- Structured Data Logo for Google Search -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "url": "https://iniedu.id",
+        "logo": "https://iniedu.id/images/favicon.ico",
+        "name": "IniEdu",
+        "description": "Platform Pendidikan Online Terbaik"
+      }
+    </script>
+    
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    
+    <!-- reCAPTCHA v3 -->
+    <script src="https://www.google.com/recaptcha/api.js?render=6LdYourSiteKey" async defer></script>
+    
+    <!-- AOS dengan integrity check -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"
+      integrity="sha256-GqiEX9BuR1rv5zPU5Vs2qS/NSHl1BJyBcjQYJ9JJZdQ="
+      crossorigin="anonymous"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"
+        integrity="sha256-GqiEX9BuR1rv5zPU5Vs2qS/NSHl1BJyBcjQYJ9JJZdQ="
+        crossorigin="anonymous"
+      />
+    </noscript>
+    
+    <style>
+      /* Reset CSS untuk menghilangkan garis dan outline */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        outline: none !important;
+      }
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        /* Prevent text selection on sensitive elements */
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      
+      /* Re-enable text selection for content areas */
+      main, article, .content, p, span, div {
+        -webkit-user-select: text;
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
+      }
+      
+      /* Security: Hide scrollbars to prevent information leakage */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+      
+      /* Prevent drag and drop */
+      * {
+        -webkit-user-drag: none;
+        -khtml-user-drag: none;
+        -moz-user-drag: none;
+        -o-user-drag: none;
+        user-drag: none;
+      }
+      
+      /* Security message styles */
+      .security-warning {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: #ff4444;
+        color: white;
+        text-align: center;
+        padding: 10px;
+        z-index: 10000;
+        display: none;
+      }
+      
+      .offline-warning {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #ff9800;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        z-index: 10000;
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body class={`${Astro.props.bodyClass ?? ""}`}>
+    <!-- Security warning banner -->
+    <div id="security-warning" class="security-warning">
+      ⚠️ Aktivitas mencurigakan terdeteksi. Sesi Anda akan diakhiri untuk keamanan.
+    </div>
+    
+    <!-- Offline warning -->
+    <div id="offline-warning" class="offline-warning">
+      📡 Koneksi terputus. Beberapa fitur mungkin tidak tersedia.
+    </div>
+    
+    <Header />
+    
+    <style>
+      body.admin-dashboard header {
+        display: none !important;
+      }
+    </style>
+
+    <!-- HAPUS AUTH ACTION YANG TIDAK AMAN -->
+    <!-- div id="auth-action" sudah dihapus karena tidak aman -->
+    
+    <main class="bg-gray-50 p-0 m-0">
+      <slot />
+    </main>
+
+    <!-- Security monitoring script -->
+    <script is:inline>
+      // Security monitoring dan protection
+      (function() {
+        'use strict';
+        
+        // Prevent console access
+        let devtools = false;
+        const threshold = 160;
+        
+        // Detect developer tools
+        function detectDevTools() {
+          if (window.outerHeight - window.innerHeight > threshold || 
+              window.outerWidth - window.innerWidth > threshold) {
+            if (!devtools) {
+              devtools = true;
+              logSecurityEvent('devtools_opened');
+              showSecurityWarning();
+            }
+          } else {
+            devtools = false;
+          }
+        }
+        
+        // Security event logging
+        function logSecurityEvent(eventType, details = {}) {
+          try {
+            fetch('https://iniedu.id/security-log.php', {
+              method: 'POST',
+              headers: { 
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+              },
+              credentials: 'include',
+              body: JSON.stringify({
+                event_type: eventType,
+                details: details,
+                timestamp: new Date().toISOString(),
+                user_agent: navigator.userAgent,
+                url: window.location.href
+              })
+            });
+          } catch (err) {
+            console.warn('Security logging failed:', err);
+          }
+        }
+        
+        // Show security warning
+        function showSecurityWarning() {
+          const warning = document.getElementById('security-warning');
+          if (warning) {
+            warning.style.display = 'block';
+            setTimeout(() => {
+              warning.style.display = 'none';
+            }, 5000);
+          }
+        }
+        
+        // Prevent common attack vectors
+        function preventAttacks() {
+          // Prevent right-click context menu
+          document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            logSecurityEvent('context_menu_blocked');
+          });
+          
+          // Prevent text selection on sensitive elements
+          document.addEventListener('selectstart', (e) => {
+            if (e.target.classList.contains('no-select')) {
+              e.preventDefault();
+            }
+          });
+          
+          // Prevent drag and drop
+          document.addEventListener('dragstart', (e) => {
+            e.preventDefault();
+            logSecurityEvent('drag_blocked');
+          });
+          
+          // Prevent print screen and common shortcuts
+          document.addEventListener('keydown', (e) => {
+            // Prevent F12, Ctrl+Shift+I, Ctrl+U, Ctrl+S, Print Screen
+            if (e.key === 'F12' || 
+                e.key === 'PrintScreen' ||
+                (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+                (e.ctrlKey && e.key === 'u') ||
+                (e.ctrlKey && e.key === 's')) {
+              e.preventDefault();
+              logSecurityEvent('keyboard_shortcut_blocked', {
+                key: e.key,
+                ctrlKey: e.ctrlKey,
+                shiftKey: e.shiftKey
+              });
+            }
+          });
+          
+          // Prevent copy of sensitive data
+          document.addEventListener('copy', (e) => {
+            const selection = window.getSelection().toString();
+            if (selection.length > 100) { // Threshold for sensitive data
+              logSecurityEvent('large_copy_attempt', {
+                content_length: selection.length
+              });
+            }
+          });
+        }
+        
+        // Network monitoring
+        function monitorNetwork() {
+          // Detect offline status
+          function updateOnlineStatus() {
+            const warning = document.getElementById('offline-warning');
+            if (warning) {
+              warning.style.display = navigator.onLine ? 'none' : 'block';
+            }
+            
+            if (!navigator.onLine) {
+              logSecurityEvent('connection_lost');
+            }
+          }
+          
+          window.addEventListener('online', updateOnlineStatus);
+          window.addEventListener('offline', updateOnlineStatus);
+          updateOnlineStatus();
+        }
+        
+        // CSP violation reporting
+        document.addEventListener('securitypolicyviolation', (e) => {
+          logSecurityEvent('csp_violation', {
+            blockedURI: e.blockedURI,
+            violatedDirective: e.violatedDirective,
+            originalPolicy: e.originalPolicy
+          });
+        });
+        
+        // Initialize security measures
+        setInterval(detectDevTools, 1000);
+        preventAttacks();
+        monitorNetwork();
+        
+        // Page visibility change detection
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) {
+            logSecurityEvent('page_hidden');
+          } else {
+            logSecurityEvent('page_visible');
+          }
+        });
+        
+        // Prevent page caching for security
+        window.addEventListener('beforeunload', () => {
+          logSecurityEvent('page_unload');
+        });
+        
+        // Session timeout warning
+        let sessionWarningShown = false;
+        const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+        const WARNING_TIME = 5 * 60 * 1000; // 5 minutes before timeout
+        
+        function checkSessionTimeout() {
+          const loginTime = sessionStorage.getItem('loginTime');
+          if (loginTime) {
+            const elapsed = Date.now() - parseInt(loginTime);
+            if (elapsed > SESSION_TIMEOUT - WARNING_TIME && !sessionWarningShown) {
+              sessionWarningShown = true;
+              if (confirm('Sesi Anda akan berakhir dalam 5 menit. Klik OK untuk memperpanjang sesi.')) {
+                // Extend session
+                sessionStorage.setItem('loginTime', Date.now().toString());
+                sessionWarningShown = false;
+                logSecurityEvent('session_extended');
+              }
+            }
+            
+            if (elapsed > SESSION_TIMEOUT) {
+              logSecurityEvent('session_timeout');
+              sessionStorage.clear();
+              window.location.href = '/login?reason=timeout';
+            }
+          }
+        }
+        
+        setInterval(checkSessionTimeout, 60000); // Check every minute
+        
+      })();
+    </script>
+
+    <!-- Load header auth script dengan security -->
+    <script type="module" src="/header-auth.js"></script>
+    
+    <!-- AOS dengan integrity check -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"
+      integrity="sha256-pQBbZbkJVqV6q0+QVB3u5kMOYLnfNnm2/nGl2Lj9iYo="
+      crossorigin="anonymous"
+      defer
+      onload="if(window.AOS){window.AOS.init({duration:700,once:true,delay:0});}"
+    ></script>
+    
+    <!-- Service Worker untuk offline capability dan security -->
+    <script is:inline>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('SW registered: ', registration);
+            })
+            .catch((registrationError) => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+    </script>
+  </body>
+</html>
